@@ -1,0 +1,1 @@
+# HakurouKen's Blog.
