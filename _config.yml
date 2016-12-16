@@ -56,4 +56,5 @@ theme: next
 
 # Deployment
 deploy:
-  type:
+  type: shell
+  command: git subtree push --prefix public origin master
