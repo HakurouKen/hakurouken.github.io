@@ -401,7 +401,7 @@ algolia_search:
 use_motion: true
 
 # Fancybox
-fancybox: true
+fancybox: false
 
 
 # Script Vendors.
