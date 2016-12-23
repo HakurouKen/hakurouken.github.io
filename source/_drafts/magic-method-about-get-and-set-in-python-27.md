@@ -38,7 +38,7 @@ dir(new_instance) # ['__class__', '__delattr__', '__dict__', '__doc__', '__forma
 
 ### 魔术方法
 
-1. `object.__getattribute__(self,name)`
+1. `object.__getattribute__`
 在获取对象的 **任意** 属性时 **无条件** 执行。
 ```python
 # -*- coding: utf-8 -*-
@@ -86,9 +86,9 @@ if __name__ == '__main__':
     #   Try to get attribute `__class__`
 ```
 
-`__getattribute__` 是相对底层的方法，在实际开发中，很少涉及到对其进行重载。如果修改默认的 `__getattribute__`，也会对 `__getattr__` 和描述符的调用产生影响。另外需要注意的是，`__getattribute__` 没有与之对应的 set 方法。
+`__getattribute__` 是相对底层的方法，在实际开发中，很少涉及到(并且也不建议)对其进行重载。如果修改默认的 `__getattribute__`，也会对 `__getattr__` 和描述符的调用产生影响。另外需要注意的是，`__getattribute__` 没有与之对应的 set 方法。
 
-2. `object.__getattr__(self, name)` 和 `object.__setattr__(self, name, value)`
+2. `object.__getattr__` 和 `object.__setattr__`
 `__getattr__` 在获取对象的属性，且该属性不存在时调用（`__getattribute__`抛出 `AttributeError` 时调用）。
 例如，我们打算创建一个 “用点号访问的字典类型” 的类
 ```python
