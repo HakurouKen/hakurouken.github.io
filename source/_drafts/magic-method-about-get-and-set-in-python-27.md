@@ -8,6 +8,7 @@ tags: python
 由于历史原因，Python 中的类分为旧式类(old-style class)和在 Python 2.2 中引入的新式类(new-style class),引入这个新式类的目的主要是为了统一类(class)和类型(type)。简单的说来，对于新式类中的 `x` 实例，有`type(x) == x.__class__`（在旧式类中二者不一致）。另外，新式类中为对象提供了一套完整的“元模型”（对纯 Python 代码而言，就是一系列的魔术方法），使新式类的功能更强大。**下文讨论的所有 magic-method 全部针对新式类。**
 
 新旧式类的主要区别示例：
+
 ```python
 # -*- coding: utf-8 -*-
 class OldStyleClass:
@@ -35,6 +36,7 @@ dir(new_instance) # ['__class__', '__delattr__', '__dict__', '__doc__', '__forma
 
 更多有关旧式类和新式类的区别，可以参照 [Python 的官方文档](https://docs.python.org/2/reference/datamodel.html#new-style-and-classic-classes)。
 在实际开发中，建议全部使用新式类。另外，在 Python3 中，已经去掉了旧式类的概念，全部都是新式类。
+
 
 ### 魔术方法
 
@@ -138,3 +140,23 @@ assert(obj.key == None)
 #   __setattr__: key = value
 obj.key = 'value'
 ```
+
+3. `getattr` 和 `setattr` (以及 `hasattr`)
+`getattr` 、`setattr` 和 `hastattr` 是 Python 的内置函数，他们的表现比较直观:
+
+在不给定 default 时，`getattr(object, name[, default])` 表现和 `object.name` 一致。
+给定 default 后，则会将 default 当作属性不存在（即抛出 `AttributeError`）时的默认值。
+
+`setattr(object, name, value)` 和 `object.name = value` 表现一致。
+
+`hasattr(object, name)` 的表现可以用下列的 Python 代码描述：
+```python
+def hasattr_(obj, name):
+    try:
+        getattr(obj, name)
+        return True
+    except AttributeError:
+        return False
+```
+
+4. `__get__` 和 `__set__`
