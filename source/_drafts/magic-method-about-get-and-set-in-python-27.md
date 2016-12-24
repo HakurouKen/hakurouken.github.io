@@ -2,9 +2,8 @@
 title: Python 2.7 中 GET/SET 相关的魔术方法
 tags: python
 ---
-## Python 2.7 中 GET/SET 相关的魔术方法
 
-### 旧式类(经典类)和新式类
+## 旧式类(经典类)和新式类
 由于历史原因，Python 中的类分为旧式类(old-style class)和在 Python 2.2 中引入的新式类(new-style class),引入这个新式类的目的主要是为了统一类(class)和类型(type)。简单的说来，对于新式类中的 `x` 实例，有`type(x) == x.__class__`（在旧式类中二者不一致）。另外，新式类中为对象提供了一套完整的“元模型”（对纯 Python 代码而言，就是一系列的魔术方法），使新式类的功能更强大。**下文讨论的所有 magic-method 全部针对新式类。**
 
 新旧式类的主要区别示例：
@@ -38,7 +37,7 @@ dir(new_instance) # ['__class__', '__delattr__', '__dict__', '__doc__', '__forma
 在实际开发中，建议全部使用新式类。另外，在 Python3 中，已经去掉了旧式类的概念，全部都是新式类。
 
 
-### 魔术方法
+## 魔术方法
 
 1. `object.__getattribute__`
 在获取对象的 **任意** 属性时 **无条件** 执行。
@@ -92,7 +91,7 @@ if __name__ == '__main__':
 
 2. `object.__getattr__` 和 `object.__setattr__`
 `__getattr__` 在获取对象的属性，且该属性不存在时调用（`__getattribute__`抛出 `AttributeError` 时调用）。
-例如，我们打算创建一个 “用点号访问的字典类型” 的类
+例如，我们打算创建一个 “用点号访问的字典类型” 的类：
 ```python
 # -*- coding: utf-8 -*-
 class DotDict(object):
@@ -158,5 +157,3 @@ def hasattr_(obj, name):
     except AttributeError:
         return False
 ```
-
-4. `__get__` 和 `__set__`
