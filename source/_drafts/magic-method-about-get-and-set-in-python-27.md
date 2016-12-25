@@ -192,3 +192,35 @@ assert(m.y == 5) # y 不是一个描述器，没有输出
 ```
 
 描述器在 Python 内应用相当广泛，比如常用的 property/staticmethod/classmethod 内部都使用了描述器。更多关于描述器的详细介绍，可以参照[官方文档](https://docs.python.org/2/howto/descriptor.html) ，或其[中文译本](http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html)。
+
+5. `__getitem__` , `__setitem__` 和 `__contain__`
+这两个魔术方法和其它的魔术方法比较好区分，因为它们是作用于容器类型（例如 `dict/tuple/list`）,在 `self[key]` 时调用。比如 `list` 中的负索引的实现，就是使用了 `__getitem__` 的方法。这里需要注意，内置的 `dict/tuple/list` 等的这个方法不能被直接修改。
+
+```python
+class Language(object):
+    def __init__(self):
+        self.languages = {}
+
+    def __getitem__(self, language):
+        ver = self.languages.get(language)
+        if not ver:
+            print 'There is no language named {}.'.format(language)
+        return self.languages.get(language)
+
+    def __setitem__(self, language, version):
+        old_version = self.languages.get(language)
+        print 'Language update from version {} to {}'.format(old_version or 0,version)
+        self.languages[language] = version
+
+lang = Language()
+assert(lang['python'] == None)
+# 输出: There is no language named python.
+lang['python'] = '2.7'
+# 输出： Language update from version None to 0 to 2.7
+lang['python'] = '3.6'
+# 输出： Language update from version None to 2.7 to 3.6
+assert(lang['python'] == '3.6')
+# 没有输出
+```
+
+当我们使用 `in` 时，会优先调用 `__contain__` 方法，如果没有则使用 `__iter__`，最后尝试 `__getitem__`。
