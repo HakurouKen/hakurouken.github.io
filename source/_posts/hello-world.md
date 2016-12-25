@@ -20,7 +20,10 @@ date: 2016-12-11 18:14:10
 
 ## 关于我
 
+hakurouken 是罗马音的“白楼剑(はくろうけん)”,是东方 Project 中魂魄妖梦的短刀。
+
 Github: [HakurouKen](https://github.com/HakurouKen/)
+邮箱： [Ticshot@gmail.com](mailto:Ticshot@gmail.com)
 
 ## 头像
 
