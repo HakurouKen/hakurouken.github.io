@@ -87,7 +87,7 @@ if __name__ == '__main__':
     #   Try to get attribute `__class__`
 ```
 
-`__getattribute__` 是相对底层的方法，在实际开发中，很少涉及到(并且也不建议)对其进行重载。如果修改默认的 `__getattribute__`，也会对 `__getattr__` 和描述符的调用产生影响。另外需要注意的是，`__getattribute__` 没有与之对应的 set 方法。
+`__getattribute__` 是相对底层的方法，在实际开发中，很少涉及到(并且也 **不建议** )对其进行重载。如果修改默认的 `__getattribute__`，也会对 `__getattr__` 和描述符的调用产生影响。另外需要注意的是，`__getattribute__` 没有与之对应的 set 方法。
 
 2. `object.__getattr__` 和 `object.__setattr__`
 `__getattr__` 在获取对象的属性，且该属性不存在时调用（`__getattribute__`抛出 `AttributeError` 时调用）。
@@ -157,3 +157,38 @@ def hasattr_(obj, name):
     except AttributeError:
         return False
 ```
+
+4. `__get__` ， `__set__` 和描述器(Descriptor)
+在 Python 中，描述器是指一个访问控制(可以简单理解为getter/setter)被对应的协议方法重写的 **对象属性**。这里的“访问控制”对应的魔术方法有 `__get__(self, obj, type=None)`, `__set__(self, obj, value)` 和 `__delete__(self, obj)`。其中定义了 `__get__` 和 `__set__` 的方法叫做 **资料描述器(data descriptor)**, 只定义了 `__get__` 的方法叫做 **非资料描述器(non-data descriptor)**。
+对于 `obj.attr`，如果寻找到的 `attr` 属性定义了 `__get__` 方法，则会按照 **资料描述器 -> 实例变量 -> 非资料描述器 -> __getattr__ （如果有）** 的顺序来查找执行。
+描述器的概念相对抽象，这里看一个官方给的描述器的例子：
+```python
+class RevealAccess(object):
+    """A data descriptor that sets and returns values
+       normally and prints a message logging their access.
+    """
+
+    def __init__(self, initval=None, name='var'):
+        self.val = initval
+        self.name = name
+
+    def __get__(self, obj, objtype):
+        print 'Retrieving', self.name
+        return self.val
+
+    def __set__(self, obj, val):
+        print 'Updating', self.name
+        self.val = val
+
+class MyClass(object):
+    x = RevealAccess(10, 'var "x"')
+    y = 5
+
+m = MyClass()
+assert(m.x == 10) # 输出： Retrieving var "x"
+m.x = 20 # 输出： Updating var "x"
+assert(m.x == 20) # 输出： Retrieving var "x"
+assert(m.y == 5) # y 不是一个描述器，没有输出
+```
+
+描述器在 Python 内应用相当广泛，比如常用的 property/staticmethod/classmethod 内部都使用了描述器。更多关于描述器的详细介绍，可以参照[官方文档](https://docs.python.org/2/howto/descriptor.html) ，或其[中文译本](http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html)。
