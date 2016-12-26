@@ -2,7 +2,7 @@
 title: 对 Django URL 路由机制的思考与改进
 tags:
   - python
-  - Django
+  - django
 date: 2016-12-15 02:36:58
 ---
 
