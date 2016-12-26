@@ -58,32 +58,31 @@ class Person(object):
         # 这里不能使用 self.name, 否则会导致循环递归，抛出 RuntimeError
         return object.__getattribute__(self,name)
 
-if __name__ == '__main__':
-    person = Person('male')
-    assert(person.sex == 'male')
-    # 这里直接取了 sex 变量，输出:
-    #   Try to get attribute: `sex`.
-    person.growup()
-    # 这里直接取了 growup 变量，在 growup 内又取了 age 变量，因此输出：
-    #   Try to get attribute: `growup`.
-    #   Try to get attribute `age`.
-    try:
-        person.haha
-    except AttributeError as err:
-        print 'Got an AttributeError'
-    # 取了不存在的变量 haha，也会触发 __getattribute__
-    # 输出：
-    #   Try to get attribute `haha`.
-    #   Got an AttributeError
-    assert(person.ANCIENT == 'ape')
-    # 获取类变量时，__getattribute__ 也会触发
-    # 输出：
-    #   Try to get attribute `ANCIENT`
-    assert(Person.ANCIENT == 'ape')
-    # __getattribute__ 是对象的属性，从类直接获取类变量，不会调用，没有输出
-    assert(person.__class__ == Person)
-    # 取内部变量时，__getattribute__ 也会触发
-    # 输出:
+person = Person('male')
+assert(person.sex == 'male')
+# 这里直接取了 sex 变量，输出:
+#   Try to get attribute: `sex`.
+person.growup()
+# 这里直接取了 growup 变量，在 growup 内又取了 age 变量，因此输出：
+#   Try to get attribute: `growup`.
+#   Try to get attribute `age`.
+try:
+    person.haha
+except AttributeError as err:
+    print 'Got an AttributeError'
+# 取了不存在的变量 haha，也会触发 __getattribute__
+# 输出：
+#   Try to get attribute `haha`.
+#   Got an AttributeError
+assert(person.ANCIENT == 'ape')
+# 获取类变量时，__getattribute__ 也会触发
+# 输出：
+#   Try to get attribute `ANCIENT`
+assert(Person.ANCIENT == 'ape')
+# __getattribute__ 是对象的属性，从类直接获取类变量，不会调用，没有输出
+assert(person.__class__ == Person)
+# 取内部变量时，__getattribute__ 也会触发
+# 输出:
     #   Try to get attribute `__class__`
 ```
 
