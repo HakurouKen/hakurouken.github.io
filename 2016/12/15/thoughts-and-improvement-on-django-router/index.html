@@ -1,0 +1,655 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,django," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="在 Django 中配置路由看上去是个很简单的事，就是在 urlpatterns 里加一个 url 对象而已。但是，在项目中有上百个路由的时候，维护这个 urlpatterns 就变得分外蛋疼。而且涉及到在多人在同一台服务器协作的时候，又会出现相互覆盖/一个人的代码导致整个服务器崩溃的问题。本文即是讨论这种问题在特定场景下的解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对 Django URL 路由机制的思考与改进">
+<meta property="og:url" content="http://blog.sevenplus.me/2016/12/15/thoughts-and-improvement-on-django-router/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="在 Django 中配置路由看上去是个很简单的事，就是在 urlpatterns 里加一个 url 对象而已。但是，在项目中有上百个路由的时候，维护这个 urlpatterns 就变得分外蛋疼。而且涉及到在多人在同一台服务器协作的时候，又会出现相互覆盖/一个人的代码导致整个服务器崩溃的问题。本文即是讨论这种问题在特定场景下的解决方案。">
+<meta property="og:updated_time" content="2016-12-26T14:05:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对 Django URL 路由机制的思考与改进">
+<meta name="twitter:description" content="在 Django 中配置路由看上去是个很简单的事，就是在 urlpatterns 里加一个 url 对象而已。但是，在项目中有上百个路由的时候，维护这个 urlpatterns 就变得分外蛋疼。而且涉及到在多人在同一台服务器协作的时候，又会出现相互覆盖/一个人的代码导致整个服务器崩溃的问题。本文即是讨论这种问题在特定场景下的解决方案。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2016/12/15/thoughts-and-improvement-on-django-router/"/>
+
+
+
+
+
+  <title> 对 Django URL 路由机制的思考与改进 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2016/12/15/thoughts-and-improvement-on-django-router/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                对 Django URL 路由机制的思考与改进
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-15T02:36:58+08:00">
+                2016-12-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 Django 中配置路由看上去是个很简单的事，就是在 urlpatterns 里加一个 url 对象而已。但是，在项目中有上百个路由的时候，维护这个 urlpatterns 就变得分外蛋疼。而且涉及到在多人在同一台服务器协作的时候，又会出现相互覆盖/一个人的代码导致整个服务器崩溃的问题。本文即是讨论这种问题在特定场景下的解决方案。</p>
+<a id="more"></a>
+<h2 id="Django-中的路由"><a href="#Django-中的路由" class="headerlink" title="Django 中的路由"></a>Django 中的路由</h2><p>对于大多数项目，Django 的 URL 匹配，基本遵循这个流程：</p>
+<ol>
+<li>读取 <code>&lt;project&gt;/settings.py</code> 中配置的 <code>ROOT_URLCONF</code>, 作为总入口。</li>
+<li>读取 <code>urlpatterns</code>。这是一个 <code>django.conf.urls.url()</code> 的 <code>list/tuple</code>.</li>
+<li>按顺序匹配 <code>urlpatterns</code> 中的每一个 url,匹配成功则停止。如果没有匹配到，进行错误处理。</li>
+</ol>
+<p>至此，Django 就成功将一个 URL 对应到了一个 view-function(或 view-class) + 参数 的组合。当然，这里有一些特例，比如 <code>Request</code> 对象被中间件设置了 <code>urlconf</code> 属性，Django 就会采用这个值做入口。更为详细的说明，可以参照<a href="https://docs.djangoproject.com/en/1.10/topics/http/urls/#how-django-processes-a-request" target="_blank" rel="external">Django官方文档</a>。</p>
+<h2 id="Django-路由实际使用中的一些问题"><a href="#Django-路由实际使用中的一些问题" class="headerlink" title="Django 路由实际使用中的一些问题"></a>Django 路由实际使用中的一些问题</h2><h3 id="开发环境说明"><a href="#开发环境说明" class="headerlink" title="开发环境说明"></a>开发环境说明</h3><p>在说明问题之前，首先同步下我们团队采用的开发模式：</p>
+<ol>
+<li>远程开发，本地使用脚手架生成/监控代码，并自动上传同步到开发环境。</li>
+<li>在开发环境的 uwsgi 下设置自动重启。</li>
+</ol>
+<p>选择这样的开发模式，主要是由于开发时使用的 DB 在本机没有连接权限，由于涉及到和不同的开发对接，也不能把 DB 放在本地开发。另外，团队之前不是 python 开发背景，每个人本地 Python 版本也不一致，很多人也没有采用 pip 和 virtualenv 来管理依赖/环境，在服务器可以保证开发环境统一，避免开发完成后提测出现些奇怪的问题。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在这种开发模式下，<strong>所有人都工作在同一台服务器上并行开发</strong>。随着项目增大 &amp;&amp; 并行进行的任务增多，逐渐出现一些问题：</p>
+<ol>
+<li><p>路由配置经常会相互覆盖。这个问题，多数路由管理的解决方案是一种类似“切片”的方法：对于 Django 来说，就是把 url 配置分配到不同的地方，然后再 include 进来。但是问题并没有彻底解决：如果分片的粒度太大（比如以 APP 为单位），覆盖问题还是会经常出现；分片粒度太小，又难以管理，度比较难把握。</p>
+</li>
+<li><p>几个模块并行开发时，一个人在自己的 view 文件里写了些错误代码导致 import 时产生异常（比如写了个 SyntaxError），就会导致整个系统都崩掉，影响其他人的开发。</p>
+</li>
+<li><p>不少 view 的逻辑都很轻（比如只是直接读个 DB 返回），还要配置个 URL，群众表示好麻烦…</p>
+</li>
+</ol>
+<h2 id="多人协同模式下的-Django-路由"><a href="#多人协同模式下的-Django-路由" class="headerlink" title="多人协同模式下的 Django 路由"></a>多人协同模式下的 Django 路由</h2><p>为了解决这几个问题，经过不断的摸索，我们引入了一套动态加载 VIEW 的机制。大概思路就是根据实际文件路径，通过特定的变换规则，映射到对应的 view_func. 这里需要注意的是，这个变换规则最好不要太复杂，否则后续会变得越来越难维护。</p>
+<p>函数具体流程大概分几步：</p>
+<ol>
+<li>遍历得到所有 views 文件的路径。</li>
+<li>引入所有 views—pack 。</li>
+<li>inspect 得到所有的 view-func , 根据路径生成了路由。</li>
+</ol>
+<h3 id="遍历-views-文件"><a href="#遍历-views-文件" class="headerlink" title="遍历 views 文件"></a>遍历 views 文件</h3><p>首先用 <code>os.listdir</code> 得到的文件夹和 <code>INSTALLED_APPS</code> 取一个交集，获取所有需要遍历的 APP。之后 <code>os.walk</code> 得到所有的 <code>.py</code> 文件（这里要做一些额外的判断，比如子文件夹是不是含有 <code>__init__.py</code>）。在我们的项目中，所有的对外视图文件都以 views.py 结尾，这里需要多做一步过滤。另外为了兼容老代码，这里做了一些特例判断，比如如果该 app 下有 <code>urls.py</code>,就直接 include, 跳过所有这些逻辑。</p>
+<h3 id="package-引入"><a href="#package-引入" class="headerlink" title="package 引入"></a>package 引入</h3><p>将相对于项目跟路径，转化成 dot-style 的包名 ,用 <code>importlib</code> 或 <code>__import__</code> 引入，在引入过程时用 try/catch 包裹，如果 import 时产生错误，我们会包装一个特定的 “会抛出错误的VIEW”，加到所有正常 URL 匹配的队尾。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="comment"># 注意这段代码只能应用于 Python 2, Python 3 中去掉了 raise 的这个语法，这里需要稍微改写一下。</span></div><div class="line"><span class="comment"># 详见： https://docs.python.org/3/reference/simple_stmts.html#the-raise-statement</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">reraise</span><span class="params">(err_type,err_value,err_traceback)</span>:</span></div><div class="line">    <span class="string">''' wrapper the error and reraise in specific view '''</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></div><div class="line">        <span class="keyword">raise</span> err_type, err_value, err_traceback</div><div class="line">    <span class="keyword">return</span> wrapper</div><div class="line"></div><div class="line"><span class="comment"># 这里省略了一些必要的初始化代码</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    pack = importlib.import_module(view)</div><div class="line"><span class="keyword">except</span>:</div><div class="line">    <span class="comment"># 这里的路由绑定在包对应的名称</span></div><div class="line">    <span class="comment"># 比如这个 view 的路径是 app/something/wow.py</span></div><div class="line">    <span class="comment"># 路由就绑定 /app/something/wow</span></div><div class="line">    error_patterns.append(</div><div class="line">        url(regex,reraise(*sys.exc_info()))</div><div class="line">    )</div><div class="line"></div><div class="line"><span class="comment"># 在所有的 VIEWS 遍历结束后，将错误路由放在最后</span></div><div class="line">urlpatterns += error_patterns</div></pre></td></tr></table></figure>
+<p>用 <code>inspect</code> 遍历 import 的包，筛选出所有的 view. 我们业务中的 view，为了方便格式化输出数据，都被自定义的一套 <code>render</code> 装饰器装饰。我们只要改动下这个装饰器，为被装饰函数加一个标识，即可方便的筛选出需要绑定路由的函数/类。这样的做法，可以做到几乎对业务代码无侵入。</p>
+<p>最简单的装饰器，大概长这样：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">route</span><span class="params">(func)</span>:</span></div><div class="line"><span class="meta">    @wraps(func)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args,**kwargs)</span>:</span></div><div class="line">        <span class="keyword">return</span> func(*args,**kwargs)</div><div class="line">    wrapper._auto_urlconf = <span class="keyword">True</span></div><div class="line">    <span class="keyword">return</span> wrapper</div></pre></td></tr></table></figure></p>
+<p>之后我们只需要判断 <code>getattr(func,&#39;_auto_urlconf&#39;,None)</code> 的值，就知道这个是不是我们需要让用户直接执行的 view 了。<br>有了 view-func 和对应的路径，我们就可以生成 url 了。然后添加到 urlpatterns, 大功告成！</p>
+<h2 id="通用性的改进"><a href="#通用性的改进" class="headerlink" title="通用性的改进"></a>通用性的改进</h2><p>上面的方法虽然解决了我们项目中的问题，但还不是很通用（比如对 RESTFUL 完全不能支持）。对此我们需要做一些改进。</p>
+<h3 id="支持自定义子路由与路由名称"><a href="#支持自定义子路由与路由名称" class="headerlink" title="支持自定义子路由与路由名称"></a>支持自定义子路由与路由名称</h3><p>把我们的装饰器升级一下，改成这样(省略部分 import 代码)：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">UrlConf = namedtuple(<span class="string">'UrlConf'</span>,[<span class="string">'url'</span>,<span class="string">'name'</span>])</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">route</span><span class="params">(url=None,name=None)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">resolver</span><span class="params">(func)</span>:</span></div><div class="line"><span class="meta">        @wraps(func)</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args,**kwargs)</span>:</span></div><div class="line">            <span class="keyword">return</span> func(*args,**kwargs)</div><div class="line">        wrapper._auto_urlconf = UrlConf(url,name)</div><div class="line">        <span class="keyword">return</span> wrapper</div><div class="line">    <span class="keyword">return</span> resolver</div></pre></td></tr></table></figure></p>
+<p>让我们的内部变量携带更多信息（子路由/路由名称），之后遍历时，将 <code>_auto_urlconf</code> 的路由信息作为一个 <strong>子路由</strong> 追加。这里的子路由的概念大概相当于 django 中的 <code>include</code>：比如针对 <code>app/demo.py</code> 文件下的 <code>func</code>, 指定匹配子路由 <code>/func/(\d+)/$</code>，最终将会匹配 <code>/app/demo/func/(\d+)/$</code>。</p>
+<h3 id="支持连字符-下划线-驼峰等多重格式"><a href="#支持连字符-下划线-驼峰等多重格式" class="headerlink" title="支持连字符/下划线/驼峰等多重格式"></a>支持连字符/下划线/驼峰等多重格式</h3><p>在绑定 URL 时，不能直接用文件路径，需要进行一步转换。这里为了方便，可以假定所有 函数名都是满足 PEP8 的 snake_style 。</p>
+<h3 id="支持截断与自定义转化"><a href="#支持截断与自定义转化" class="headerlink" title="支持截断与自定义转化"></a>支持截断与自定义转化</h3><p>比如项目所有的 views 定义在 <code>views.py</code> 下，又不想让路由中出现 <code>view</code> 这种字样，这时就需要在绑定前指定一个 transform 方法，根据统一的 transform 转换路由。</p>
+<p>按照上述思路，大致整理了一个 <code>django-auto-route</code> 的库。欢迎来 <a href="https://github.com/HakurouKen/django-auto-route/" target="_blank" rel="external">Github</a> Fork/Star。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>注意，这里讨论的对于 Django 路由的 “优化” 是基于我们特定的需求/开发模式下的，并不是银弹。比如，如果需要的 URL 全是较为复杂的 RESTFUL 接口，这种方式就完全不适合。在实际使用中，需要根据自己业务的需求选择。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/django/" rel="tag"># django</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/11/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Django-中的路由"><span class="nav-number">1.</span> <span class="nav-text">Django 中的路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Django-路由实际使用中的一些问题"><span class="nav-number">2.</span> <span class="nav-text">Django 路由实际使用中的一些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发环境说明"><span class="nav-number">2.1.</span> <span class="nav-text">开发环境说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">2.2.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多人协同模式下的-Django-路由"><span class="nav-number">3.</span> <span class="nav-text">多人协同模式下的 Django 路由</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#遍历-views-文件"><span class="nav-number">3.1.</span> <span class="nav-text">遍历 views 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#package-引入"><span class="nav-number">3.2.</span> <span class="nav-text">package 引入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通用性的改进"><span class="nav-number">4.</span> <span class="nav-text">通用性的改进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#支持自定义子路由与路由名称"><span class="nav-number">4.1.</span> <span class="nav-text">支持自定义子路由与路由名称</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持连字符-下划线-驼峰等多重格式"><span class="nav-number">4.2.</span> <span class="nav-text">支持连字符/下划线/驼峰等多重格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#支持截断与自定义转化"><span class="nav-number">4.3.</span> <span class="nav-text">支持截断与自定义转化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
