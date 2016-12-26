@@ -224,3 +224,307 @@ assert(lang['python'] == '3.6')
 ```
 
 当我们使用 `in` 时，会优先调用 `__contain__` 方法，如果没有则使用 `__iter__`，最后尝试 `__getitem__`。
+
+
+## Python 中的点号调用
+
+Python 中的点号调用，主要的逻辑集中在 `__getattribute__` ，在 `__getattribute__` 执行完毕后，只需要根据是否抛出 `AttributeError` 判断是否执行 `__getattr__`（如果有），之后即可得到最终结果。下文主要描述 `__getattribute__` 的内部实现。
+
+### `__getattribute__` 的执行过程
+先上结论：
+下面讨论的过程，**只针对于非内建属性**，内建属性(例如`__doc__`)将会直接从 slot 中取，这里不列入考虑。
+对于对象`object.__getattribute__` 和类`type.__getattribute__`处理方式稍微有些不同。
+
+对于对象，Python 查找 `obj.attr_name` 的过程如下:
+1. 沿着 MRO 寻找 `attr_name` 对应的值（并保存下结果`descr`），如果 `descr` 是资料描述器，执行`__get__(obj,type(obj))`并返回。
+2. 在 `obj.__dict__` 中寻找对象属性，如果寻找到了，返回（这里找到的值就是实例变量）。
+3. 如果在 步骤1 中 `descr` 为非资料描述器，执行`__get__(obj,type(obj))`并返回。
+4. 在 步骤1 中 `descr` 不是个描述器，直接返回（这里就是类变量）。
+5. 什么都没找到，抛出 `AttributeError`。
+
+对于类，Python 查找 `Cls.attr_name` 和对象类似，具体的过程如下：
+1. 沿着 MRO 寻找 `attr_name` 对应的值（并保存下这个结果 `meta_attribute`），如果是资料描述器，执行 `__get__(Cls,type(Cls))`并返回。
+2. 在 `Cls.__dict__` 中寻找对象属性：
+    1. 如果找到了属性，且属性为描述器，执行 `__get__(None,Cls)` 并返回结果。
+    2. 如果找到了属性，且属性不是描述器，返回结果。
+    3. 如果没找到属性，继续。
+3. 如果在 步骤1 中的 `meta_attribute` 为非资料描述器，执行 `__get__(Cls, type(Cls))` 并返回。
+4. 在 步骤1 `meta_attribute` 中找到的不是描述器，直接返回。
+5. 什么都没找到，抛出 `AttributeError`。
+
+可以看到，对象和类的不同处理方式主要在 `__dict__` 中找到的值如果是描述器，需不需要再做处理。
+
+### `__getattribute__` 在 CPython 中的实现
+
+首先看对于对象的实现，在 Python 的官方提供的 [C-API](https://docs.python.org/2/c-api/object.html#c.PyObject_GetAttr) 中，我们可以看到上层的 Python 代码`o.attr_name` 对应 CPython 中底层 C 代码的 `PyObject* PyObject_GetAttr(PyObject *o, PyObject *attr_name)`。
+
+`PyObject_GetAttr` 的完整代码如下(在 `Objects/object.c`)：
+```c
+PyObject *
+PyObject_GetAttr(PyObject *v, PyObject *name)
+{
+    PyTypeObject *tp = Py_TYPE(v);
+    /* 省略了一些字符串/unicode 校验代码 */
+    if (tp->tp_getattro != NULL)
+        return (*tp->tp_getattro)(v, name);
+    if (tp->tp_getattr != NULL)
+        return (*tp->tp_getattr)(v, PyString_AS_STRING(name));
+    PyErr_Format(PyExc_AttributeError,
+                 "'%.50s' object has no attribute '%.400s'",
+                 tp->tp_name, PyString_AS_STRING(name));
+    return NULL;
+}
+```
+
+`Py_TYPE` 是一个宏定义，实质是将对象转 `PyObject` 后取 `ob_type`（参见 `Include/object.h`）。这里的 `ob_type` 被称作元类，是一个 `PyTypeObject` 的指针。对于一个 `object` 对象，可以见到它的完整定义：
+
+```c
+PyTypeObject PyBaseObject_Type = {
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
+    "object",                                   /* tp_name */
+    sizeof(PyObject),                           /* tp_basicsize */
+    0,                                          /* tp_itemsize */
+    object_dealloc,                             /* tp_dealloc */
+    0,                                          /* tp_print */
+    0,                                          /* tp_getattr */
+    0,                                          /* tp_setattr */
+    0,                                          /* tp_compare */
+    object_repr,                                /* tp_repr */
+    0,                                          /* tp_as_number */
+    0,                                          /* tp_as_sequence */
+    0,                                          /* tp_as_mapping */
+    (hashfunc)_Py_HashPointer,                  /* tp_hash */
+    0,                                          /* tp_call */
+    object_str,                                 /* tp_str */
+    PyObject_GenericGetAttr,                    /* tp_getattro */
+    PyObject_GenericSetAttr,                    /* tp_setattro */
+    0,                                          /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
+    PyDoc_STR("The most base type"),            /* tp_doc */
+    0,                                          /* tp_traverse */
+    0,                                          /* tp_clear */
+    0,                                          /* tp_richcompare */
+    0,                                          /* tp_weaklistoffset */
+    0,                                          /* tp_iter */
+    0,                                          /* tp_iternext */
+    object_methods,                             /* tp_methods */
+    0,                                          /* tp_members */
+    object_getsets,                             /* tp_getset */
+    0,                                          /* tp_base */
+    0,                                          /* tp_dict */
+    0,                                          /* tp_descr_get */
+    0,                                          /* tp_descr_set */
+    0,                                          /* tp_dictoffset */
+    object_init,                                /* tp_init */
+    PyType_GenericAlloc,                        /* tp_alloc */
+    object_new,                                 /* tp_new */
+    PyObject_Del,                               /* tp_free */
+};
+```
+
+在这里，我们需要关注的就是 `PyObject_GenericGetAttr` 这个函数。`__getattribute__` 的核心逻辑就是在这个函数中完成的。在 Python 的 [C-API](https://docs.python.org/2/c-api/object.html#c.PyObject_GenericGetAttr) 中也解释了它的功能：在对象的 MRO 中类的字典中查询对应的描述符，并在 `__dict__` 中查询对应属性（如果存在的话），然后按照 资料描述器 -> 实例属性 -> 非示例属性的顺序获取属性。如果都没有，则会引发 `AttributeError`。
+
+下文的代码演示在 Python 2.7.13 源代码的基础上做了改动，省略掉了一些校验和 `PyObject_GenericGetAttr` 调用 `_PyObject_GenericGetAttrWithDict` 中不会走到的代码流程。
+```c
+/* Generic GetAttr functions - put these in your tp_[gs]etattro slot */
+PyObject *
+PyObject_GenericGetAttr(PyObject *obj, PyObject *name)
+{
+    return _PyObject_GenericGetAttrWithDict(obj, name, NULL);
+}
+
+PyObject *
+_PyObject_GenericGetAttrWithDict(PyObject *obj, PyObject *name, PyObject *dict)
+{
+    PyTypeObject *tp = Py_TYPE(obj);
+    PyObject *descr = NULL;
+    PyObject *res = NULL;
+    descrgetfunc f;
+    Py_ssize_t dictoffset;
+    PyObject **dictptr;
+
+    /* 这里省略掉了 PyString_Check 相关的校验代码 */
+
+    Py_INCREF(name);
+
+    /* 如果 __dict__ 不存在，判断是否初始化，如果初始化失败，直接抛异常 */
+    if (tp->tp_dict == NULL) {
+        if (PyType_Ready(tp) < 0)
+            goto done;
+    }
+
+    /*
+     * _PyType_Lookup 是一个沿着 MRO 搜索对应名称的内部 API，源代码说明如下：
+     * Internal API to look for a name through the MRO.
+     * This returns a borrowed reference, and doesn't set an exception!
+     */
+    descr = _PyType_Lookup(tp, name);
+    Py_XINCREF(descr);
+
+    f = NULL;
+    /* 如果找到了对应的描述器， 且描述器是资料描述器的话， 执行该描述器的 __get__，结束 */
+    if (descr != NULL &&
+        PyType_HasFeature(descr->ob_type, Py_TPFLAGS_HAVE_CLASS)) {
+        f = descr->ob_type->tp_descr_get;
+        if (f != NULL && PyDescr_IsData(descr)) {
+            res = f(descr, obj, (PyObject *)obj->ob_type);
+            Py_DECREF(descr);
+            goto done;
+        }
+    }
+
+    /*
+     * 由于传入的 dict 为 NULL，这里一定会进入这个分支。
+     * 可以看出，这里的操作就是把指针移到 __dict__ 区域对应的区域
+     */
+     if (dict == NULL) {
+         /* Inline _PyObject_GetDictPtr */
+         dictoffset = tp->tp_dictoffset;
+         if (dictoffset != 0) {
+             if (dictoffset < 0) {
+                 Py_ssize_t tsize;
+                 size_t size;
+
+                 tsize = ((PyVarObject *)obj)->ob_size;
+                 if (tsize < 0)
+                     tsize = -tsize;
+                 size = _PyObject_VAR_SIZE(tp, tsize);
+
+                 dictoffset += (long)size;
+                 assert(dictoffset > 0);
+                 assert(dictoffset % SIZEOF_VOID_P == 0);
+             }
+             dictptr = (PyObject **) ((char *)obj + dictoffset);
+             dict = *dictptr;
+         }
+     }
+
+
+     /*
+      * 如果有 __dict__ ，直接取对应的 name ，取到就返回。
+      */
+     if (dict != NULL) {
+         Py_INCREF(dict);
+         res = PyDict_GetItem(dict, name);
+         if (res != NULL) {
+             Py_INCREF(res);
+             Py_XDECREF(descr);
+             Py_DECREF(dict);
+             goto done;
+         }
+         Py_DECREF(dict);
+     }
+
+
+    /* 上文已经对资料描述器做了处理，这里处理非资料描述器 */
+    if (f != NULL) {
+        res = f(descr, obj, (PyObject *)Py_TYPE(obj));
+        Py_DECREF(descr);
+        goto done;
+    }
+
+    /* f == NULL , 说明沿 MRO 搜索到的是普通属性，直接把它返回 */
+    if (descr != NULL) {
+        res = descr;
+        /* descr was already increfed above */
+        goto done;
+    }
+
+    /* 上述查找全都失败，抛出 AttributeError */
+    PyErr_Format(PyExc_AttributeError,
+                 "'%.50s' object has no attribute '%.400s'",
+                 tp->tp_name, PyString_AS_STRING(name));
+  done:
+    Py_DECREF(name);
+    return res;
+}
+```
+至此，`__getattribute__` 的过程结束。
+
+对于类，大体和对象是一致的，只不过 `PyObject_GenericGetAttr` 变成了 `type_getattro`，如下：
+```c
+/* 官方注释也说，它们两个差不多... */
+/* This is similar to PyObject_GenericGetAttr(),
+   but uses _PyType_Lookup() instead of just looking in type->tp_dict. */
+static PyObject *
+type_getattro(PyTypeObject *type, PyObject *name)
+{
+    PyTypeObject *metatype = Py_TYPE(type);
+    PyObject *meta_attribute, *attribute;
+    descrgetfunc meta_get;
+
+    if (!PyString_Check(name)) {
+        PyErr_Format(PyExc_TypeError,
+                     "attribute name must be string, not '%.200s'",
+                     name->ob_type->tp_name);
+        return NULL;
+    }
+
+    /* Initialize this type (we'll assume the metatype is initialized) */
+    if (type->tp_dict == NULL) {
+        if (PyType_Ready(type) < 0)
+            return NULL;
+    }
+
+    /* No readable descriptor found yet */
+    meta_get = NULL;
+
+    /* Look for the attribute in the metatype */
+    meta_attribute = _PyType_Lookup(metatype, name);
+
+    if (meta_attribute != NULL) {
+        meta_get = Py_TYPE(meta_attribute)->tp_descr_get;
+
+        if (meta_get != NULL && PyDescr_IsData(meta_attribute)) {
+            /* Data descriptors implement tp_descr_set to intercept
+             * writes. Assume the attribute is not overridden in
+             * type's tp_dict (and bases): call the descriptor now.
+             */
+            return meta_get(meta_attribute, (PyObject *)type,
+                            (PyObject *)metatype);
+        }
+        Py_INCREF(meta_attribute);
+    }
+
+    /* No data descriptor found on metatype. Look in tp_dict of this
+     * type and its bases */
+    attribute = _PyType_Lookup(type, name);
+    if (attribute != NULL) {
+        /* Implement descriptor functionality, if any */
+        descrgetfunc local_get = Py_TYPE(attribute)->tp_descr_get;
+
+        Py_XDECREF(meta_attribute);
+
+        if (local_get != NULL) {
+            /* NULL 2nd argument indicates the descriptor was
+             * found on the target object itself (or a base)  */
+            return local_get(attribute, (PyObject *)NULL,
+                             (PyObject *)type);
+        }
+
+        Py_INCREF(attribute);
+        return attribute;
+    }
+
+    /* No attribute found in local __dict__ (or bases): use the
+     * descriptor from the metatype, if any */
+    if (meta_get != NULL) {
+        PyObject *res;
+        res = meta_get(meta_attribute, (PyObject *)type,
+                       (PyObject *)metatype);
+        Py_DECREF(meta_attribute);
+        return res;
+    }
+
+    /* If an ordinary attribute was found on the metatype, return it now */
+    if (meta_attribute != NULL) {
+        return meta_attribute;
+    }
+
+    /* Give up */
+    PyErr_Format(PyExc_AttributeError,
+                     "type object '%.50s' has no attribute '%.400s'",
+                     type->tp_name, PyString_AS_STRING(name));
+    return NULL;
+}
+```
