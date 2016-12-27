@@ -39,7 +39,7 @@ dir(new_instance) # ['__class__', '__delattr__', '__dict__', '__doc__', '__forma
 
 ## 魔术方法
 
-1. `object.__getattribute__`
+### `object.__getattribute__`
 在获取对象的 **任意** 属性时 **无条件** 执行。
 ```python
 # -*- coding: utf-8 -*-
@@ -88,7 +88,7 @@ assert(person.__class__ == Person)
 
 `__getattribute__` 是相对底层的方法，在实际开发中，很少涉及到(并且也 **不建议** )对其进行重载。如果修改默认的 `__getattribute__`，也会对 `__getattr__` 和描述符的调用产生影响。另外需要注意的是，`__getattribute__` 没有与之对应的 set 方法。
 
-2. `object.__getattr__` 和 `object.__setattr__`
+### `object.__getattr__` 和 `object.__setattr__`
 `__getattr__` 在获取对象的属性，且该属性不存在时调用（`__getattribute__`抛出 `AttributeError` 时调用）。
 例如，我们打算创建一个 “用点号访问的字典类型” 的类：
 ```python
@@ -139,7 +139,7 @@ assert(obj.key == None)
 obj.key = 'value'
 ```
 
-3. `getattr` 和 `setattr` (以及 `hasattr`)
+### `getattr` 和 `setattr` (以及 `hasattr`)
 `getattr` 、`setattr` 和 `hastattr` 是 Python 的内置函数，他们的表现比较直观:
 
 在不给定 default 时，`getattr(object, name[, default])` 表现和 `object.name` 一致。
@@ -157,7 +157,7 @@ def hasattr_(obj, name):
         return False
 ```
 
-4. `__get__` ， `__set__` 和描述器(Descriptor)
+### `__get__` ， `__set__` 和描述器(Descriptor)
 在 Python 中，描述器是指一个访问控制(可以简单理解为getter/setter)被对应的协议方法重写的 **对象属性**。这里的“访问控制”对应的魔术方法有 `__get__(self, obj, type=None)`, `__set__(self, obj, value)` 和 `__delete__(self, obj)`。其中定义了 `__get__` 和 `__set__` 的方法叫做 **资料描述器(data descriptor)**, 只定义了 `__get__` 的方法叫做 **非资料描述器(non-data descriptor)**。
 对于 `obj.attr`，如果寻找到的 `attr` 属性定义了 `__get__` 方法，则会按照 **资料描述器 -> 实例变量 -> 非资料描述器 -> __getattr__ （如果有）** 的顺序来查找执行。
 描述器的概念相对抽象，这里看一个官方给的描述器的例子：
@@ -192,7 +192,7 @@ assert(m.y == 5) # y 不是一个描述器，没有输出
 
 描述器在 Python 内应用相当广泛，比如常用的 property/staticmethod/classmethod 内部都使用了描述器。更多关于描述器的详细介绍，可以参照[官方文档](https://docs.python.org/2/howto/descriptor.html) ，或其[中文译本](http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html)。
 
-5. `__getitem__` , `__setitem__` 和 `__contain__`
+### `__getitem__` , `__setitem__` 和 `__contain__`
 这两个魔术方法和其它的魔术方法比较好区分，因为它们是作用于容器类型（例如 `dict/tuple/list`）,在 `self[key]` 时调用。比如 `list` 中的负索引的实现，就是使用了 `__getitem__` 的方法。这里需要注意，内置的 `dict/tuple/list` 等的这个方法不能被直接修改。
 
 ```python
@@ -527,3 +527,24 @@ type_getattro(PyTypeObject *type, PyObject *name)
     return NULL;
 }
 ```
+
+## 参考资料
+
+官方文档 / HOWTO：
+- [Python 内建函数](https://docs.python.org/2/library/functions.html) `getattr` 和 `setattr`
+- [Python 中的数据模型](https://docs.python.org/2/reference/datamodel.html)
+- [Python 中的内建类型](https://docs.python.org/2/library/stdtypes.html#internal-objects) `Internal-Objects`
+- [Python 中 in 操作符](https://docs.python.org/2/reference/expressions.html#membership-test-details)
+- [CPython-API 类型对象(PyTypeObject)](https://docs.python.org/2/c-api/type.html)
+- [CPython 对象协议](https://docs.python.org/2/c-api/object.html)
+- [Python 描述器 HowTo](https://docs.python.org/2/howto/descriptor.html)
+
+Stackoverflow:
+- [Python getattribute and setattribute ](http://stackoverflow.com/questions/14787334/confused-with-getattribute-and-setattribute-in-python#answer-14787522)
+- [Python `__getattribute__` method and descriptors](http://stackoverflow.com/questions/24863787/python-the-getattribute-method-and-descriptors#answer-24863898)
+- [Python `__getattr__` 与 `getattr`](http://stackoverflow.com/questions/1944625/what-is-the-relationship-between-getattr-and-getattr)
+
+其它：
+- [Python 描述器 HowTo 翻译](http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html)
+- [Python 魔术方法指南](http://pycoders-weekly-chinese.readthedocs.io/en/latest/issue6/a-guide-to-pythons-magic-methods.html)
+- [python 属性查找](http://blog.jidanke.com/2015/04/21/python-attribute-lookup/)
