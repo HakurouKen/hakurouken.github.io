@@ -3,6 +3,10 @@ title: Python 2.7 中 GET/SET 相关的魔术方法
 tags: python
 ---
 
+Python 中有很多关于 get/set 的魔术方法和内置方法，在官方文档中描述的相对分散，这里做个简单的总结。
+
+<!-- more -->
+
 ## 旧式类(经典类)和新式类
 由于历史原因，Python 中的类分为旧式类(old-style class)和在 Python 2.2 中引入的新式类(new-style class),引入这个新式类的目的主要是为了统一类(class)和类型(type)。简单的说来，对于新式类中的 `x` 实例，有`type(x) == x.__class__`（在旧式类中二者不一致）。另外，新式类中为对象提供了一套完整的“元模型”（对纯 Python 代码而言，就是一系列的魔术方法），使新式类的功能更强大。**下文讨论的所有 magic-method 全部针对新式类。**
 
