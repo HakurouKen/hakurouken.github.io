@@ -83,7 +83,7 @@ assert(Person.ANCIENT == 'ape')
 assert(person.__class__ == Person)
 # 取内部变量时，__getattribute__ 也会触发
 # 输出:
-    #   Try to get attribute `__class__`
+#   Try to get attribute `__class__`
 ```
 
 `__getattribute__` 是相对底层的方法，在实际开发中，很少涉及到(并且也 **不建议** )对其进行重载。如果修改默认的 `__getattribute__`，也会对 `__getattr__` 和描述符的调用产生影响。另外需要注意的是，`__getattribute__` 没有与之对应的 set 方法。
