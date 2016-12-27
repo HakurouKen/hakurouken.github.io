@@ -1,7 +1,9 @@
 ---
 title: Python 2.7 中 GET/SET 相关的魔术方法
 tags: python
+date: 2016-12-27 21:35:40
 ---
+
 
 Python 中有很多关于 get/set 的魔术方法和内置方法，在官方文档中描述的相对分散，这里做个简单的总结。
 
