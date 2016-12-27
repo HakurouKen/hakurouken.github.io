@@ -259,6 +259,8 @@ Python 中的点号调用，主要的逻辑集中在 `__getattribute__` ，在 `
 
 可以看到，对象和类的不同处理方式主要在 `__dict__` 中找到的值如果是描述器，需不需要再做处理。
 
+上文中多次提到了 MRO （Method Resolution Order)，这是在 Python 中解决多重继承中同名函数二义性的一种算法。对于单继承的情况，我们可以简单理解为一层一层向父级寻找。MRO相关的参考资料，可以参考 The History of Python 中的 [Method Resolution Order](http://python-history.blogspot.com/2010/06/method-resolution-order.html)。
+
 ### `__getattribute__` 在 CPython 中的实现
 
 首先看对于对象的实现，在 Python 的官方提供的 [C-API](https://docs.python.org/2/c-api/object.html#c.PyObject_GetAttr) 中，我们可以看到上层的 Python 代码`o.attr_name` 对应 CPython 中底层 C 代码的 `PyObject* PyObject_GetAttr(PyObject *o, PyObject *attr_name)`。
@@ -554,3 +556,4 @@ Stackoverflow:
 - [Python 描述器 HowTo 翻译](http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html)
 - [Python 魔术方法指南](http://pycoders-weekly-chinese.readthedocs.io/en/latest/issue6/a-guide-to-pythons-magic-methods.html)
 - [python 属性查找](http://blog.jidanke.com/2015/04/21/python-attribute-lookup/)
+- The History of Python 中的 [Method Resolution Order](http://python-history.blogspot.com/2010/06/method-resolution-order.html)
