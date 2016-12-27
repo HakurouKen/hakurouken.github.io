@@ -1,5 +1,5 @@
 ---
-title: Python 2.7 中 GET/SET 相关的魔术方法
+title: Python 2.7 中 GET/SET 相关的方法
 tags: python
 date: 2016-12-27 21:35:40
 ---
@@ -43,7 +43,7 @@ dir(new_instance) # ['__class__', '__delattr__', '__dict__', '__doc__', '__forma
 在实际开发中，建议全部使用新式类。另外，在 Python3 中，已经去掉了旧式类的概念，全部都是新式类。
 
 
-## 魔术方法
+## 魔术方法和内置方法
 
 ### `object.__getattribute__`
 在获取对象的 **任意** 属性时 **无条件** 执行。
