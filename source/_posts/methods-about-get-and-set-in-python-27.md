@@ -11,9 +11,7 @@ Python 中有很多关于 get/set 的魔术方法和内置方法，在官方文�
 
 ## 旧式类(经典类)和新式类
 由于历史原因，Python 中的类分为旧式类(old-style class)和在 Python 2.2 中引入的新式类(new-style class),引入这个新式类的目的主要是为了统一类(class)和类型(type)。简单的说来，对于新式类中的 `x` 实例，有`type(x) == x.__class__`（在旧式类中二者不一致）。另外，新式类中为对象提供了一套完整的“元模型”（对纯 Python 代码而言，就是一系列的魔术方法），使新式类的功能更强大。**下文讨论的所有 magic-method 全部针对新式类。**
-
 新旧式类的主要区别示例：
-
 ```python
 # -*- coding: utf-8 -*-
 class OldStyleClass:
@@ -38,13 +36,11 @@ type(new_instance) # <class '__main__.NewStyleClass'>
 new_instance.__class__ # <class '__main__.NewStyleClass'>
 dir(new_instance) # ['__class__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__',...]
 ```
-
 更多有关旧式类和新式类的区别，可以参照 [Python 的官方文档](https://docs.python.org/2/reference/datamodel.html#new-style-and-classic-classes)。
 在实际开发中，建议全部使用新式类。另外，在 Python3 中，已经去掉了旧式类的概念，全部都是新式类。
 
 
 ## 魔术方法和内置方法
-
 ### `object.__getattribute__`
 在获取对象的 **任意** 属性时 **无条件** 执行。
 ```python
@@ -116,9 +112,8 @@ assert(obj.key == 'value')
 #   __getattr__ called, name: `key`
 ```
 另外，如果重写了 `__getattribute__` 方法，导致其不抛出 `AttributeError`(正常返回，或抛出其它错误)，都会导致 `__getattr__` 不执行。
-
 `__setattr__` 是在为对象设定属性值时即会被调用。需要注意的是，这个触发时机和 `__getattr__` 并 **不对称**（却和 `__getattribute__`类似）。
-与 `__getattribute__`类似，我们不能在 `__setattr__` 中使用类似 `self.name = value` 这样的语句，否则会导致死循环。另外
+与 `__getattribute__`类似，我们不能在 `__setattr__` 中使用类似 `self.name = value` 这样的语句，否则会导致死循环。
 我们为上面的 `DotDict` 完善一个 set 方法如下：
 ```python
 # -*- coding: utf-8 -*-
@@ -147,12 +142,9 @@ obj.key = 'value'
 
 ### `getattr` 和 `setattr` (以及 `hasattr`)
 `getattr` 、`setattr` 和 `hastattr` 是 Python 的内置函数，他们的表现比较直观:
-
 在不给定 default 时，`getattr(object, name[, default])` 表现和 `object.name` 一致。
 给定 default 后，则会将 default 当作属性不存在（即抛出 `AttributeError`）时的默认值。
-
 `setattr(object, name, value)` 和 `object.name = value` 表现一致。
-
 `hasattr(object, name)` 的表现可以用下列的 Python 代码描述：
 ```python
 def hasattr_(obj, name):
@@ -195,12 +187,10 @@ m.x = 20 # 输出： Updating var "x"
 assert(m.x == 20) # 输出： Retrieving var "x"
 assert(m.y == 5) # y 不是一个描述器，没有输出
 ```
-
 描述器在 Python 内应用相当广泛，比如常用的 property/staticmethod/classmethod 内部都使用了描述器。更多关于描述器的详细介绍，可以参照[官方文档](https://docs.python.org/2/howto/descriptor.html) ，或其[中文译本](http://pyzh.readthedocs.io/en/latest/Descriptor-HOW-TO-Guide.html)。
 
 ### `__getitem__` , `__setitem__` 和 `__contain__`
 这两个魔术方法和其它的魔术方法比较好区分，因为它们是作用于容器类型（例如 `dict/tuple/list`）,在 `self[key]` 时调用。比如 `list` 中的负索引的实现，就是使用了 `__getitem__` 的方法。这里需要注意，内置的 `dict/tuple/list` 等的这个方法不能被直接修改。
-
 ```python
 class Language(object):
     def __init__(self):
@@ -227,7 +217,6 @@ lang['python'] = '3.6'
 assert(lang['python'] == '3.6')
 # 没有输出
 ```
-
 当我们使用 `in` 时，会优先调用 `__contain__` 方法，如果没有则使用 `__iter__`，最后尝试 `__getitem__`。
 
 
@@ -237,8 +226,7 @@ Python 中的点号调用，主要的逻辑集中在 `__getattribute__` ，在 `
 
 ### `__getattribute__` 的执行过程
 先上结论：
-下面讨论的过程，**只针对于非内建属性**，内建属性(例如`__doc__`)将会直接从 slot 中取，这里不列入考虑。
-对于对象`object.__getattribute__` 和类`type.__getattribute__`处理方式稍微有些不同。
+下面讨论的过程，**只针对于非内建属性**，内建属性(例如`__doc__`)将会直接从 slot 中取，这里不列入考虑。对于对象`object.__getattribute__` 和类`type.__getattribute__`处理方式稍微有些不同。
 
 对于对象，Python 查找 `obj.attr_name` 的过程如下:
 1. 沿着 MRO 寻找 `attr_name` 对应的值（并保存下结果`descr`），如果 `descr` 是资料描述器，执行`__get__(obj,type(obj))`并返回。
@@ -258,13 +246,11 @@ Python 中的点号调用，主要的逻辑集中在 `__getattribute__` ，在 `
 5. 什么都没找到，抛出 `AttributeError`。
 
 可以看到，对象和类的不同处理方式主要在 `__dict__` 中找到的值如果是描述器，需不需要再做处理。
-
 上文中多次提到了 MRO （Method Resolution Order)，这是在 Python 中解决多重继承中同名函数二义性的一种算法。对于单继承的情况，我们可以简单理解为一层一层向父级寻找。MRO相关的参考资料，可以参考 The History of Python 中的 [Method Resolution Order](http://python-history.blogspot.com/2010/06/method-resolution-order.html)。
 
 ### `__getattribute__` 在 CPython 中的实现
 
 首先看对于对象的实现，在 Python 的官方提供的 [C-API](https://docs.python.org/2/c-api/object.html#c.PyObject_GetAttr) 中，我们可以看到上层的 Python 代码`o.attr_name` 对应 CPython 中底层 C 代码的 `PyObject* PyObject_GetAttr(PyObject *o, PyObject *attr_name)`。
-
 `PyObject_GetAttr` 的完整代码如下(在 `Objects/object.c`)：
 ```c
 PyObject *
@@ -328,9 +314,7 @@ PyTypeObject PyBaseObject_Type = {
     PyObject_Del,                               /* tp_free */
 };
 ```
-
 在这里，我们需要关注的就是 `PyObject_GenericGetAttr` 这个函数。`__getattribute__` 的核心逻辑就是在这个函数中完成的。在 Python 的 [C-API](https://docs.python.org/2/c-api/object.html#c.PyObject_GenericGetAttr) 中也解释了它的功能：在对象的 MRO 中类的字典中查询对应的描述符，并在 `__dict__` 中查询对应属性（如果存在的话），然后按照 资料描述器 -> 实例属性 -> 非示例属性的顺序获取属性。如果都没有，则会引发 `AttributeError`。
-
 下文的代码演示在 Python 2.7.13 源代码的基础上做了改动，省略掉了一些校验和 `PyObject_GenericGetAttr` 调用 `_PyObject_GenericGetAttrWithDict` 中不会走到的代码流程。
 ```c
 /* Generic GetAttr functions - put these in your tp_[gs]etattro slot */
