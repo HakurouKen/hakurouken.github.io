@@ -53,8 +53,8 @@ absolute_import
 | division | 2.2.0a2 | 3.0 | 整数除法变为浮点数除法 | [PEP 238: Changing the Division Operator](https://www.python.org/dev/peps/pep-0238/) |
 | absolute_import | 2.5.0a1 | 3.0 | 绝对引入 | [PEP 328: Imports: Multi-Line and Absolute/Relative](https://www.python.org/dev/peps/pep-0328/) |
 | with_statement | 2.5.0.a1 | 2.6 | with 声明 | [PEP 343: The “with” Statement](https://www.python.org/dev/peps/pep-343/) |
-| print_function |2.6.0a2 | 3.0 | 强制 print 为函数 | [PEP 3105: Make print a function](https://www.python.org/dev/peps/pep-3105/) |
-| unicode_literals | 2.6.0a2 | 3.0 | 默认为 unicode | [PEP 3112: Bytes literals in Python 3000](https://www.python.org/dev/peps/pep-3105/) |
+| print_function | 2.6.0a2 | 3.0 | 强制 print 为函数 | [PEP 3105: Make print a function](https://www.python.org/dev/peps/pep-3105/) |
+| unicode_literals | 2.6.0a2 | 3.0 | 默认为 unicode | [PEP 3112: Bytes literals in Python 3000](https://www.python.org/dev/peps/pep-3112/) |
 | generator_stop | 3.5.0b1 | 3.7 | 生成器 | [PEP 479: StopIteration handling inside generators](https://www.python.org/dev/peps/pep-0479/) |
 | barry_as_FLUFL | 3.1.0a2 | 3.9 | `<>` 转为 `!=` | [PEP 401: BDFL Retirement](https://www.python.org/dev/peps/pep-0401/) |
 
