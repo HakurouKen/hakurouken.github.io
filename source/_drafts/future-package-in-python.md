@@ -6,8 +6,8 @@ tags: python
 有关这个库的探讨，网上有不少相关文章。不过相比较起来，还是官方文档对它的细节描述的最清楚详尽（针对每一个修改都有一篇对应的 PEP 文章说明），这里只对其进行简单的总结，特性的详细说明，可以参照对应的 PEP 文章。
 
 <!--more-->
-## 语法声明与解析过程
-先贴出官方的对于 future 声明的语法说明：
+## 语法与解析过程
+先贴出官方的对于 future 语句的语法说明：
 ```
 future_statement ::=  "from" "__future__" "import" feature ["as" name]
                       ("," feature ["as" name])*
@@ -32,9 +32,9 @@ import __future__
 # 下面的情况会报错
 # from __future__ import *
 ```
-同时，`__future__` 的引入还必须在模块的（接近）顶部。在 future 声明前，只允许存在：** docstring， 注释，空行 以及其他 future 声明 **。
-通过上述不同，我们可以发现，`__future__` 模块和普通的 `import` 的工作机制并不一样（future 声明和 import 声明两个语法就不一样了）。`__future__` 的[源代码](https://hg.python.org/cpython/file/3.6/Lib/__future__.py)很简单，里面只有一些声明。这些声明对应的语言解析特性，是硬编码在语言解析器中的。详细可以参照 [`Python/future.c`](https://hg.python.org/cpython/file/2.7/Python/future.c)。我们的每个 future 声明的 feature ，在 Python 解析器内部会被转换成对应的 flag，解析器根据有没有设置 flag 进行不同的判断。后续版本将某个特性置为默认后，会直接 PASS 掉对应的 flag ，并去掉相关的判断。
-另外对于 CPython 2.7 版本及之前有些特别，由于有一些 future 声明引入的声明会影响到后续语法树的解析，在 [`Parser/parser.c`](https://hg.python.org/cpython/file/2.7/Parser/parser.c) 解析的过程中，在 `future_hack` 中对一些会对 tokenizer 产生影响的部分（例如 `print_function`）做了特殊处理（设置一些特殊的 flag 作为后续 token 解析的条件）。后续在 3.0 中去掉了相关的部分（由于后续的 future 特性不会影响 token 分析）。
+同时，`__future__` 的引入还必须在模块的（接近）顶部。在 future 语句前，只允许存在：** docstring， 注释，空行 以及其他 future 语句 **。
+通过上述不同，我们可以发现，`__future__` 模块和普通的 `import` 的工作机制并不一样（future 语句 import 语句`__future__` 的[源代码](https://hg.python.org/cpython/file/3.6/Lib/__future__.py)很简单，里面只有一些声明。这些声明对应的语言解析特性，是硬编码在语言解析器中的。详细可以参照 [`Python/future.c`](https://hg.python.org/cpython/file/2.7/Python/future.c)。我们的每个 future 语句的 feature ，在 Python 解析器内部会被转换成对应的 flag，解析器根据有没有设置 flag 进行不同的判断。后续版本将某个特性置为默认后，会直接 PASS 掉对应的 flag ，并去掉相关的判断。
+另外对于 CPython 2.7 版本及之前有些特别，由于有一些 future 语句的引入会影响到后续语法树的解析，在 [`Parser/parser.c`](https://hg.python.org/cpython/file/2.7/Parser/parser.c) 解析的过程中，在 `future_hack` 中对一些会对 tokenizer 产生影响的部分（例如 `print_function`）做了特殊处理（设置一些特殊的 flag 作为后续 token 解析的条件）。后续在 3.0 中去掉了相关的部分（由于后续的 future 特性不会影响 token 分析）。
 
 ## `__future__` 特性
 `__future__` 包是一个“自解释的包”，当我们 import 进来的模块中，包含了特性引入的版本，和将要强制生效的版本，举个例子：
