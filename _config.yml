@@ -57,4 +57,4 @@ theme: next
 # Deployment
 deploy:
   type: shell
-  command: git commit -m "Publish." -- public/ && git push && git subtree push --prefix public origin master
+  command: git add public/* && git commit -m "Publish." -- public/ && git push && git subtree push --prefix public origin master
