@@ -60,6 +60,53 @@ absolute_import
 
 `barry_as_FLUFL` 这个并没有出现在 Python 的官方文档中（因为是个愚人节彩蛋），不过它确实添加了 `<>` 的语法。另外还有一个彩蛋：如果你不习惯使用缩进，可以用大括号的方式来替代缩进，只需要 `from __future__ import braces` 即可 （然而并不会被解析，抛出 `SyntaxError: not a chance`）。
 
+下面对几个常用的 `__future__` 特性做一些简要说明。
+
+### division
+在 Python2 中，两个`int`相除，得到的还是`int`；两个`float`/`int`和`float`相除，得到的都是浮点数。引入`division`，会把所有的除法结果统一为浮点数。如下：
+```
+In [1]: 5/3
+Out[1]: 1
+
+In [2]: from __future__ import division
+
+In [3]: 5/3
+Out[3]: 1.6666666666666667
+```
+### absolute_import
+`absolute_import` 看上去是绝对导入，然而它的实际的功能是 **禁用隐式相对导入**。在 PEP0328 中，也强烈建议不要使用隐式相对导入。网上相关的介绍也有很多，下文将用一个具体的例子，说明下隐式相对导入可能带来的一些问题。假设一个这样的目录结构：
+```python
+module
+│  common.py
+│  __init__.py
+│  __main__.py
+|
+├─client
+│      common.py
+│      __init__.py
+|      logic.py
+│
+└─server
+        common.py
+        __init__.py
+        logic.py
+```
+我们将整个 module 文件夹作为一个模块，执行 `python -m module`，那么对于 `client/logic.py` 文件：
+
+| 隐式相对导入 | 开启 | 关闭 |
+| --- | --- | --- |
+| `from . import common` | 导入`client.common`模块 | 导入`client.common`模块 |
+| `from server import common` | 导入`server.common`模块 | 导入`server.common` 模块 |
+| `import server` | 导入`server`模块 | 导入`server`模块 |
+| `import common` | 导入`client.common`模块 | 导入`common` 模块 |
+
+可以看出，在开启相对导入后，`import` 产生了一些二义性（`import server`和`import common`表现不同），这也是为什么对于 python2，**强烈建议开启`absolute_import`**的一个原因（当然，升级到 Py3 就没有这个烦恼了）。
+
+### print_function
+在 python2 中，`print`既是一个语句又是一个内置函数，引入`print_function`后，将会移除`print`语句。
+
+### unicode_literals
+简单的讲，开启`unicode_literals`后，会将 Python2 中的 `s="测试"` 变成 `s=u"测试"`，`unicode`和`str`两种字符串类型也是 Python2 中著名的坑，不再赘述（在 Python3 中已解决此问题）。** 建议开启 **。不过对于有些只接受`str`作为参数的函数（例如`datetime.datetime.strftime`），如果包含超出 ascii 范围的字符，在使用前要先`encode`一下。
 
 ## 参考资料
 - [Python 官方文档](https://docs.python.org/3/library/__future__.html)
