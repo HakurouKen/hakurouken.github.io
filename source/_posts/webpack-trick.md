@@ -1,9 +1,11 @@
 ---
 title: Webpack 使用技巧
 tags:
-    - webpack
-    - javascript
+  - webpack
+  - javascript
+date: 2016-12-30 20:30:28
 ---
+
 
 本文翻译自 Github [rstacruz/webpack-tricks](https://github.com/rstacruz/webpack-tricks)。
 
