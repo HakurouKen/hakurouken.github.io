@@ -99,3 +99,66 @@ module.exports = {
 }
 ```
 当构建生产环境组件时,需要这样调用 Webpack：`env NODE_ENV=production webpack -p`。
+
+## 查看包大小列表
+想要查看哪些依赖最大？你可以使用 webpack-bundle-size-analyzer。
+```
+$ yarn global add webpack-bundle-size-analyzer
+
+$ ./node_modules/.bin/webpack --json | webpack-bundle-size-analyzer
+jquery: 260.93 KB (37.1%)
+moment: 137.34 KB (19.5%)
+parsleyjs: 87.88 KB (12.5%)
+bootstrap-sass: 68.07 KB (9.68%)
+...
+```
+（注：作者这里用的 yarn, 类似于 npm 命令的`npm install webpack-bundle-size-analyzer --global`）
+如果你生成了 source map, 你可以使用 source-map-explorer, 它可以脱离 Webpack 使用。
+```
+$ yarn global add source-map-explorer
+
+$ source-map-explorer bundle.min.js bundle.min.js.map
+```
+> 相关：[webpack-bundle-size-analyzer](https://github.com/robertknight/webpack-bundle-size-analyzer)，[source-map-explorer](https://www.npmjs.com/package/source-map-explorer)
+
+## 更小的 React 库
+React 默认打包了开发工具，但我们在生产环境下并不需要。使用 DefinePlugin 去掉开发工具，可以减少大概 30kb 的大小。
+```javascript
+plugins: [
+  new webpack.DefinePlugin({
+    'process.env': {
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+    }
+  })
+]
+```
+在构建生产环境组件时，需要像这样调用 Webpack: `env NODE_ENV=production webpack -p`。
+
+## 更小的 Lodash 库
+Lodash 是个十分有用的库，但我们往往只需要它的一小部分功能。 lodash-webpack-plugin 使用 noop, identity 或其它更简单的替代方法替换原有功能，帮助你缩小构建后的 lodash。
+```javascript
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+
+const config = {
+  plugins: [
+    new LodashModuleReplacementPlugin({
+      path: true,
+      flattening: true
+    })
+  ]
+};
+```
+根据你使用 Lodash 的多少会缩减 >10kb 不等。
+
+## Require 一个文件夹下的所有文件
+```javascript
+require('./behaviors/*')  /* Doesn't work! */
+```
+使用 require.context 可以解决这一问题。
+```javascript
+// http://stackoverflow.com/a/30652110/873870
+function requireAll (r) { r.keys().forEach(r) }
+
+requireAll(require.context('./behaviors/', true, /\.js$/))
+```
+> 相关：[require.context](http://webpack.github.io/docs/context.html#require-context)
