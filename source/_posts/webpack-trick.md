@@ -11,6 +11,7 @@ date: 2016-12-30 20:30:28
 
 这里列举了一些我学到的 Webpack 技巧，所有下列技巧仅适用于 Webpack 1， Webpack 2 的 API 有些变动，因此有些技巧可能无法正常在 Webpack 2 中工作。[这篇文章](http://javascriptplayground.com/blog/2016/10/moving-to-webpack-2/)详细介绍了如何迁移到 Webpack 2。
 
+<!-- more -->
 ## 显示进度
 执行 Webpack 时添加参数：
 ```
