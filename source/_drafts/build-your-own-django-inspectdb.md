@@ -43,6 +43,9 @@ class Command(BaseCommand):
             return re.sub(r'[^a-zA-Z0-9]', '', table_name.title())
 
         # 取到对应链接的游标
+        # 这里的 connection 是 django.db.utils.ConnectionHandler 的实例，默认使用 settings.DATABASES 初始化
+        # https://github.com/django/django/blob/master/django/db/utils.py#L144
+        # 如果需要自定义 DB 而不使用 settings.DATABASES 的配置，这里可以改为自己新建的实例
         with connection.cursor() as cursor:
             # 输出公共头信息
             known_models = []
