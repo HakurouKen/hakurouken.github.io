@@ -16,6 +16,7 @@ python manage.py inspectdb --database YOUR_DB
 4. 同样的道理，我们希望把列名规范成下划线连接的方式
 
 鉴于以上原因，我决定基于原有根据业务改一个新的 inspectdb。
+<!-- more -->
 
 ## inspectdb 工作过程
 inspectdb 的源代码位于 `django/core/management/commands/inspectdb.py`下，可以在 [Github](https://github.com/django/django/blob/master/django/core/management/commands/inspectdb.py) 上看到其源码。对于 django-admin 的命令，执行入口在 handle 方法。如果对 django-command 还不了解的话，可以看官方文档的[Custom Command](https://docs.djangoproject.com/en/1.10/howto/custom-management-commands/)。粗略浏览一遍，代码的大致结构如下：
