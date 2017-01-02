@@ -1,9 +1,11 @@
 ---
 title: 打造自己的 django-inspectdb 命令
 tags:
-    - python
-    - django
+  - python
+  - django
+date: 2017-01-03 00:07:16
 ---
+
 
 Django 提供了一个 inspectdb 的指令，可以通过内省现有的数据库来创建 django 的 ORM models。执行起来也很简单:
 ```bash
