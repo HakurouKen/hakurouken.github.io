@@ -88,7 +88,7 @@ class Command(BaseCommand):
 知道了这些，再对源代码做修改，就容易很多了。
 
 ## 修改过程中遇到问题
-inspectdb 执行过程中，用到的数据库检查代码位于 `django/db/backends/<db>/introspection.py` 中。由于我们的后台数据库全部是 mysql，因此这里讨论 DB 相关的部分也全部针对 mysql。其它 DB 相关信息可以去对应的 backends 中查找。
+inspectdb 执行过程中，不同的数据库用到的数据库检查代码也不同，分别位于 `django/db/backends/<db>/introspection.py` 中。由于我们的后台数据库全部是 mysql，因此这里讨论 DB 相关的部分也全部针对 mysql。其它 DB 相关信息可以去对应的 backends 中查找。
 
 针对 Mysql 获取表/列字段信息基本都是使用 `information_schema` 这个大杀器。例如 django 内部获取表信息时用到的 `get_table_description`:
 ```python
@@ -128,7 +128,7 @@ def get_table_description(self, cursor, table_name):
     return fields
 ```
 现在我需要显示表注释，首先得查询得到表注释，需要对这个方法进行扩展。大概会有3种方案：
-1. 直接改源码，SELECT 的时候加上一列 `table_comment`，返回的 field 加上一列即可。
+1. 直接改源码，SELECT 的时候加一列 `table_comment`，返回的 field 加上一列即可。
 2. 写一个类继承 `mysql.introspection.DatabaseIntrospection`，然后把对应的方法重写。
 3. 需要的时候，多查询一遍 DB。
 
