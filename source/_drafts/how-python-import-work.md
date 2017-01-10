@@ -21,7 +21,7 @@ tags: python
 赋值部分相对比较简单，只需要把已经加载的模块绑定到对应变量即可，下文主要关注模块查找和加载。另外，**这里的探讨只针对 Python3, 在 Python2 下会有一些不同**。
 
 ## Finder/Loader
-在进行整个查找过程之前，首先要引入几个概念：查找器（finder），加载器（loader），导入器（impoter）。需要注意的是，在 Python 3.4 中，对这些概念涉及到的类进行了一些调整，下文会针对不同版本分别说明。
+在进行整个查找过程之前，首先要引入几个概念：查找器（finder），加载器（loader），导入器（impoter）和 ModuleSpec。需要注意的是，在 Python 3.4 中，对这些概念涉及到的类进行了一些调整，下文会针对不同版本分别说明。
 ### Finder
 Finder 的功能主要是通过名字查找对应 loader，在 Python 中存在两种 finder ：在`sys.meta_path`中使用的“元路径查找器”(meta path finder)和`sys.path_hooks`中使用的“路径入口查找器”(path entry finder,于 3.3 后引入)。
 在 3.3 之前，只有`importlib.abc.Finder`一种加载器，在 3.3 版本之后作为`MetaPathFinder`和`PathEntryFinder`的父类，不被直接使用。
@@ -38,6 +38,8 @@ Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`lo
 6. 在加载模块时发生错误时清理现场
 ### Importer
 同时实现了查找和加载的功能（即同时是 finder 和 loader 的对象）。
+### ModuleSpec
+上文提到在 Python 3.4 之后 finder 返回的不是一个 loader，而是 ModuleSpec，它一般是`importlib.machinery.ModuleSpec`的实例或其它结构相同的对象。详细的定义可以参照[官方文档](https://docs.python.org/3/library/importlib.html#importlib.machinery.ModuleSpec)或[PEP-0451](https://www.python.org/dev/peps/pep-0451/#modulespec)的相关说明。
 
 ## Python 中的模块查找/加载
 有了上文的 finder/loader 的概念，我们来看 Python 中是如何查找和加载一个模块的。
@@ -59,7 +61,7 @@ Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`lo
 ### 完成查找过程
 如果上述都没找到，抛出异常 ImportError(ModuleNotFoundError)。
 ### 加载
-官网给了一段**伪代码**，很好的说明了整个 Loading 的大致过程，其中 spec 变量指的是 loader 返回的 module-spec：
+官网给了一段**伪代码**，很好的说明了（在 Python 3.4 之后）整个 Loading 的大致过程，其中 spec 变量指的是 loader 返回的 module-spec：
 ```python
 module = None
 if spec.loader is not None and hasattr(spec.loader, 'create_module'):
@@ -94,3 +96,48 @@ else:
         raise
 return sys.modules[spec.name]
 ```
+
+## Import Hooks 示例
+对于开发者来说，我们用到最多的钩子是`sys.meta_path`和 PathFinder 用到的`sys.path_hook`(或直接修改 `sys.path`)。下面给出一个例子，在引入下列代码之后，在 import 没有找到包时，会提示出与 import 相似的包名。
+```python
+# -*- coding: utf-8 -*-
+from difflib import SequenceMatcher
+from collections import namedtuple
+import pkgutil
+import importlib
+import sys
+
+Similarity = namedtuple('Similarity',['a','b','ratio'])
+
+modules = [m.name for m in pkgutil.iter_modules()]
+
+class SimilarFinder(object):
+    @classmethod
+    def find_spec(self, name, path, target=None):
+        # 额外判断，sys.meta_path 中应当有且仅有一个 SimilarFinder 的实例，且在队尾
+        index = next((index
+            for index,spec in enumerate(sys.meta_path)
+                if isinstance(spec,self)),
+        None)
+        if index != len(sys.meta_path) - 1:
+            raise ValueError('There should be exactly 1 SimilarFinder instance at the end of sys.meta_path')
+
+        similarity = Similarity(None,None,0)
+        # 在所有比较中，取相似性最大且大于 0.6 的值
+        # 0.6 这个经验值来自 Python 的官方文档推荐
+        for module in modules:
+            ratio = SequenceMatcher(None, module, name).ratio()
+            if ratio > similarity.ratio and ratio > 0.6:
+                similarity = Similarity(module,name,ratio)
+        # 上文以保证这个是最后一个 hook，因此到达这里已经确定是没找到对应的包，直接抛异常即可
+        if similarity and similarity.ratio > 0.6:
+            raise ModuleNotFoundError('{} is not exists, do you mean {} ?'.format(name, similarity.a))
+
+    @classmethod
+    def find_module(self, name, path):
+        # 这里做一个 backup，支持 Python 3.4- 的版本
+        return self.find_spec(name, path)
+
+sys.meta_path.append(SimilarFinder())
+```
+在 [liuchang 的 PyCon2015](https://github.com/Liuchang0812/slides/tree/master/pycon2015cn#一些hook示例) 的演示中，有更多详细的示例参考，这里不再举更多的示例。
