@@ -141,3 +141,19 @@ class SimilarFinder(object):
 sys.meta_path.append(SimilarFinder())
 ```
 在 [liuchang 的 PyCon2015](https://github.com/Liuchang0812/slides/tree/master/pycon2015cn#一些hook示例) 的演示中，有更多详细的示例参考，这里不再举更多的示例。
+
+## 参考资料
+官方文档：
+[importlib 文档](https://docs.python.org/3/library/importlib.html)
+[import 文档](https://docs.python.org/3/reference/import.html)
+[sys 模块](https://docs.python.org/3/library/sys.html)
+[import 语法声明](https://docs.python.org/3/reference/simple_stmts.html#import)
+
+PEP 文章
+[PEP 451 -- A ModuleSpec Type for the Import System](https://www.python.org/dev/peps/pep-0451/)
+[PEP 420 -- Implicit Namespace Packages](https://www.python.org/dev/peps/pep-0420/)
+[PEP 302 -- New Import Hooks](https://www.python.org/dev/peps/pep-0302/)
+[PEP 338 -- Executing modules as scripts](https://www.python.org/dev/peps/pep-0338/)
+
+其它：
+[刘畅的 Pycon2015cn 演讲文章](https://github.com/Liuchang0812/slides/tree/master/pycon2015cn)
