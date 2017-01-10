@@ -44,8 +44,8 @@ Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`lo
 ### sys.modules
 在 import 搜索第一步会检查`sys.modules`这个 dict 对象，这个变量中缓存了所有曾经引入过的模块。如果这里搜索得到了结果，则直接结束。注意，这个对象是**可写的**，手动添加/修改可能会改变下一次 import 的结果。
 ### sys.meta_path
-如果 sys.modules 中没有对应的 module, 将会搜索 sys.meta_path 变量，这是一个 meta path finder 的 list，通过调用每一个 finder 的`find_spec`方法判断是否找到对应的 module-spec。python3 中默认有三个finder：`_frozen_importlib.BuiltinImporter`，`_frozen_importlib.FrozenImporter`，`_frozen_importlib_external.PathFinder`，分别用来导入内建模块，[freeze的模块](https://wiki.python.org/moin/Freeze)，和通用的路径模块，在 Windows 上额外还有一个`_frozen_importlib_external.WindowsRegistryFinder`。
-这里单独说一下 PathFinder，这个是我们默认导入非内建模块时用到的 finder。在[这里](https://hg.python.org/cpython/file/3.6/Lib/importlib/_bootstrap_external.py#11055)我们可以看到它的源码，这里简单说下它的执行思路：
+如果 sys.modules 中没有对应的 module, 将会搜索 sys.meta_path 变量，这是一个 meta path finder 的 list，通过调用每一个 finder 的`find_spec`方法判断是否找到对应的 module-spec。python3 中默认有三个finder：`_frozen_importlib.BuiltinImporter`，`_frozen_importlib.FrozenImporter`，`_frozen_importlib_external.PathFinder`，分别用来导入内建模块，[freeze的模块](https://wiki.python.org/moin/Freeze)，和通用的路径模块，在 Windows 上额外还有一个`_frozen_importlib_external.WindowsRegistryFinder`（特别说明一下，在 Python2 中`sys.meta_path`变量是空数组）。
+这里单独说一下 PathFinder，这个是我们默认导入非内建模块时用到的 finder。在[这里](https://hg.python.org/cpython/file/3.6/Lib/importlib/_bootstrap_external.py#11055)我们可以看到它的源码，这里简单说下它的主体执行思路：
 1. 遍历`sys.path`（或者指定的 path），对于每一个路径：
     1.1 从`sys.path_importer_cache`取路径对应的 finder，如果没有，进入步骤 1.2
     1.2 按顺序尝试每一个 sys.path_hooks 中的 hooks，直到成功返回（没有抛出 ImportError），将结果缓存在`sys.path_importer_cache`。这些 hooks 要求也返回一个 finder。
@@ -55,6 +55,42 @@ Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`lo
 3. 如果 spec 没有对应的 loader，设置 spec.submodule_search_locations ，返回对应的 spec
 4. 其他的状况下，直接返回 spec
 
-需要注意的是，一个 import 可能会遍历多次 meta_path 变量，例如`import foo.bar.baz`时，对每个meta path finder(mpf)，会先调用`mpf.find_spec("foo",None,None)`，foo 成功导入后，调用`mpf.find_spec("foo.bar",foo.__path__,None)`，之后是`mpf.find_spec("foo.bar.barz",foo.bar.__path__,None)`。
-### 抛出异常
-上述都没找到，抛出异常 ImportError(ModuleNotFoundError)。
+需要注意的是，一个 import 可能会遍历多次 meta_path 变量，例如`import foo.bar.baz`时，对每个meta path finder(下文以 mpf 指代一个实例)，会先调用`mpf.find_spec("foo",None,None)`，foo 成功导入后，调用`mpf.find_spec("foo.bar",foo.__path__,None)`，之后是`mpf.find_spec("foo.bar.barz",foo.bar.__path__,None)`。
+### 完成查找过程
+如果上述都没找到，抛出异常 ImportError(ModuleNotFoundError)。
+### 加载
+官网给了一段**伪代码**，很好的说明了整个 Loading 的大致过程，其中 spec 变量指的是 loader 返回的 module-spec：
+```python
+module = None
+if spec.loader is not None and hasattr(spec.loader, 'create_module'):
+    # 如果 loader 有 `create_module` 方法，则默认它也有 `exec_module`
+    module = spec.loader.create_module(spec)
+if module is None:
+    module = ModuleType(spec.name)
+# The import-related module attributes get set here:
+# 设置 import 相关的模块属性，包括 __name__, __loader__ , __package__, __file__ 等等
+# 详细可以可以参照官网： https://docs.python.org/3/reference/import.html#import-related-module-attributes
+_init_module_attrs(spec, module)
+
+if spec.loader is None:
+    if spec.submodule_search_locations is not None:
+        # 包命名空间
+        sys.modules[spec.name] = module
+    else:
+        # 不支持
+        raise ImportError
+elif not hasattr(spec.loader, 'exec_module'):
+    module = spec.loader.load_module(spec.name)
+    # 如果没有 __loader__ 和 __package__ 属性，重新设置
+else:
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+    except BaseException:
+        try:
+            del sys.modules[spec.name]
+        except KeyError:
+            pass
+        raise
+return sys.modules[spec.name]
+```
