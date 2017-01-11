@@ -4,9 +4,9 @@ tags: python
 date: 2017-01-10 17:15:11
 ---
 
-
 本文主要探讨 Python 中 import 的运作机制。在 Python [官方文档](https://docs.python.org/3/reference/simple_stmts.html#import)中，将 Python import 的过程简单分成**查找/加载**和**赋值**两步。
 
+<!-- more -->
 对于 import 语法（不含有 from）:
 1. 查找对应的模块，加载并(在有必要的情况下)初始化（一般在初次加载时初始化）
 2. 在当前作用域定义相应变量
@@ -25,19 +25,20 @@ date: 2017-01-10 17:15:11
 ## Finder/Loader
 在进行整个查找过程之前，首先要引入几个概念：查找器（finder），加载器（loader），导入器（impoter）和 ModuleSpec。需要注意的是，在 Python 3.4 中，对这些概念涉及到的类进行了一些调整，下文会针对不同版本分别说明。
 ### Finder
-Finder 的功能主要是通过名字查找对应 loader，在 Python 中存在两种 finder ：在`sys.meta_path`中使用的“元路径查找器”(meta path finder)和`sys.path_hooks`中使用的“路径入口查找器”(path entry finder,于 3.3 后引入)。
+Finder 的功能主要是通过名字查找对应 loader，在 Python 中存在两种 finder ：在`sys.meta_path`中使用的“元路径查找器”(meta path finder)和`sys.path_hooks`中使用的“路径入口查找器”(path entry finder ，于 3.3 后引入)。
 在 3.3 之前，只有`importlib.abc.Finder`一种加载器，在 3.3 版本之后作为`MetaPathFinder`和`PathEntryFinder`的父类，不被直接使用。
-Meta path finder 多继承自`importlib.abc.MetaPathFinder`，需要实现`find_module(fullname, path)`，(3.4之前)或`find_spec(fullname, path, target=None)`(3.4及之后)。
-Path entry finder 多继承自`importlib.abc.PathEntryFinder`，需要实现`find_loader(fullname)`或(3.4之前)`find_spec(fullname, target=None)`(3.4及之后)。
+Meta path finder 一般继承自`importlib.abc.MetaPathFinder`，需要实现`find_module(fullname, path)`(3.4之前)或`find_spec(fullname, path, target=None)`(3.4及之后)。
+Path entry finder 一般继承自`importlib.abc.PathEntryFinder`，需要实现`find_loader(fullname)`或(3.4之前)`find_spec(fullname, target=None)`(3.4及之后)。
 如果对应的 finder 找到了对应模块，则返回一个对应的 loader(3.4之前)或 module-spec(3.4之后)。
 ### Loader
-Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`load_module(fullname)`(3.4之前)或`exec_module(fullname)`(3.4及之后)。Loader主要可以做下列事情：
+Loader 负责加载模块，一般继承自`importlib.abc.Loader`，需要实现`load_module(fullname)`(3.4之前)或`exec_module(fullname)`(3.4及之后)。Loader主要可以做下列事情：
 1. 执行一些（module 相关）验证
 2. 创建一个 module 对象
 3. 在模块上设置导入相关属性
 4. 将模块“注册”到 sys.modules
 5. 执行模块
 6. 在加载模块时发生错误时清理现场
+
 ### Importer
 同时实现了查找和加载的功能（即同时是 finder 和 loader 的对象）。
 ### ModuleSpec
@@ -48,7 +49,7 @@ Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`lo
 ### sys.modules
 在 import 搜索第一步会检查`sys.modules`这个 dict 对象，这个变量中缓存了所有曾经引入过的模块。如果这里搜索得到了结果，则直接结束。注意，这个对象是**可写的**，手动添加/修改可能会改变下一次 import 的结果。
 ### sys.meta_path
-如果 sys.modules 中没有对应的 module, 将会搜索 sys.meta_path 变量，这是一个 meta path finder 的 list，通过调用每一个 finder 的`find_spec`方法判断是否找到对应的 module-spec。python3 中默认有三个finder：`_frozen_importlib.BuiltinImporter`，`_frozen_importlib.FrozenImporter`，`_frozen_importlib_external.PathFinder`，分别用来导入内建模块，[freeze的模块](https://wiki.python.org/moin/Freeze)，和通用的路径模块，在 Windows 上额外还有一个`_frozen_importlib_external.WindowsRegistryFinder`（特别说明一下，在 Python2 中`sys.meta_path`变量是空数组）。
+如果 sys.modules 中没有对应的 module, 将会搜索 sys.meta_path 变量，这是一个 meta path finder 的 list，通过调用每一个 finder 的`find_spec`方法判断是否找到对应的 module-spec。python3 中默认有三个 finder： BuiltinImporter， FrozenImporter， PathFinder，分别用来导入内建模块，[freeze的模块](https://wiki.python.org/moin/Freeze)，和通用的路径模块，在 Windows 上额外还有一个 WindowsRegistryFinder（特别说明一下，在 Python2 中`sys.meta_path`变量是空数组）。
 这里单独说一下 PathFinder，这个是我们默认导入非内建模块时用到的 finder。在[这里](https://hg.python.org/cpython/file/3.6/Lib/importlib/_bootstrap_external.py#11055)我们可以看到它的源码，这里简单说下它的主体执行思路：
 1. 遍历`sys.path`（或者指定的 path），对于每一个路径：
     1.1 从`sys.path_importer_cache`取路径对应的 finder，如果没有，进入步骤 1.2
@@ -59,7 +60,7 @@ Loader 负责加载模块，多继承自`importlib.abc.Loader`，需要实现`lo
 3. 如果 spec 没有对应的 loader，设置 spec.submodule_search_locations ，返回对应的 spec
 4. 其他的状况下，直接返回 spec
 
-需要注意的是，一个 import 可能会遍历多次 meta_path 变量，例如`import foo.bar.baz`时，对每个meta path finder(下文以 mpf 指代一个实例)，会先调用`mpf.find_spec("foo",None,None)`，foo 成功导入后，调用`mpf.find_spec("foo.bar",foo.__path__,None)`，之后是`mpf.find_spec("foo.bar.barz",foo.bar.__path__,None)`。
+需要注意的是，一个 import 可能会遍历多次 meta_path 变量，例如`import foo.bar.baz`时，对每个meta path finder(下文以 mpf 指代一个实例)，会先调用`mpf.find_spec("foo",None,None)`，foo 成功导入后，调用`mpf.find_spec("foo.bar",foo.__path__,None)`，之后是 `mpf.find_spec("foo.bar.barz",foo.bar.__path__,None)`。
 ### 完成查找过程
 如果上述都没找到，抛出异常 ImportError(ModuleNotFoundError)。
 ### 加载
@@ -131,7 +132,7 @@ class SimilarFinder(object):
             ratio = SequenceMatcher(None, module, name).ratio()
             if ratio > similarity.ratio and ratio > 0.6:
                 similarity = Similarity(module,name,ratio)
-        # 上文以保证这个是最后一个 hook，因此到达这里已经确定是没找到对应的包，直接抛异常即可
+        # 上文已保证这个是最后一个 hook，因此到达这里已经确定是没找到对应的包，直接抛异常即可
         if similarity and similarity.ratio > 0.6:
             raise ModuleNotFoundError('{} is not exists, do you mean {} ?'.format(name, similarity.a))
 
