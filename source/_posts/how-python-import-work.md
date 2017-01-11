@@ -1,7 +1,9 @@
 ---
 title: python 的 import 是如何工作的
 tags: python
+date: 2017-01-10 17:15:11
 ---
+
 
 本文主要探讨 Python 中 import 的运作机制。在 Python [官方文档](https://docs.python.org/3/reference/simple_stmts.html#import)中，将 Python import 的过程简单分成**查找/加载**和**赋值**两步。
 
