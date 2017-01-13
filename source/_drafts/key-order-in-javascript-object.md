@@ -110,9 +110,12 @@ console.log(order);
 
 ## 应用
 如果只需要兼容新式主流浏览器，这个顺序基本可以作为可信。如果需要兼容老浏览器，为了确保顺序可信，建议还是采用单属性数组或键值对数组，如：`[{key:'value'},{key2:'value2'}]` 或 `[['key','value'],['key2','value2']]`。
-另外给一个参考：在`React.createFragement`方法中，已经依赖了 for-in 遍历的顺序，详见 React [文档](https://facebook.github.io/react/docs/create-fragment.html)和[相关源码](https://github.com/facebook/react/blob/master/src/addons/ReactFragment.js)。
+另外给一个参考：在`React.createFragement`方法中，已经依赖了 for-in 遍历的顺序，详见 React [文档](https://facebook.github.io/react/docs/create-fragment.html)和[相关源码](https://github.com/facebook/react/blob/master/src/addons/ReactFragment.js#L65-L82)。
 
 ## 参考资料以及扩展阅读
-[ECMA2015 标准文档](http://www.ecma-international.org/ecma-262/6.0/)
-[ECMA2016 标准文档](http://www.ecma-international.org/ecma-262/7.0/)
-[最新ECMA 标准文档](https://tc39.github.io/ecma262/)
+1. [ECMA2015 标准文档](http://www.ecma-international.org/ecma-262/6.0/)
+2. [ECMA2016 标准文档](http://www.ecma-international.org/ecma-262/7.0/)
+3. [最新ECMA 标准文档](https://tc39.github.io/ecma262/)
+4. [Stackoverflow: Does JavaScript Guarantee Object Property Order?](http://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order)
+5. [Stackoverflow: Does ES6 introduce a well-defined order of enumeration for object properties? ](http://stackoverflow.com/questions/30076219/does-es6-introduce-a-well-defined-order-of-enumeration-for-object-properties)
+6. [Chromium 的一个相关 issuse](https://bugs.chromium.org/p/v8/issues/detail?id=164)
