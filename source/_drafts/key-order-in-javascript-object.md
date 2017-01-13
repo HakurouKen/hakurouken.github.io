@@ -108,6 +108,10 @@ console.log(order);
 
 可以看到，几乎所有浏览器都按照同样的标准来定义这一规范（甚至包括一些老浏览器）。这里不涉及一些复杂的 case （例如删除 keys 再添加等等），如果需要的话，读者可以自行测试。
 
+## 应用
+如果只需要兼容新式主流浏览器，这个顺序基本可以作为可信。如果需要兼容老浏览器，为了确保顺序可信，建议还是采用单属性数组或键值对数组，如：`[{key:'value'},{key2:'value2'}]` 或 `[['key','value'],['key2','value2']]`。
+另外给一个参考：在`React.createFragement`方法中，已经依赖了 for-in 遍历的顺序，详见 React [文档](https://facebook.github.io/react/docs/create-fragment.html)和[相关源码](https://github.com/facebook/react/blob/master/src/addons/ReactFragment.js)。
+
 ## 参考资料以及扩展阅读
 [ECMA2015 标准文档](http://www.ecma-international.org/ecma-262/6.0/)
 [ECMA2016 标准文档](http://www.ecma-international.org/ecma-262/7.0/)
