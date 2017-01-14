@@ -1,6 +1,7 @@
 ---
 title: javascript 中 Object 的键值顺序
 tags: javascript
+date: 2017-01-14 14:06:35
 ---
 
 在 javascript 中，我们通常想要遍历一个对象，通常会有下列几种方式：
@@ -13,6 +14,7 @@ tags: javascript
 需要注意的是，在 ES2015 标准之后，keys 除了是 String，还可以是 Symbol（之前只可以是 String）。除此之外其它的 key 值，在设置的时候，会隐式调用 toString 转化为字符串。
 针对上述一系列情况，遍历 key 的顺序是怎样的？下文将对这个问题进行一些探究。
 
+<!-- more -->
 ## ECMAScript 标准
 这里的标准主要参考[最新标准（截至目前是 ES2017）](https://tc39.github.io/ecma262/)。
 以 Object.keys 为例，Object.keys 执行时，内部的顺序由`EnumerableOwnProperties`方法决定，而这个方法的遍历顺序和[EnumerateObjectProperties](https://tc39.github.io/ecma262/#sec-enumerate-object-properties)保持一致。这个规定中有一句说明：
@@ -97,14 +99,14 @@ console.log(order);
 注：
 1. 测试平台 Windows 7
 2. 这里没有测试 key 为 Symbol 的值，一时因为在实际开发中，使用 Symbol 作为 key 的情况比较少，二是 for-in / Object.keys / getOwnPropertyNames 遍历时也不会获取 Symbol 的 key<del>，三是 IE 还不支持 Symbol</del>。
-3. 按照标准中所描述，遍历的预期结果为`["2","6","100","a","c","[object Object]","b",7]`，为了使表格更清晰，结果中用 √ 标识这个结果。
+3. 按照标准中所描述，遍历的预期结果为`["2","6","100","a","c","[object Object]","b",7]`，为了使表格更清晰，结果中用 ✓ 标识这个结果。
 
 | 浏览器 | for-in | Object.keys | getOwnPropertyNames | Reflect.ownKeys |
 | --- | :---: | :---: | :---: | :---: |
-| Chrome 55.0 | √ | √ | √ | √ |
-| Firefox 45.0.2 | √ | √ | √ | √ |
-| IE Edge | √ | √ | √ | 不支持 |
-| IE 10 | √ | √ | √ | 不支持 |
+| Chrome 55.0 | ✓ | ✓ | ✓ | ✓ |
+| Firefox 45.0.2 | ✓ | ✓ | ✓ | ✓ |
+| IE Edge | ✓ | ✓ | ✓ | 不支持 |
+| IE 10 | ✓ | ✓ | ✓ | 不支持 |
 
 可以看到，几乎所有浏览器都按照同样的标准来定义这一规范（甚至包括一些老浏览器）。这里不涉及一些复杂的 case （例如删除 keys 再添加等等），如果需要的话，读者可以自行测试。
 
