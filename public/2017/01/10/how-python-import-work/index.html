@@ -1,0 +1,707 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="本文主要探讨 Python 中 import 的运作机制。在 Python 官方文档中，将 Python import 的过程简单分成查找/加载和赋值两步。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 的 import 是如何工作的">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/01/10/how-python-import-work/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="本文主要探讨 Python 中 import 的运作机制。在 Python 官方文档中，将 Python import 的过程简单分成查找/加载和赋值两步。">
+<meta property="og:updated_time" content="2017-01-13T13:14:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 的 import 是如何工作的">
+<meta name="twitter:description" content="本文主要探讨 Python 中 import 的运作机制。在 Python 官方文档中，将 Python import 的过程简单分成查找/加载和赋值两步。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/01/10/how-python-import-work/"/>
+
+
+
+
+
+  <title> python 的 import 是如何工作的 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/01/10/how-python-import-work/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                python 的 import 是如何工作的
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-10T17:15:11+08:00">
+                2017-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/01/10/how-python-import-work/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/10/how-python-import-work/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要探讨 Python 中 import 的运作机制。在 Python <a href="https://docs.python.org/3/reference/simple_stmts.html#import" target="_blank" rel="external">官方文档</a>中，将 Python import 的过程简单分成<strong>查找/加载</strong>和<strong>赋值</strong>两步。</p>
+<a id="more"></a>
+<p>对于 import 语法（不含有 from）:</p>
+<ol>
+<li>查找对应的模块，加载并(在有必要的情况下)初始化（一般在初次加载时初始化）</li>
+<li>在当前作用域定义相应变量</li>
+</ol>
+<p>对于 from … import 语法：</p>
+<ol>
+<li>查找对应的模块，加载并(在有必要的情况下)初始化</li>
+<li>对于每个导入的声明：<ol>
+<li>检查导入的模块中有没有对应名称的属性</li>
+<li>如果没有对应的属性，尝试导入具有该名称的子模块</li>
+<li>如果没有找到，引发 ImportError</li>
+<li>如果找到了对应属性/子模块，将对应的引用储存在当前命名空间中</li>
+</ol>
+</li>
+</ol>
+<p>上述两个赋值部分，还要额外考虑 as 子句的情况：如果有 as 子句，则赋值时采用 as 后的名称，否则保持原样。<br>赋值部分相对比较简单，只需要把已经加载的模块绑定到对应变量即可，下文主要关注模块查找和加载。另外，<strong>这里的探讨只针对 Python3, 在 Python2 下会有一些不同</strong>。</p>
+<h2 id="Finder-Loader"><a href="#Finder-Loader" class="headerlink" title="Finder/Loader"></a>Finder/Loader</h2><p>在进行整个查找过程之前，首先要引入几个概念：查找器（finder），加载器（loader），导入器（impoter）和 ModuleSpec。需要注意的是，在 Python 3.4 中，对这些概念涉及到的类进行了一些调整，下文会针对不同版本分别说明。</p>
+<h3 id="Finder"><a href="#Finder" class="headerlink" title="Finder"></a>Finder</h3><p>Finder 的功能主要是通过名字查找对应 loader，在 Python 中存在两种 finder ：在<code>sys.meta_path</code>中使用的“元路径查找器”(meta path finder)和<code>sys.path_hooks</code>中使用的“路径入口查找器”(path entry finder ，于 3.3 后引入)。<br>在 3.3 之前，只有<code>importlib.abc.Finder</code>一种加载器，在 3.3 版本之后作为<code>MetaPathFinder</code>和<code>PathEntryFinder</code>的父类，不被直接使用。<br>Meta path finder 一般继承自<code>importlib.abc.MetaPathFinder</code>，需要实现<code>find_module(fullname, path)</code>(3.4之前)或<code>find_spec(fullname, path, target=None)</code>(3.4及之后)。<br>Path entry finder 一般继承自<code>importlib.abc.PathEntryFinder</code>，需要实现<code>find_loader(fullname)</code>或(3.4之前)<code>find_spec(fullname, target=None)</code>(3.4及之后)。<br>如果对应的 finder 找到了对应模块，则返回一个对应的 loader(3.4之前)或 module-spec(3.4之后)。</p>
+<h3 id="Loader"><a href="#Loader" class="headerlink" title="Loader"></a>Loader</h3><p>Loader 负责加载模块，一般继承自<code>importlib.abc.Loader</code>，需要实现<code>load_module(fullname)</code>(3.4之前)或<code>exec_module(fullname)</code>(3.4及之后)。Loader主要可以做下列事情：</p>
+<ol>
+<li>执行一些（module 相关）验证</li>
+<li>创建一个 module 对象</li>
+<li>在模块上设置导入相关属性</li>
+<li>将模块“注册”到 sys.modules</li>
+<li>执行模块</li>
+<li>在加载模块时发生错误时清理现场</li>
+</ol>
+<h3 id="Importer"><a href="#Importer" class="headerlink" title="Importer"></a>Importer</h3><p>同时实现了查找和加载的功能（即同时是 finder 和 loader 的对象）。</p>
+<h3 id="ModuleSpec"><a href="#ModuleSpec" class="headerlink" title="ModuleSpec"></a>ModuleSpec</h3><p>上文提到在 Python 3.4 之后 finder 返回的不是一个 loader，而是 ModuleSpec，它一般是<code>importlib.machinery.ModuleSpec</code>的实例或其它结构相同的对象。详细的定义可以参照<a href="https://docs.python.org/3/library/importlib.html#importlib.machinery.ModuleSpec" target="_blank" rel="external">官方文档</a>或<a href="https://www.python.org/dev/peps/pep-0451/#modulespec" target="_blank" rel="external">PEP-0451</a>的相关说明。</p>
+<h2 id="Python-中的模块查找-加载"><a href="#Python-中的模块查找-加载" class="headerlink" title="Python 中的模块查找/加载"></a>Python 中的模块查找/加载</h2><p>有了上文的 finder/loader 的概念，我们来看 Python 中是如何查找和加载一个模块的。</p>
+<h3 id="sys-modules"><a href="#sys-modules" class="headerlink" title="sys.modules"></a>sys.modules</h3><p>在 import 搜索第一步会检查<code>sys.modules</code>这个 dict 对象，这个变量中缓存了所有曾经引入过的模块。如果这里搜索得到了结果，则直接结束。注意，这个对象是<strong>可写的</strong>，手动添加/修改可能会改变下一次 import 的结果。</p>
+<h3 id="sys-meta-path"><a href="#sys-meta-path" class="headerlink" title="sys.meta_path"></a>sys.meta_path</h3><p>如果 sys.modules 中没有对应的 module, 将会搜索 sys.meta_path 变量，这是一个 meta path finder 的 list，通过调用每一个 finder 的<code>find_spec</code>方法判断是否找到对应的 module-spec。python3 中默认有三个 finder： BuiltinImporter， FrozenImporter， PathFinder，分别用来导入内建模块，<a href="https://wiki.python.org/moin/Freeze" target="_blank" rel="external">freeze的模块</a>，和通用的路径模块，在 Windows 上额外还有一个 WindowsRegistryFinder（特别说明一下，在 Python2 中<code>sys.meta_path</code>变量是空数组）。<br>这里单独说一下 PathFinder，这个是我们默认导入非内建模块时用到的 finder。在<a href="https://hg.python.org/cpython/file/3.6/Lib/importlib/_bootstrap_external.py#11055" target="_blank" rel="external">这里</a>我们可以看到它的源码，这里简单说下它的主体执行思路：</p>
+<ol>
+<li>遍历<code>sys.path</code>（或者指定的 path），对于每一个路径：<br> 1.1 从<code>sys.path_importer_cache</code>取路径对应的 finder，如果没有，进入步骤 1.2<br> 1.2 按顺序尝试每一个 sys.path_hooks 中的 hooks，直到成功返回（没有抛出 ImportError），将结果缓存在<code>sys.path_importer_cache</code>。这些 hooks 要求也返回一个 finder。<br> 1.3 判断 finder 的合法性，并调用 finder 的 find_spec 方法<br> 1.4 如果得到一个合法的 spec，跳出循环，否则继续尝试下一个路径</li>
+<li>如果 spec 为 None，直接返回</li>
+<li>如果 spec 没有对应的 loader，设置 spec.submodule_search_locations ，返回对应的 spec</li>
+<li>其他的状况下，直接返回 spec</li>
+</ol>
+<p>需要注意的是，一个 import 可能会遍历多次 meta_path 变量，例如<code>import foo.bar.baz</code>时，对每个meta path finder(下文以 mpf 指代一个实例)，会先调用<code>mpf.find_spec(&quot;foo&quot;,None,None)</code>，foo 成功导入后，调用<code>mpf.find_spec(&quot;foo.bar&quot;,foo.__path__,None)</code>，之后是 <code>mpf.find_spec(&quot;foo.bar.barz&quot;,foo.bar.__path__,None)</code>。</p>
+<h3 id="完成查找过程"><a href="#完成查找过程" class="headerlink" title="完成查找过程"></a>完成查找过程</h3><p>如果上述都没找到，抛出异常 ImportError(ModuleNotFoundError)。</p>
+<h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>官网给了一段<strong>伪代码</strong>，很好的说明了（在 Python 3.4 之后）整个 Loading 的大致过程，其中 spec 变量指的是 loader 返回的 module-spec：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">module = <span class="keyword">None</span></div><div class="line"><span class="keyword">if</span> spec.loader <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> hasattr(spec.loader, <span class="string">'create_module'</span>):</div><div class="line">    <span class="comment"># 如果 loader 有 `create_module` 方法，则默认它也有 `exec_module`</span></div><div class="line">    module = spec.loader.create_module(spec)</div><div class="line"><span class="keyword">if</span> module <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">    module = ModuleType(spec.name)</div><div class="line"><span class="comment"># The import-related module attributes get set here:</span></div><div class="line"><span class="comment"># 设置 import 相关的模块属性，包括 __name__, __loader__ , __package__, __file__ 等等</span></div><div class="line"><span class="comment"># 详细可以可以参照官网： https://docs.python.org/3/reference/import.html#import-related-module-attributes</span></div><div class="line">_init_module_attrs(spec, module)</div><div class="line"></div><div class="line"><span class="keyword">if</span> spec.loader <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">    <span class="keyword">if</span> spec.submodule_search_locations <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">        <span class="comment"># 包命名空间</span></div><div class="line">        sys.modules[spec.name] = module</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 不支持</span></div><div class="line">        <span class="keyword">raise</span> ImportError</div><div class="line"><span class="keyword">elif</span> <span class="keyword">not</span> hasattr(spec.loader, <span class="string">'exec_module'</span>):</div><div class="line">    module = spec.loader.load_module(spec.name)</div><div class="line">    <span class="comment"># 如果没有 __loader__ 和 __package__ 属性，重新设置</span></div><div class="line"><span class="keyword">else</span>:</div><div class="line">    sys.modules[spec.name] = module</div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        spec.loader.exec_module(module)</div><div class="line">    <span class="keyword">except</span> BaseException:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            <span class="keyword">del</span> sys.modules[spec.name]</div><div class="line">        <span class="keyword">except</span> KeyError:</div><div class="line">            <span class="keyword">pass</span></div><div class="line">        <span class="keyword">raise</span></div><div class="line"><span class="keyword">return</span> sys.modules[spec.name]</div></pre></td></tr></table></figure></p>
+<h2 id="Import-Hooks-示例"><a href="#Import-Hooks-示例" class="headerlink" title="Import Hooks 示例"></a>Import Hooks 示例</h2><p>对于开发者来说，我们用到最多的钩子是<code>sys.meta_path</code>和 PathFinder 用到的<code>sys.path_hook</code>(或直接修改 <code>sys.path</code>)。下面给出一个例子，在引入下列代码之后，在 import 没有找到包时，会提示出与 import 相似的包名。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">from</span> difflib <span class="keyword">import</span> SequenceMatcher</div><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</div><div class="line"><span class="keyword">import</span> pkgutil</div><div class="line"><span class="keyword">import</span> importlib</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">Similarity = namedtuple(<span class="string">'Similarity'</span>,[<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'ratio'</span>])</div><div class="line"></div><div class="line">modules = [m.name <span class="keyword">for</span> m <span class="keyword">in</span> pkgutil.iter_modules()]</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimilarFinder</span><span class="params">(object)</span>:</span></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_spec</span><span class="params">(self, name, path, target=None)</span>:</span></div><div class="line">        <span class="comment"># 额外判断，sys.meta_path 中应当有且仅有一个 SimilarFinder 的实例，且在队尾</span></div><div class="line">        index = next((index</div><div class="line">            <span class="keyword">for</span> index,spec <span class="keyword">in</span> enumerate(sys.meta_path)</div><div class="line">                <span class="keyword">if</span> isinstance(spec,self)),</div><div class="line">        <span class="keyword">None</span>)</div><div class="line">        <span class="keyword">if</span> index != len(sys.meta_path) - <span class="number">1</span>:</div><div class="line">            <span class="keyword">raise</span> ValueError(<span class="string">'There should be exactly 1 SimilarFinder instance at the end of sys.meta_path'</span>)</div><div class="line"></div><div class="line">        similarity = Similarity(<span class="keyword">None</span>,<span class="keyword">None</span>,<span class="number">0</span>)</div><div class="line">        <span class="comment"># 在所有比较中，取相似性最大且大于 0.6 的值</span></div><div class="line">        <span class="comment"># 0.6 这个经验值来自 Python 的官方文档推荐</span></div><div class="line">        <span class="keyword">for</span> module <span class="keyword">in</span> modules:</div><div class="line">            ratio = SequenceMatcher(<span class="keyword">None</span>, module, name).ratio()</div><div class="line">            <span class="keyword">if</span> ratio &gt; similarity.ratio <span class="keyword">and</span> ratio &gt; <span class="number">0.6</span>:</div><div class="line">                similarity = Similarity(module,name,ratio)</div><div class="line">        <span class="comment"># 上文已保证这个是最后一个 hook，因此到达这里已经确定是没找到对应的包，直接抛异常即可</span></div><div class="line">        <span class="keyword">if</span> similarity <span class="keyword">and</span> similarity.ratio &gt; <span class="number">0.6</span>:</div><div class="line">            <span class="keyword">raise</span> ModuleNotFoundError(<span class="string">'&#123;&#125; is not exists, do you mean &#123;&#125; ?'</span>.format(name, similarity.a))</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_module</span><span class="params">(self, name, path)</span>:</span></div><div class="line">        <span class="comment"># 这里做一个 backup，支持 Python 3.4- 的版本</span></div><div class="line">        <span class="keyword">return</span> self.find_spec(name, path)</div><div class="line"></div><div class="line">sys.meta_path.append(SimilarFinder())</div></pre></td></tr></table></figure></p>
+<p>在 <a href="https://github.com/Liuchang0812/slides/tree/master/pycon2015cn#一些hook示例" target="_blank" rel="external">liuchang 的 PyCon2015</a> 的演示中，有更多详细的示例参考，这里不再举更多的示例。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>官方文档：<br><a href="https://docs.python.org/3/library/importlib.html" target="_blank" rel="external">importlib 文档</a><br><a href="https://docs.python.org/3/reference/import.html" target="_blank" rel="external">import 文档</a><br><a href="https://docs.python.org/3/library/sys.html" target="_blank" rel="external">sys 模块</a><br><a href="https://docs.python.org/3/reference/simple_stmts.html#import" target="_blank" rel="external">import 语法声明</a></p>
+<p>PEP 文章<br><a href="https://www.python.org/dev/peps/pep-0451/" target="_blank" rel="external">PEP 451 – A ModuleSpec Type for the Import System</a><br><a href="https://www.python.org/dev/peps/pep-0420/" target="_blank" rel="external">PEP 420 – Implicit Namespace Packages</a><br><a href="https://www.python.org/dev/peps/pep-0302/" target="_blank" rel="external">PEP 302 – New Import Hooks</a><br><a href="https://www.python.org/dev/peps/pep-0338/" target="_blank" rel="external">PEP 338 – Executing modules as scripts</a></p>
+<p>其它：<br><a href="https://github.com/Liuchang0812/slides/tree/master/pycon2015cn" target="_blank" rel="external">刘畅的 Pycon2015cn 演讲文章</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/07/childprocess-in-nodejs/" rel="next" title="Node.js 的 child_process 模块">
+                <i class="fa fa-chevron-left"></i> Node.js 的 child_process 模块
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/14/key-order-in-javascript-object/" rel="prev" title="javascript 中 Object 的键值顺序">
+                javascript 中 Object 的键值顺序 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/01/10/how-python-import-work/"
+     data-title="python 的 import 是如何工作的"
+     data-content=""
+     data-url="http://blog.sevenplus.me/2017/01/10/how-python-import-work/">
+</div>
+<style>
+.ds-share-icons-footer {
+    display: none! important;
+}
+ds-powered-by {
+    display: none! important;
+}
+</style>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/01/10/how-python-import-work/"
+           data-title="python 的 import 是如何工作的" data-url="http://blog.sevenplus.me/2017/01/10/how-python-import-work/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Finder-Loader"><span class="nav-number">1.</span> <span class="nav-text">Finder/Loader</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Finder"><span class="nav-number">1.1.</span> <span class="nav-text">Finder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Loader"><span class="nav-number">1.2.</span> <span class="nav-text">Loader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Importer"><span class="nav-number">1.3.</span> <span class="nav-text">Importer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ModuleSpec"><span class="nav-number">1.4.</span> <span class="nav-text">ModuleSpec</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-中的模块查找-加载"><span class="nav-number">2.</span> <span class="nav-text">Python 中的模块查找/加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sys-modules"><span class="nav-number">2.1.</span> <span class="nav-text">sys.modules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sys-meta-path"><span class="nav-number">2.2.</span> <span class="nav-text">sys.meta_path</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完成查找过程"><span class="nav-number">2.3.</span> <span class="nav-text">完成查找过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载"><span class="nav-number">2.4.</span> <span class="nav-text">加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Import-Hooks-示例"><span class="nav-number">3.</span> <span class="nav-text">Import Hooks 示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hakurouken"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
