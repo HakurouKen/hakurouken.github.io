@@ -18,6 +18,37 @@ Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通
 
 在一个 AudioContext 中，允许有多个输入以及多个效果器，但是只有一个输出。
 
+## 示例：音乐可视化
+有了上述概念之后，下文以一个简单的音乐可视化的 DEMO，详细介绍下 Web Audio API 的使用方法。
+
+### 创建 AudioContext 上下文
+使用 canvas 绘图时，我们可以直接通过 canvas DOM 元素的 `getContext('2d')` 方法获取 canvas 对应的绘制上下文，而使用 Web Audio API 时，我们需要自己 new 一个上下文。
+```javascript
+let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+```
+
+### 创建音源
+在有了上下文环境之后，我们接下来需要创建一个音频输入源。一般情况下输入源可以来自：
+1. 用 javascript 创建正弦波。相关函数：[AudioContext.createOscillator()](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createOscillator)。
+2. 用原始 PCM 数据创建。相关函数： [AudioContext.createBuffer()](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createBuffer), [AudioContext.createBufferSource()](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createBufferSource), [AudioContext.decodeAudioData()](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData)。
+3. 从 HTML 标签(`<video>`和`<audio>`)获取。相关函数：[AudioContext.createMediaElementSource()](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource)。
+4. 从 WebRTC 的输入流中获取。相关函数：[AudioContext.createMediaStreamSource()](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaStreamSource)。
+
+音源一共有 OscillatorNode, AudioBuffer, AudioBufferSourceNode, MediaElementAudioSourceNode 和 MediaStreamAudioSourceNode 五种类型，分别对应着 AudioContext 的五个音源的 create 方法，从函数名中可以简单的看出对应关系。
+
+我们这里选用`<audio>`作为输入源：
+
+HTML:
+```html
+<audio src="audio.mp3" controls id="source"></audio>
+```
+
+Javascript
+```javascript
+let audio = document.getElementById('source');
+let source = audioCtx.createMediaElementSource(audio);
+```
+
 ## 参考资料
 - [Using the Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API)
 - [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
