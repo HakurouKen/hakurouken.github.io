@@ -74,6 +74,11 @@ analyser.getByteFrequencyData(dataArray);
 // console.log(dataArray)
 ```
 
+## JS Bin 实例
+
+<a class="jsbin-embed" href="http://jsbin.com/qoyemuh/embed?js,output&height=500px">Audio Visualizer Demo</a>
+<script src="http://static.jsbin.com/js/embed.min.js?3.41.0"></script>
+
 ## 参考资料
 - [Using the Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API)
 - [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
