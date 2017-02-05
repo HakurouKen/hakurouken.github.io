@@ -68,7 +68,7 @@ analyser.connect(audioCtx.destination);
 ```javascript
 let bufferLength = analyser.frequencyBinCount;
 let dataArray = new Uint8Array(bufferLength);
-analyser.getByteTimeDomainData(dataArray);
+analyser.getByteFrequencyData(dataArray);
 // console.log(dataArray)
 ```
 
