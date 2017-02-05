@@ -38,13 +38,12 @@ let audioCtx = new AudioContext();
 
 音源一共有 OscillatorNode, AudioBuffer, AudioBufferSourceNode, MediaElementAudioSourceNode 和 MediaStreamAudioSourceNode 五种类型，分别对应着 AudioContext 的五个音源的 create 方法，从函数名中可以简单的看出对应关系。
 
-我们这里选用`<audio>`作为输入源：
+我们这里选用`<audio>`作为输入源，代码如下：
 
-HTML:
+HTML
 ```html
 <audio src="audio.mp3" controls id="source"></audio>
 ```
-
 Javascript
 ```javascript
 let audio = document.getElementById('source');
@@ -71,10 +70,10 @@ analyser.connect(audioCtx.destination);
 let bufferLength = analyser.frequencyBinCount;
 let dataArray = new Uint8Array(bufferLength);
 analyser.getByteFrequencyData(dataArray);
-// console.log(dataArray)
+// console.log(dataArray);
 ```
 
-## JS Bin 实例
+## 示例演示
 
 <a class="jsbin-embed" href="http://jsbin.com/qoyemuh/embed?js,output&height=500px">Audio Visualizer Demo</a>
 <script src="http://static.jsbin.com/js/embed.min.js?3.41.0"></script>
