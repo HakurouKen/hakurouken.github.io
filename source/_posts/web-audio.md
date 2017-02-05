@@ -1,9 +1,11 @@
 ---
 title: 使用 Web Audio API
 tags: javascript
+date: 2017-02-06 00:09:40
 ---
 
-Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通过它开发复杂的混音，音效，平移以及获取音频信息等等。本文介绍 Web Audio API 的基本应用。
+Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通过它开发复杂的混音，音效，平移以及获取音频信息等等。本文将通过一个简单的可视化例子，介绍 Web Audio API 的基本应用。
+<!-- more -->
 
 ## 基础概念
 一个典型的 Web Audio 的应用流程如下：
