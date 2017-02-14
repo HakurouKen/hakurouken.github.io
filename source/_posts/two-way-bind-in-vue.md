@@ -3,7 +3,9 @@ title: Vue 中的双向绑定
 tags:
   - javascript
   - vue
+date: 2017-02-15 00:00:22
 ---
+
 
 在 Vue 中构建组件的时候，父子组件采用的通信方式可以简单总结为 **Props down, Events up**。即：父组件通过 props 向下对子组件传递数据，子组件通过 events 给父组件发消息。
 
