@@ -25,7 +25,7 @@ tags:
     <div class="dialog-header">
       <slot name="header"></slot>
       <!-- 这是个关闭按钮，点它将会关闭 Dialog -->
-      <a href="javascript:void(0);">x</a>
+      <a href="javascript:void(0);" @click="onClose">x</a>
     </div>
     <div class="modal-body"><slot></slot></div>
   </div>
@@ -68,7 +68,52 @@ new Vue({
 需求似乎已经解决，不过有一点小瑕疵：这个 on-close 的事件，并不是当按钮关闭时的回调事件，而是通知父组件来关闭自己的事件（父组件还要通过修改 props 来手动关闭）。这也是单向数据流的设计理念之一：子组件不能修改父组件的属性。为了解决这个问题，我们想到了 Vue 中唯一的 “双向绑定” 指令：`v-model`。
 
 ## v-model 的解决方案
+上文中的“双向绑定”之所以带上了引号，是因为 v-model 仅仅是个语法糖：
+```html
+<input v-model="something">
+```
+相当于：
+```html
+<input :value="something" @input="something = $event.target.value">
+```
+利用这一点：我们只要在子组件中，触发一个`input`事件，即可利用 `v-model` 实现双向绑定：
+```html
+<template>
+  <div class="dialog-container" v-show="show">
+    <div class="dialog-header">
+      <slot name="header"></slot>
+      <!-- 这是个关闭按钮，点它将会关闭 Dialog -->
+      <a href="javascript:void(0);" @on-close="close">x</a>
+    </div>
+    <div class="modal-body"><slot></slot></div>
+  </div>
+</template>
+<script>
+  export default {
+    name: 'MyDialog',
+    props: ['show'],
+    methods: {
+      onClose () {
+        this.$emit('input', false)
+        this.$emit('on-close')
+      }
+    }
+  }
+</script>
+```
 
-## 方案的不足
-
-## 参考资料
+调用时，我们就可以去掉 `this.show = false`，变为：
+```javascript
+new Vue({
+  el: '#dialog-example',
+  data: {
+    show: false
+  },
+  methods: {
+    close () {
+      console.log('Dialog is closed!')
+    }
+  }
+})
+```
+## 方案的适用场景与不足
