@@ -1,8 +1,6 @@
 ---
 title: "LeetCode 1 Two Sum"
-tags:
-  - LeetCode
-  - javascript
+tags: leetcode
 ---
 
 ## Question
