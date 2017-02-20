@@ -1,5 +1,5 @@
 ---
-title: "LeetCode 1 Two Sum"
+title: "LeetCode 1: Two Sum"
 tags: leetcode
 ---
 
