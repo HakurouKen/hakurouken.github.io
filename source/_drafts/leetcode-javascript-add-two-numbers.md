@@ -28,3 +28,36 @@ You may assume the two numbers do not contain any leading zero, except the numbe
 在实际代码中，我们会用到一个“哑节点”（dummy node）来简化链表的操作，这是一个在链表操作中的常用技巧：由于头节点的特异性（不是任何一个节点的“下一个节点”），我们创建一个没有实际用途的哑节点，用它指向实际的头节点，这样就可以统一头节点和其它节点的行为，减少一些额外判断。
 
 ## 题解
+```javascript
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *   this.val = val;
+ *   this.next = null;
+ * }
+ */
+/**
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var addTwoNumbers = function (l1, l2) {
+  var dummy = new ListNode(0),
+    cur = dummy,
+    value,
+    carry = 0;
+  while (l1 || l2) {
+    value = (l1 ? l1.val : 0) + (l2 ? l2.val : 0) + carry;
+    carry = (value / 10) ^ 0;
+    cur.next = new ListNode(value % 10);
+    cur = cur.next;
+    l1 = l1 && l1.next;
+    l2 = l2 && l2.next;
+  }
+
+  if (carry) {
+    cur.next = new ListNode(carry);
+  }
+  return dummy.next;
+};
+```
