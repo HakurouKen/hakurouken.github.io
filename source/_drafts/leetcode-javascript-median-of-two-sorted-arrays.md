@@ -52,9 +52,9 @@ function findMedianSortedArrays(nums1, nums2) {
   l2 = nums2.length,
   len = l1 + l2;
   if( len % 2 === 0 ){
-    return ( findKthElem(nums1, 0, l1 - 1 , nums2, 0, l2 - 1, len/2 - 1) + findKthElem(nums1, 0, l1 - 1, nums2, 0, l2 - 1, len/2) ) / 2;
+    return (findKthElem(nums1, 0, l1 - 1 , nums2, 0, l2 - 1, len/2 - 1) + findKthElem(nums1, 0, l1 - 1, nums2, 0, l2 - 1, len/2)) / 2;
   } else {
-    return findKthElem(nums1, 0, l1 - 1, nums2, 0, l2 - 1, (len-1)/2 );
+    return findKthElem(nums1, 0, l1 - 1, nums2, 0, l2 - 1, (len-1)/2);
   }
 }
 
@@ -62,6 +62,72 @@ function findKthElem(nums1, start1, end1, nums2, start2, end2, k) {
   //@TODO: return the kth element.
 }
 ```
+这里，我们为了避免昂贵的数组操作，采用 start 和 end 两个标志位来标识数组的“切割位置”。我们实际需要考虑的数组部分为`nums.slice(start, end)`这部分。
 
-我们剩下只需考虑这个“找到第 k 大的数字”的函数实现即可。
+我们剩下只需考虑这个“找到第 k 大的数字”的函数实现即可。采用二分法，如果有
+```javascript
+// nums1 的“前中位数” 大于 nums2 的
+nums1[Math.floor(nums1.length/2)] > nums2[Math.floor(nums2.length/2)]
+```
+我们可以将 `findKthElem(nums1, nums2, k)` 问题转化为：
+```javascript
+findKthElem(
+  // nums1 保持不变
+  nums1,
+  // nums2 的后半段
+  nums2.slice(Math.floor(nums2.length/2), nums2.length),
+  
+  k - Math.floor(nums2.length/2)
+)
+```
+
+空间复杂度：O(1)
+
+时间复杂度：O(log(m+n))
+
 ## 题解
+```javascript
+function findMedianSortedArrays (nums1,nums2) {
+  var l1 = nums1.length,
+    l2 = nums2.length,
+    len = l1 + l2;
+  if (len % 2 === 0) {
+    return (findKthElem(nums1, 0, l1 - 1 , nums2, 0, l2 - 1, len/2 - 1) + findKthElem(nums1, 0, l1 - 1, nums2, 0, l2 - 1, len/2)) / 2;
+  } else {
+    return findKthElem(nums1, 0, l1 - 1, nums2, 0, l2 - 1, (len-1)/2);
+  }
+}
+
+function findKthElem(nums1, start1, end1, nums2, start2, end2, k){
+  var len1 = end1 - start1 + 1,
+    len2 = end2 - start2 + 1,
+    mid1 = len1 / 2 ^ 0,
+    mid2 = len2 / 2 ^ 0;
+
+  if (len1 <= 0) {
+    return nums2[start2 + (k < 0 ? 0 : k)];
+  }
+  if (len2 <= 0) {
+    return nums1[start1 + (k < 0 ? 0 : k)];
+  }
+  if (k <= 0) {
+    return Math.min(nums1[start1],nums2[start2]);
+  }
+
+  if (nums2[start2 + mid2] > nums1[start1 + mid1]) {
+    if(mid1 + mid2 >= k ) {
+      return findKthElem(nums1, start1, end1, nums2, start2, end2 - Math.max(1,mid2), k);
+    } else {
+      mid1 = Math.max(mid1,1);
+      return findKthElem(nums1, start1 + mid1, end1, nums2, start2, end2, k - mid1);
+    }
+  } else {
+    if (mid2 + mid1 >= k) {
+      return findKthElem(nums1, start1, end1 - Math.max(1,mid1), nums2, start2, end2, k);
+    } else {
+      mid2 = Math.max(mid2,1);
+      return findKthElem(nums1, start1, end1, nums2, start2 + mid2, end2, k - mid2);
+    }
+  }
+}
+```
