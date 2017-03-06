@@ -1,6 +1,7 @@
 ---
-title: JavaScript 中的 void 关键字
+title: JavaScript 中的 void 关键字（译）
 tags: javascript
+date: 2017-03-06 22:21:19
 ---
 
 > 本文翻译自： http://cmichel.io/javascript-void-keyword/
@@ -14,6 +15,7 @@ void function foo()
 ```
 是的，这是 JavaScript ，我知道标题里写了。但是，我最近才在 ESLint 的[返回值一致性](http://eslint.org/docs/rules/consistent-return)<sup>注①</sup>中知道`void`这个关键字。
 
+<!-- more -->
 ## JS 中的 void 是干什么的？
 `void` 接受一个表达式，执行并返回`undefined`。我认为确实没什么用，但是你可以通过它节省一些代码的书写。
 
@@ -28,7 +30,7 @@ function middleware(next) {
     database.save(value)
 
     // 这里会隐式返回 undefined
-    // => 违反了返回一致性原则，因为这里没有显式的 return
+    // => 违反了返回一致性原则，因为这里没有显式的 return ，
     // 但是在错误的分支中，返回了（未知的） next() 的返回值
   })
 }
@@ -66,5 +68,5 @@ console.log(foo) // 2
 ## 译注
 1. 原文为：`consistent return`，对应的 ESLint 说明的标题为`require return statements to either always or never specify values (consistent-return)`。
 2. 立即执行函数表达式：immediately-invoked function expressions
-3. 作者在原文评论中，对一个特性的使用有额外的评述（同时也是我非常赞同的）:
->（新特性的使用）取决于：1) 一个特性是否有用 2) 它是否广泛被人接受。我全力支持使用 ES6 的 Promise，生成器 和 async/await ，尽管他们很复杂（译注：async/await 实际上并不属于 ES6 规范，不过这里不是重点）。因为他们确实有用，可以大大简化你的代码，并且没有真正的替代品。但是`void`的应用是在优先，而且几乎不为人所知。同时它可以被函数执行后加一个`return undefined`简单的替换掉。
+3. 作者在原文评论中，对是否在开发中使用一个特性，有这样一段评述（同时也是我非常赞同的）:
+>（新特性是否应该被使用）取决于：1) 一个特性是否有用，2) 它是否广泛被人接受。我支持使用 ES6 的 Promise，生成器 和 async/await ，尽管他们很复杂（译注：async/await 实际上并不属于 ES6 规范），因为他们确实有用，可以大大简化你的代码，并且没有真正的替代品。但是`void`的应用是在优先，而且几乎不为人所知。同时它可以被函数执行后加一个`return undefined`简单的替换掉。
