@@ -203,7 +203,7 @@ body {
 }
 @media (min-width: 1600px) {
   body {
-    font-size: 16px;
+    font-size: $font-size;
   }
 }
 h1,
@@ -935,7 +935,7 @@ pre .javascript .function {
   }
 }
 .comments {
-  margin: 60px 20px 0;
+  margin: 20px 20px 0;
 }
 .tag-cloud {
   text-align: center;
@@ -1157,10 +1157,8 @@ pre .javascript .function {
     padding-right: 10px;
   }
 }
-@media (min-width: 992px) {
-  .posts-expand .post-body {
-    text-align: justify;
-  }
+.posts-expand .post-body {
+  text-align: left;
 }
 .posts-expand .post-body h2,
 .posts-expand .post-body h3,
@@ -1681,7 +1679,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #4f90ff;
+  background: #e9d41a;
 }
 .links-of-blogroll {
   font-size: 13px;
