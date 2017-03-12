@@ -43,7 +43,7 @@ requirejs.config({
   nodeRequire: require
 });
 
-var foo = requirejs('foo');
+var foo = requirejs('foo')
 ```
 
 ### 设置 NODE_PATH
@@ -95,9 +95,9 @@ function linkToNodeModule(src, dst){
     if (!stat) {
       fs.symlink(src, dst, 'dir', err => {
         if (err) throw err
-      });
+      })
     }
-  });
+  })
 }
 
 linkToNodeModule('lib');
@@ -115,3 +115,9 @@ const misc = require('lib/misc')
 虽然上述方法可以缓解相对路径过长的问题，但我们仍然应该意识到，过深相对路径往往意味着在设计时过早将一个完整的 app 打散成了多个部分，导致不同的模块间依赖较严重。多数情况下，我们可以将公共的模块抽象到一个文件夹下（通常叫 lib 或 common 之类的），然后再用上述技巧来消除过多的`../../`路径。
 
 ## 参考资料
+- [Stackoverflow: How to make the require in node.js to be always relative to the root folder of the project?](http://stackoverflow.com/questions/10860244/how-to-make-the-require-in-node-js-to-be-always-relative-to-the-root-folder-of-t)
+- [Better local require() paths for Node.js](https://gist.github.com/branneman/8048520)
+- [The Node.js Way - How require() Actually Works](http://fredkschott.com/post/2014/06/require-and-the-module-system/)
+- [Node.js Modules 官方文档](https://nodejs.org/api/modules.html)
+- [Node.js Globals 官方文档](https://nodejs.org/api/globals.html#globals_require)
+- [Webpack resolve-alias 官方文档](https://webpack.github.io/docs/configuration.html#resolve-alias)
