@@ -1,6 +1,6 @@
 ---
 title: 优化 Node.js 中的深层 require 路径
-tags:
+tags: javascript
 ---
 
 ## 问题
