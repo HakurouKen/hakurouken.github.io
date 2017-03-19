@@ -40,6 +40,16 @@ label 的这个特性，可以方便的扩大 input 的点击范围（尤其是�
 ```
 
 ## W3C 标准
+在标准中，我们可以找到对 label 这一特性的描述如下：
+> label 元素的[激活行为](https://www.w3.org/TR/html51/editing.html#activation-behavior)应当和该平台的标签行为相对应。类似的，任何附加的提示的呈现形式也应当和该平台的标签一致。
+这段话的描述相当偷懒，直接把所有的行为表述甩给了“与对应操作平台一致”。好在下文还针对性的举了一个例子：
+> EXAMPLE
+> 在多数平台，激活一个 checkbox 的标签将选中该 checkbox，而激活一个文本 input 将会 focus 该 input 框。单击下面示例代码段中的标签 "Lost" 将会在 checkbox 上执行一次[合成点击激活步骤(synthetic click activation steps)](https://www.w3.org/TR/html51/editing.html#running-synthetic-click-activation-steps)，就像这个元素被用户自己触发一样。而单击标签 "Where?" 将会为 input 元素添加一个[聚焦步骤(focus steps)](https://www.w3.org/TR/html51/editing.html#focusing-steps)到[任务队列](https://www.w3.org/TR/html51/webappapis.html#queuing)。
+> ```html
+<label><input type="checkbox" name="lost"> Lost</label><br> <label>Where? <input type="text" name="where"></label>
+> ```
+
+例子中的表述依旧比较复杂。简单的说，点击 label 标签时，浏览器就会触发一次与之关联 input 的点击事件，就和用户自己点击 input 之后执行的动作完全一致。这也就是上文中出现两次事件的原因。
 
 ## 解决方案
 ### 阻止 label 的默认行为
