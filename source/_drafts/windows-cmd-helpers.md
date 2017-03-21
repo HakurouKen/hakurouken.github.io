@@ -6,7 +6,7 @@ tags: javascript
 ## Cygwin, MinGW 与 MSYS2
 
 ## 几个命令行工具对比
-### msysgit
+### msysgit(Git Bash)
 ### cmder
 ### conemu
 ### xshell
