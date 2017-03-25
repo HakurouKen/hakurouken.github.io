@@ -8,6 +8,11 @@ tags: javascript
 ## shell，终端(terminal)与控制台(console)
 在进入正题之前，我们需要先弄清楚 shell，terminal，console 三个概念。这三个概念都是从早期的大型机保留下来的，我们这里只讨论在类 unix 环境下这三个概念的区别。
 
+**太长懒看版本：**
+1. Shell : 命令行解释器
+2. Terminal : 命令行的 I/O 环境
+3. Console : 物理 Terminal
+
 Shell 是实际处理我们输入的指令，并返回输出的程序。在 \*nix 环境下，shell 一般特指命令行 shell（一般以应用程序 + 参数 + Enter 的方式调用），在其他环境（如 Windows）下一般不使用 shell 这个词。通俗的说，虽然 shell 的意思是“壳”，但它却是实际完成工作的组件。我们常说的 bash, zsh, fish 等等，都属于 shell。
 
 Terminal 一般指代文本的I/O 环境（运行 Shell 的环境）。简单意义上，它的工作就是接受输入，将其转换成 shell 识别的控制序列传递给 shell，然后接受 shell 的 output 并显示。当然，一个良好设计的 Terminal 一定会有一些附加功能，比如显示配置、多任务多窗口管理等等。它还有一个常见的指代名称是 tty。比如 Mac 上的 iTerm，Gnome 下的 Gnome Terminal 和 Guake，都属于 Terminal。
