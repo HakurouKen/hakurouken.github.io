@@ -31,6 +31,15 @@ Cygwin 的用途，它的[官方网站](http://www.cygwin.com/)已经描述的�
 > - 一个在 Windows 上运行原生 Linux 程序的方法。如果想要在 Windows 上运行，你必须从源代码重新构建。
 > - 一个神奇的让 Windows 程序感知 Unix<sup>®</sup>的功能（如信号、pyt 等）。同样，如果要利用 Cygwin 的功能，还需要从源代码重新构建。
 
+再来看 [MinGW](http://www.mingw.org/)：
+> MinGW提供了一个完整的开源编程工具集，适用于开发本地MS-Windows应用程序，而不依赖于任何第三方C-Runtime DLL。
+>
+> MinGW 编译器提供对对 Microsoft C （和某些特定语言）的运行时访问的功能。简单来讲，** MinGW 不会试图为一个 POSIX 应用提供在 Windows 上的 POSIX 运行时的环境。 **如果你有类似的需求，可以尝试 Cygwin。
+
+MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem）是一个 Cygwin-1.3 的轻量分支，包括一小部分 Unix 的工具链。但是，MYSYS 现在已经基本没人维护了，MinGW 的主要维护者牵头建立了 MSYS2 ，这是一个基于 Cygwin 更新版本的分支，基本可以替代 MSYS。
+
+回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。
+
 ## 几个命令行工具对比
 ### msysgit(Git Bash)
 ### cmder
