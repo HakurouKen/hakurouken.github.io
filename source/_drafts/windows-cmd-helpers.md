@@ -20,6 +20,16 @@ Terminal 一般指代文本的I/O 环境（运行 Shell 的环境）。简单意
 Console 是一种特殊的 Terminal，一般指代物理终端，例如键盘、显示器。
 
 ## Cygwin 与 MinGW
+想要在 Windows 上使用命令行，我们可能马上会想到 Cygwin/MinGW。Cygwin 和 MinGW 都提供了在 windows 上使用 GNU 工具的能力，但是他们两个之间有一些差别需要注意。
+
+Cygwin 的用途，它的[官方网站](http://www.cygwin.com/)已经描述的非常清楚了：
+> Cygwin 是：
+> - 一个 GNU 和开源工具的合集，为 Windows 提供类似 Linux 发行版的功能
+> - 一个提供大量 POSIX API 的功能的 DLL(cygwin1.dll)
+>
+> Cygwin **不是**：
+> - 一个在 Windows 上运行原生 Linux 程序的方法。如果想要在 Windows 上运行，你必须从源代码重新构建。
+> - 一个神奇的让 Windows 程序感知 Unix<sup>®</sup>的功能（如信号、pyt 等）。同样，如果要利用 Cygwin 的功能，还需要从源代码重新构建。
 
 ## 几个命令行工具对比
 ### msysgit(Git Bash)
