@@ -41,6 +41,8 @@ MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem�
 回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。
 
 ## 几个命令行工具对比
+下文提到的命令行工具，主要是指终端(terminal)。这些终端多数都支持我们选择自己的 shell ，也有些工具中直接集成了 shell 或者一些工具集。有关 shell，在这里强烈推荐 **cygwin + zsh + oh-my-zsh** 的默认配置，然后在此基础上针对性的修改主题，并配置一些实用工具/插件（例如提示 alias 的[alias-tips](https://github.com/djui/alias-tips)，快速跳转的 [autojump](https://github.com/wting/autojump)），可以参照 [awesome-zsh-plugins](https://github.com/unixorn/awesome-zsh-plugins)。
+
 ### msysgit(Git Bash)
 ### cmder
 ### conemu
