@@ -58,11 +58,10 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 
 ### cmder
 ### conemu
-### xshell
 ### babun
 ### ConsoleZ
-### PowerCmd
-
+### XShell 和 PowerCmd
+网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。
 
 ## 参考资料
 1. [Stackoverflow: What is the difference between shell, console, and terminal?](https://superuser.com/questions/144666/what-is-the-difference-between-shell-console-and-terminal#answer-144668)
