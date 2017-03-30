@@ -40,8 +40,17 @@ MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem�
 
 回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。
 
+## 终端的局限性
+Windows 下的命令行，按照实现方式，大概分为两类，一类是使用 stdin/stdout 重定向实现，一类使用 Windows 的 console API 实现。
+
+### stdin/stdout 重定向方式
+
+### Windows console API 方式
+
+
+
 ## 几个命令行工具对比
-下文提到的命令行工具，主要是指终端(terminal)。这些终端多数都支持我们选择自己的 shell ，也有些工具中直接集成了 shell 或者一些工具集。有关 shell，在这里强烈推荐 **cygwin + zsh + oh-my-zsh** 的默认配置，然后在此基础上针对性的修改主题，并配置一些实用工具/插件（例如提示 alias 的[alias-tips](https://github.com/djui/alias-tips)，快速跳转的 [autojump](https://github.com/wting/autojump)），可以参照 [awesome-zsh-plugins](https://github.com/unixorn/awesome-zsh-plugins)。
+下文提到的命令行工具，主要是指终端(terminal)。这些终端多数都支持我们选择自己的 shell ，也有些工具中直接集成了 shell 或者一些工具集。
 
 ### minitty
 官方网站：[https://mintty.github.io/](https://mintty.github.io/)
@@ -54,16 +63,21 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 
 但是 minitty 有很多地方支持的比较不完善，比如[不支持控制台程序](https://github.com/mintty/mintty/issues/56)，[不支持多 Tab](https://github.com/mintty/mintty/issues/645)，[在输入特殊字符时，光标移动会出现问题](https://github.com/mintty/mintty/issues/612)。
 
+有关类 Unix 的 shell，在这里强烈推荐 **cygwin + zsh + oh-my-zsh** 的默认配置，然后在此基础上针对性的修改主题，并配置一些实用工具/插件（例如提示 alias 的[alias-tips](https://github.com/djui/alias-tips)，快速跳转的 [autojump](https://github.com/wting/autojump)），可以参照 [awesome-zsh-plugins](https://github.com/unixorn/awesome-zsh-plugins)。
+
 综合来看，minitty 做到了可用，但是并不是很好用，如果你是一个轻度命令行使用者，可以考虑用 minitty 做一个 backup 方案（因为是 Cygwin 默认，省去安装的步骤）。
 
+### ConEmu
+官方网站：[https://conemu.github.io/](https://conemu.github.io/)
+
 ### cmder
-### conemu
 ### babun
 ### ConsoleZ
 ### XShell 和 PowerCmd
-网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。
+网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。另外，单纯从使用体验上讲，它们并没有比其它免费的终端更加出彩的地方，这也是个人没有选择这两款软件的原因之一。
 
 ## 参考资料
 1. [Stackoverflow: What is the difference between shell, console, and terminal?](https://superuser.com/questions/144666/what-is-the-difference-between-shell-console-and-terminal#answer-144668)
 2. [StackExchange: What is the exact difference between a 'terminal', a 'shell', a 'tty' and a 'console'? ](http://unix.stackexchange.com/questions/4126/what-is-the-exact-difference-between-a-terminal-a-shell-a-tty-and-a-con#answer-4132)
 3. [Stackoverflow: What is the difference between Cygwin and MinGW?](http://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw)
+4. [ConEmu Document: Troubleshooting Cygwin and Msys problems](https://conemu.github.io/en/CygwinMsys.html#Some_techinfo_first)
