@@ -5,19 +5,23 @@ tags: javascript
 
 写代码的时候，总免不了和命令行打交道。但是在 Windows 下，默认的命令行 cmd.exe 实在难用。 Windows 7 之后，微软推出了 powershell 作为 cmd 的替代品，但是仍然有很多缺点（PS：Windows 10 又推出了 Bash shell，不过手头还没有 Win 10 设备，暂时还没体验到），似乎对于目前在 Windows 下的开发，命令行增强是个刚需。现在这样的工具随便搜搜也能找出一堆，质量却参差不齐，本文将对几个人气比较高的工具做一些对比评测。
 
-## shell，终端(terminal)与控制台(console)
-在进入正题之前，我们需要先弄清楚 shell，terminal，console 三个概念。这三个概念都是从早期的大型机保留下来的，我们这里只讨论在类 unix 环境下这三个概念的区别。
+## shell，终端(terminal)，控制台(console)与 tty/pty
+在进入正题之前，我们需要先弄清楚 shell，terminal，console 三个概念。这三个概念都是从早期的大型机保留下来的，我们这里只讨论在类 unix 环境下这三个概念的区别。同时，unix 上还有 tty 与 pty 之间的区别，这里也需要做一个简单的区分。
 
 **太长懒看版本：**
 1. Shell : 命令行解释器
 2. Terminal : 命令行的 I/O 环境
 3. Console : 物理 Terminal
+4. tty: Terminal 的简称
+5. pty: 和 Terminal 的接口一致，但内部用不同方式处理的模拟 Terminal
 
 Shell 是实际处理我们输入的指令，并返回输出的程序。在 \*nix 环境下，shell 一般特指命令行 shell（一般以应用程序 + 参数 + Enter 的方式调用），在其他环境（如 Windows）下一般不使用 shell 这个词。通俗的说，虽然 shell 的意思是“壳”，但它却是实际完成工作的组件。我们常说的 bash, zsh, fish 等等，都属于 shell。
 
 Terminal 一般指代文本的I/O 环境（运行 Shell 的环境）。简单意义上，它的工作就是接受输入，将其转换成 shell 识别的控制序列传递给 shell，然后接受 shell 的 output 并显示。当然，一个良好设计的 Terminal 一定会有一些附加功能，比如显示配置、多任务多窗口管理等等。它还有一个常见的指代名称是 tty。比如 Mac 上的 iTerm，Gnome 下的 Gnome Terminal 和 Guake，都属于 Terminal。
 
 Console 是一种特殊的 Terminal，一般指代物理终端，例如键盘、显示器。
+
+pty（虚拟终端 pseudo-tty）是指有着和终端一致的 I/O 接口，但内部会使用不同的处理方式对输入的指令进行处理的设备。比如我们常用的 ssh/xterm 就用到了 pty ：比如当我们 ssh 到一台机器上，执行`ls`，这时`ls`的结果将会输出到与 ssh 进程连接的 pty 中。
 
 ## Cygwin 与 MinGW
 想要在 Windows 上使用命令行，我们可能马上会想到 Cygwin/MinGW。Cygwin 和 MinGW 都提供了在 windows 上使用 GNU 工具的能力，但是他们两个之间有一些差别需要注意。
@@ -44,6 +48,7 @@ MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem�
 Windows 下的命令行，按照实现方式，大概分为两类，一类是使用 stdin/stdout 重定向实现，一类使用 Windows 的 console API 实现。
 
 ### stdin/stdout 重定向方式
+多数这类终端模拟器需要依赖一个“POSIX 层”来运行，充当这个角色的一般是 cygwin 或 msys。
 
 ### Windows console API 方式
 
