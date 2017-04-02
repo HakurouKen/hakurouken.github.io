@@ -84,5 +84,6 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 ## 参考资料
 1. [Stackoverflow: What is the difference between shell, console, and terminal?](https://superuser.com/questions/144666/what-is-the-difference-between-shell-console-and-terminal#answer-144668)
 2. [StackExchange: What is the exact difference between a 'terminal', a 'shell', a 'tty' and a 'console'? ](http://unix.stackexchange.com/questions/4126/what-is-the-exact-difference-between-a-terminal-a-shell-a-tty-and-a-con#answer-4132)
-3. [Stackoverflow: What is the difference between Cygwin and MinGW?](http://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw)
-4. [ConEmu Document: Troubleshooting Cygwin and Msys problems](https://conemu.github.io/en/CygwinMsys.html#Some_techinfo_first)
+3. [Stackoverflow: What do pty and tty mean?](http://stackoverflow.com/questions/4426280/what-do-pty-and-tty-mean)
+4. [Stackoverflow: What is the difference between Cygwin and MinGW?](http://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw)
+5. [ConEmu Document: Troubleshooting Cygwin and Msys problems](https://conemu.github.io/en/CygwinMsys.html#Some_techinfo_first)
