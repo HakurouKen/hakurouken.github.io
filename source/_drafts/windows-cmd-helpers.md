@@ -21,7 +21,8 @@ Terminal 一般指代文本的I/O 环境（运行 Shell 的环境）。简单意
 
 Console 是一种特殊的 Terminal，一般指代物理终端，例如键盘、显示器。
 
-pty（虚拟终端 pseudo-tty）是指有着和终端一致的 I/O 接口，但内部会使用不同的处理方式对输入的指令进行处理的设备。比如我们常用的 ssh/xterm 就用到了 pty ：比如当我们 ssh 到一台机器上，执行`ls`，这时`ls`的结果将会输出到与 ssh 进程连接的 pty 中。
+pty（虚拟终端 pseudo-tty）是指有着和终端一致的 I/O 接口，但内部会使用不同的处理方式对输入的指令进行处理的设备。比如我们常用的 ssh/xterm 就用到了 pty ：比如当我们 ssh 到一台机器上，执行`ls`，这时`ls`的结果将会输出到与 ssh 进程连接的 pty 中。需要注意的是，**Windows 下没有 pty 这一概念**。
+
 
 ## Cygwin 与 MinGW
 想要在 Windows 上使用命令行，我们可能马上会想到 Cygwin/MinGW。Cygwin 和 MinGW 都提供了在 windows 上使用 GNU 工具的能力，但是他们两个之间有一些差别需要注意。
@@ -44,14 +45,15 @@ MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem�
 
 回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。
 
+
 ## 终端的局限性
 Windows 下的命令行，按照实现方式，大概分为两类，一类是使用 stdin/stdout 重定向实现，一类使用 Windows 的 console API 实现。
 
 ### stdin/stdout 重定向方式
-多数这类终端模拟器需要依赖一个“POSIX 层”来运行，充当这个角色的一般是 cygwin 或 msys。
+多数这类终端模拟器需要依赖一个“POSIX 层”来运行，充当这个角色的一般是 Cygwin 或 MSYS。它的优点是运行非常快，同时不需要考虑支持控制字符（因为 Cygwin 都实现了），并可以做到任意回滚。不过这种方式的最大问题在于：**无法使用为 Windows 控制台设计的程序**（例如 Powershell 或者 官方版的 vim 等等）。
 
 ### Windows console API 方式
-
+这种方式运行的终端相当于运行在一个隐藏的标准 Windows 控制台窗口中，可以完美兼容 Windows 控制台程序。但是相应的，有些在 Cygwin 上能够正常运行的程序，运行会有些异常。
 
 
 ## 几个命令行工具对比
