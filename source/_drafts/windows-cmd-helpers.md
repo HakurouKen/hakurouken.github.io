@@ -35,7 +35,7 @@ Cygwin 的用途，它的[官方网站](http://www.cygwin.com/)已经描述的�
 >
 > Cygwin **不是**：
 > - 一个在 Windows 上运行原生 Linux 程序的方法。如果想要在 Windows 上运行，你必须从源代码重新构建。
-> - 一个神奇的让 Windows 程序感知 Unix<sup>®</sup>的功能（如信号、pyt 等）。同样，如果要利用 Cygwin 的功能，还需要从源代码重新构建。
+> - 一个神奇的让 Windows 程序感知 Unix<sup>®</sup>的功能（如信号、pty 等）。同样，如果要利用 Cygwin 的功能，还需要从源代码重新构建。
 
 再来看 [MinGW](http://www.mingw.org/)：
 > MinGW提供了一个完整的开源编程工具集，适用于开发本地MS-Windows应用程序，而不依赖于任何第三方C-Runtime DLL。
@@ -44,7 +44,7 @@ Cygwin 的用途，它的[官方网站](http://www.cygwin.com/)已经描述的�
 
 MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem）是一个 Cygwin-1.3 的轻量分支，包括一小部分 Unix 的工具链。但是，MSYS 现在已经基本没人维护了，MinGW 的主要维护者牵头建立了 MSYS2 ，这是一个基于 Cygwin 更新版本的分支，基本可以替代 MSYS。
 
-回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。
+回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。需要注意的是，由于 Cygwin 并不能支持 pty 等特性，因此很多为 Windows 命令行设计的程序会出现运行问题（比如 Node.js，可以参考[这个 issue](https://github.com/nodejs/node/issues/3006)中的讨论内容），在使用的时候需要特别注意这些场景。
 
 
 ## 终端的局限性
@@ -69,16 +69,20 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 3. 复制粘帖困难
 4. 没有主题定制
 
-但是 minitty 有很多地方支持的比较不完善，比如[不支持控制台程序](https://github.com/mintty/mintty/issues/56)，[不支持多 Tab](https://github.com/mintty/mintty/issues/645)，[在输入特殊字符时，光标移动会出现问题](https://github.com/mintty/mintty/issues/612)。
-
-有关类 Unix 的 shell，在这里强烈推荐 **cygwin + zsh + oh-my-zsh** 的默认配置，然后在此基础上针对性的修改主题，并配置一些实用工具/插件（例如提示 alias 的[alias-tips](https://github.com/djui/alias-tips)，快速跳转的 [autojump](https://github.com/wting/autojump)），可以参照 [awesome-zsh-plugins](https://github.com/unixorn/awesome-zsh-plugins)。
-
-综合来看，minitty 做到了可用，但是并不是很好用，如果你是一个轻度命令行使用者，可以考虑用 minitty 做一个 backup 方案（因为是 Cygwin 默认，省去安装的步骤）。
+但是 minitty 有很多地方支持的比较不完善，比如[不支持控制台程序](https://github.com/mintty/mintty/issues/56)，[不支持多 Tab](https://github.com/mintty/mintty/issues/645)，[在输入特殊字符时，光标移动会出现问题](https://github.com/mintty/mintty/issues/612)。综合来看，minitty 做到了可用，但是并不是很好用，如果你是一个轻度命令行使用者，可以考虑用 minitty 做一个 backup 方案（因为是 Cygwin 默认，省去安装的步骤）。
 
 ### ConEmu
 官方网站：[https://conemu.github.io/](https://conemu.github.io/)
 
+作为一个终端，ConEmu 做的非常出色，它甚至可以在 tab 中整合一些 GUI 的应用（比如整合一个其它的终端进来）。优点很多不再举例，这里只说使用中遇到的一些问题：
+1. 在分屏时，只有第一个 Console 能使用鼠标滚轮。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/216)。
+2. 使用 WriteConsoleW 输出中文时，会重复输出。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/945)。
+
 ### cmder
+官方网站：[http://cmder.net](http://cmder.net)
+
+简单的讲，cmder ≈ ConEmu + [Clink](https://mridgers.github.io/clink/)。它同时具备具备了 ConEmu 终端的功能，又通过 Clink 引入了 Bash-style 的行编辑功能。但同时，它也集合了二者的缺点。比如我在使用中，遇到最大的问题是[使用方向键进行历史补全的显示问题](https://github.com/mridgers/clink/issues/409)。另外，cmder 对中文的支持有一点小问题，比如`ls`默认不能输出中文，要加上`--show-control-chars`才能解决（这个问题已经修复，见[这个PR](https://github.com/cmderdev/cmder/pull/1070)）。
+
 ### babun
 ### ConsoleZ
 ### XShell 和 PowerCmd
@@ -89,4 +93,5 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 2. [StackExchange: What is the exact difference between a 'terminal', a 'shell', a 'tty' and a 'console'? ](http://unix.stackexchange.com/questions/4126/what-is-the-exact-difference-between-a-terminal-a-shell-a-tty-and-a-con#answer-4132)
 3. [Stackoverflow: What do pty and tty mean?](http://stackoverflow.com/questions/4426280/what-do-pty-and-tty-mean)
 4. [Stackoverflow: What is the difference between Cygwin and MinGW?](http://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw)
-5. [ConEmu Document: Troubleshooting Cygwin and Msys problems](https://conemu.github.io/en/CygwinMsys.html#Some_techinfo_first)
+5. [ConEmu Document: RealConsole](http://conemu.github.io/en/RealConsole.html)
+6. [ConEmu Document: Troubleshooting Cygwin and Msys problems](https://conemu.github.io/en/CygwinMsys.html#Some_techinfo_first)
