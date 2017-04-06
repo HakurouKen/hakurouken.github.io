@@ -75,7 +75,7 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 官方网站：[https://conemu.github.io/](https://conemu.github.io/)
 
 作为一个终端，ConEmu 做的非常出色，它的 attach 功能甚至可以在 tab 中整合一些 GUI 的应用（比如整合一个其它的终端进来）。优点很多不再举例，这里只说使用中遇到的一些问题：
-1. 在和一些分屏软件搭配使用时，会出现只有第一个 Console 能使用鼠标滚轮的 bug。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/216)。
+1. 滚动条表现比较奇怪，在滚动超过最后一行后，仍然可以继续滚动。
 2. 使用 WriteConsoleW 输出中文时，会重复输出。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/945)。
 
 ### cmder
