@@ -1,10 +1,12 @@
 ---
 title: windows 下的命令行工具
 tags: javascript
+date: 2017-04-07 00:19:24
 ---
 
 写代码的时候，总免不了和命令行打交道。但是在 Windows 下，默认的命令行 cmd.exe 实在难用。 Windows 7 之后，微软推出了 powershell 作为 cmd 的替代品，但是仍然有很多缺点（PS：Windows 10 又推出了 Bash shell，不过手头还没有 Win 10 设备，暂时还没体验到），似乎对于目前在 Windows 下的开发，命令行增强是个刚需。现在这样的工具随便搜搜也能找出一堆，质量却参差不齐，本文将对几个人气比较高的工具做一些对比评测。
 
+<!-- more -->
 ## shell，终端(terminal)，控制台(console)与 tty/pty
 在进入正题之前，我们需要先弄清楚 shell，terminal，console 三个概念。这三个概念都是从早期的大型机保留下来的，我们这里只讨论在类 unix 环境下这三个概念的区别。同时，unix 上还有 tty 与 pty 之间的区别，这里也需要做一个简单的区分。
 
