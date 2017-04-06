@@ -51,7 +51,7 @@ MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem�
 Windows 下的命令行，按照实现方式，大概分为两类，一类是使用 stdin/stdout 重定向实现，一类使用 Windows 的 console API 实现。
 
 ### stdin/stdout 重定向方式
-多数这类终端模拟器需要依赖一个“POSIX 层”来运行，充当这个角色的一般是 Cygwin 或 MSYS。它的优点是运行非常快，同时不需要考虑支持控制字符（因为 Cygwin 都实现了），并可以做到任意回滚。不过这种方式的最大问题在于：**无法使用为 Windows 控制台设计的程序**（例如 Powershell 或者 官方版的 vim 等等）。使用这种方式实现的常见终端有 mintty，puttycyg 等。
+多数这类终端模拟器需要依赖一个“POSIX 层”来运行，充当这个角色的一般是 Cygwin 或 MSYS。它的优点是运行非常快，同时不需要考虑支持控制字符（因为 Cygwin 都实现了），并可以做到任意回滚。不过这种方式的最大问题在于：**无法使用为 Windows 控制台设计的程序**（例如 Powershell 或者 官方版的 vim , Node.js 等等）。使用这种方式实现的常见终端有 mintty，puttycyg 等。
 
 ### Windows console API 方式
 这种方式运行的终端相当于运行在一个隐藏的标准 Windows 控制台窗口中，可以完美兼容 Windows 控制台程序。但是相应的，有些在 Cygwin 上能够正常运行的程序，运行会有些异常。使用这种方式实现的终端有 ConEmu、ConsoleZ 等。
@@ -78,6 +78,8 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 1. 滚动条表现比较奇怪，在滚动超过最后一行后，仍然可以继续滚动。
 2. 使用 WriteConsoleW 输出中文时，会重复输出。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/945)。
 
+总得来说，我遇到的问题感觉都无伤大雅，在可以接受的范围之内，值得推荐。
+
 ### cmder
 官方网站：[http://cmder.net](http://cmder.net)
 
@@ -99,8 +101,14 @@ ConsoleZ 是一个 Console 2 的分支（Console 2 似乎已经停止更新）�
 3. 光标默认不闪（让我总感觉终端卡死了，虽然并没有）。
 4. 支持的配置项没有 ConEmu 多（不过日常需要的几乎都可以满足，缺少的只是一些个性化设置）。
 
+ConsoleZ 总体来说还是一个很好用的终端，但是由于以上几个体验问题，个人感觉会比 ConEmu 体验差一些。
+
 ### XShell 和 PowerCmd
 网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。另外，单纯从使用体验上讲，它们并没有比其它免费的终端更加出彩的地方，这也是个人没有选择这两款软件的原因之一。
+
+
+## 总结
+在 Windows 下，个人最推荐的终端是 ConEmu 。默认的 shell 使用 powershell，如果需要使用 Linux 工具链的话，再手动切换到 Cygwin 下的 shell，shell 配置使用 zsh (基于 oh-my-zsh 的默认配置做自定义)。
 
 ## 参考资料
 1. [Stackoverflow: What is the difference between shell, console, and terminal?](https://superuser.com/questions/144666/what-is-the-difference-between-shell-console-and-terminal#answer-144668)
