@@ -89,6 +89,16 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 babun 与其说是一个终端，不如说是一个集成工具集。它使用 mintty 作为默认终端，集成了一个定制版的 Cygwin，同时使用 zsh 作为默认 shell（采用 oh-my-zsh 作为默认配置）。不仅如此，它还继承了许多第三方工具和软件（比如 python/git/curl 等等），这也导致了它的安装包体积比较大。 babun 的优点在于开箱即用，它完成的工作和我们基于 mintty 手动配置没有太大差别。另外从 Github 上的提交日志，似乎已经停止更新了，因此今后不太建议继续使用。
 
 ### ConsoleZ
+官方网站：[https://github.com/cbucher/console](https://github.com/cbucher/console)
+
+ConsoleZ 是一个 Console 2 的分支（Console 2 似乎已经停止更新），它基于 Console 2 做了非常多的优化和改进。
+
+缺点：
+1. 默认设置不好用，比如[默认中文显示问题](https://github.com/cbucher/console/issues/172)；默认的选中、复制粘帖鼠标快捷键比较怪等等；没有预制的 PowerShell 启动项，要自己手动选择到 PowerShell 路径才行。不过总的来说，这个都是一次性设置，不是大问题。
+2. 没有初始化钩子，不能支持刚打开 terminal 时打开几个默认 task。
+3. 光标默认不闪（让我总感觉终端卡死了，虽然并没有）。
+4. 支持的配置项没有 ConEmu 多（不过日常需要的几乎都可以满足，缺少的只是一些个性化设置）。
+
 ### XShell 和 PowerCmd
 网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。另外，单纯从使用体验上讲，它们并没有比其它免费的终端更加出彩的地方，这也是个人没有选择这两款软件的原因之一。
 
