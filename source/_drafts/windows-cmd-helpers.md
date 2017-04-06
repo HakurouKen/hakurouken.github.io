@@ -44,7 +44,7 @@ Cygwin 的用途，它的[官方网站](http://www.cygwin.com/)已经描述的�
 
 MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem）是一个 Cygwin-1.3 的轻量分支，包括一小部分 Unix 的工具链。但是，MSYS 现在已经基本没人维护了，MinGW 的主要维护者牵头建立了 MSYS2 ，这是一个基于 Cygwin 更新版本的分支，基本可以替代 MSYS。
 
-回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。需要注意的是，由于 Cygwin 并不能支持 pty 等特性，因此很多为 Windows 命令行设计的程序会出现运行问题（比如 Node.js，可以参考[这个 issue](https://github.com/nodejs/node/issues/3006)中的讨论内容），在使用的时候需要特别注意这些场景。
+回到我们的需求来看，如果我们只是需要一个**类 Unix 命令行工具**，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。需要注意的是，由于 Cygwin 并不能支持 pty 等特性，因此很多为 Windows 命令行设计的程序会出现运行问题（比如 Node.js，可以参考[这个 issue](https://github.com/nodejs/node/issues/3006)中的讨论内容），在使用的时候需要特别注意这些问题。
 
 
 ## 终端的局限性
@@ -74,8 +74,8 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 ### ConEmu
 官方网站：[https://conemu.github.io/](https://conemu.github.io/)
 
-作为一个终端，ConEmu 做的非常出色，它甚至可以在 tab 中整合一些 GUI 的应用（比如整合一个其它的终端进来）。优点很多不再举例，这里只说使用中遇到的一些问题：
-1. 在分屏时，只有第一个 Console 能使用鼠标滚轮。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/216)。
+作为一个终端，ConEmu 做的非常出色，它的 attach 功能甚至可以在 tab 中整合一些 GUI 的应用（比如整合一个其它的终端进来）。优点很多不再举例，这里只说使用中遇到的一些问题：
+1. 在和一些分屏软件搭配使用时，会出现只有第一个 Console 能使用鼠标滚轮的 bug。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/216)。
 2. 使用 WriteConsoleW 输出中文时，会重复输出。详见[这个 issue](https://github.com/Maximus5/ConEmu/issues/945)。
 
 ### cmder
@@ -84,6 +84,10 @@ minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解
 简单的讲，cmder ≈ ConEmu + [Clink](https://mridgers.github.io/clink/)。它同时具备具备了 ConEmu 终端的功能，又通过 Clink 引入了 Bash-style 的行编辑功能。但同时，它也集合了二者的缺点。比如我在使用中，遇到最大的问题是[使用方向键进行历史补全的显示问题](https://github.com/mridgers/clink/issues/409)。另外，cmder 对中文的支持有一点小问题，比如`ls`默认不能输出中文，要加上`--show-control-chars`才能解决（这个问题已经修复，见[这个PR](https://github.com/cmderdev/cmder/pull/1070)）。
 
 ### babun
+官方网站：[http://babun.github.io](http://babun.github.io)
+
+babun 与其说是一个终端，不如说是一个集成工具集。它使用 mintty 作为默认终端，集成了一个定制版的 Cygwin，同时使用 zsh 作为默认 shell（采用 oh-my-zsh 作为默认配置）。不仅如此，它还继承了许多第三方工具和软件（比如 python/git/curl 等等），这也导致了它的安装包体积比较大。 babun 的优点在于开箱即用，它完成的工作和我们基于 mintty 手动配置没有太大差别。另外从 Github 上的提交日志，似乎已经停止更新了，因此今后不太建议继续使用。
+
 ### ConsoleZ
 ### XShell 和 PowerCmd
 网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。另外，单纯从使用体验上讲，它们并没有比其它免费的终端更加出彩的地方，这也是个人没有选择这两款软件的原因之一。
