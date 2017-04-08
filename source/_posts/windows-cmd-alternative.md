@@ -1,5 +1,5 @@
 ---
-title: windows 下的命令行工具
+title: windows 下的命令行替代工具
 tags: javascript
 date: 2017-04-07 00:19:24
 ---
@@ -110,7 +110,8 @@ ConsoleZ 总体来说还是一个很好用的终端，但是由于以上几个�
 
 
 ## 总结
-在 Windows 下，个人最推荐的终端是 ConEmu 。默认的 shell 使用 powershell，如果需要使用 Linux 工具链的话，再手动切换到 Cygwin 下的 shell，shell 配置使用 zsh (基于 oh-my-zsh 的默认配置做自定义)。
+在 Windows 下，个人最推荐的终端是 ConEmu 。默认的 shell 使用 powershell，如果需要使用 Linux 工具链的话，再手动切换到 Cygwin 下的 shell（bash/zsh）。当然，默认的 Powershell 也有很多不好用的地方，有很多对它进行优化的工具集/配置，如[oh-my-posh](https://github.com/JanJoris/oh-my-posh#installation)等等，这里不再详细展开。
+
 
 ## 参考资料
 1. [Stackoverflow: What is the difference between shell, console, and terminal?](https://superuser.com/questions/144666/what-is-the-difference-between-shell-console-and-terminal#answer-144668)
