@@ -81,3 +81,6 @@ _.sortBy(users, [function(o) { return o.user; }]);
 要解决这个问题，我们需要校验自己的代码中，有没有用到官方描述的[Feature Sets](https://github.com/lodash/lodash-webpack-plugin#feature-sets)中类似的特性，然后更改自己的代码，或者开启对应的特性配置。**一般情况下，开启 flattening 和 paths 配置可以解决大部分问题。**
 
 ## 参考资料
+1. [lodash 官方文档](https://lodash.com)
+2. [babel-plugin-lodash 项目文档](https://github.com/lodash/babel-plugin-lodash)
+3. [lodash-webpack-plugin 项目](https://github.com/lodash/lodash-webpack-plugin)
