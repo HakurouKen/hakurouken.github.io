@@ -50,5 +50,34 @@ _map([1, 2, 3], addOne);
 在这一步的基础上，我们还可以使用 [lodash-webpack-plugin](https://github.com/lodash/lodash-webpack-plugin) 进一步减包。它的原理是将我们用到的方法（和间接用到的内部方法）使用更简单的方法替代。具体的方法对应关系，参照源代码中的[mapping.js](https://github.com/lodash/lodash-webpack-plugin/blob/master/src/mapping.js)。[使用方法](https://github.com/lodash/lodash-webpack-plugin#usage)也非常简单，只需要在 webpack 配置中引入该 plugin ，即可将所有的 **cheery-pick 引入的方法**自动进行转换。
 
 ## 需要注意的问题
+一般介绍 lodash 打包优化的文章，介绍到这里就算结束了。但是，lodash-webpack-plugin 还有一系列的 feature 配置，它们的作用又是什么？实际上，经过 lodash-webpack-plugin 转化的 lodash 函数，已经和文档中对应的函数不完全等价，因此，如果我们用到了一些特定的特性，我们需要通过调整这些配置，保证我们的代码正常运行。
+
+要关注这些配置的作用，只需要关注[mapping.js](https://github.com/lodash/lodash-webpack-plugin/blob/master/src/mapping.js)这个文件，其中配置了`features`和`overrides`两个变量。`features`中每一项对应一个开关，每个开关则对应着若干组替换规则。以`cloning`为例，当对应配置关闭（默认即为关闭）时，插件将把内部的`_._baseClone`（暂且这样表示）方法替换为`_.identity`方法。而`overrides`变量中的每一项表示：只要我们引用了对应方法，则打开对应配置开关。
+
+了解了这一点，我们再谈谈这个配置是怎样影响对应方法的。以`_.sortBy`方法为例，在它的[源代码](https://github.com/lodash/lodash/blob/es/sortBy.js)中（注：由于我们使用 npm 安装，因此需要查看 es 分支的源代码），我们可以看到它使用了四个内部库：
+```javascript
+import baseFlatten from './_baseFlatten.js';
+import baseOrderBy from './_baseOrderBy.js';
+import baseRest from './_baseRest.js';
+import isIterateeCall from './_isIterateeCall.js';
+```
+在`flattening`规则中，内部`_baseFlatten`将会被替换为`_.head`方法。本来根据`_.sortBy`[文档](https://lodash.com/docs/4.17.4#sortBy)，下列代码可以正常运行：
+```javascript
+var users = [
+  { 'user': 'fred',   'age': 48 },
+  { 'user': 'barney', 'age': 36 },
+  { 'user': 'fred',   'age': 40 },
+  { 'user': 'barney', 'age': 34 }
+];
+
+_.sortBy(users, function(o) { return o.user; });
+```
+经过插件转化后，这种写法将会抛出异常。我们只能使用下列写法：
+```javascript
+_.sortBy(users, [function(o) { return o.user; }]);
+```
+收到类似影响的函数还有`_.overArgs`,`_.flow`等几个方法。同理，`_.get`，`_.has`等方法，也会`_baseGet`方法被替换受到影响。
+
+要解决这个问题，我们需要校验自己的代码中，有没有用到官方描述的[Feature Sets](https://github.com/lodash/lodash-webpack-plugin#feature-sets)中类似的特性，然后更改自己的代码，或者开启对应的特性配置。**一般情况下，开启 flattening 和 paths 配置可以解决大部分问题。**
 
 ## 参考资料
