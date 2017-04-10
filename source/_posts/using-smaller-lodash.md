@@ -3,7 +3,9 @@ title: 使用更小的 Lodash
 tags:
   - webpack
   - javascript
+date: 2017-04-10 21:38:23
 ---
+
 
 Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。
 
