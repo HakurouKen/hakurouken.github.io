@@ -1,0 +1,754 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="写代码的时候，总免不了和命令行打交道。但是在 Windows 下，默认的命令行 cmd.exe 实在难用。 Windows 7 之后，微软推出了 powershell 作为 cmd 的替代品，但是仍然有很多缺点（PS：Windows 10 又推出了 Bash shell，不过手头还没有 Win 10 设备，暂时还没体验到），似乎对于目前在 Windows 下的开发，命令行增强是个刚需。现在这样的工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows 下的命令行替代工具">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/04/07/windows-cmd-alternative/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="写代码的时候，总免不了和命令行打交道。但是在 Windows 下，默认的命令行 cmd.exe 实在难用。 Windows 7 之后，微软推出了 powershell 作为 cmd 的替代品，但是仍然有很多缺点（PS：Windows 10 又推出了 Bash shell，不过手头还没有 Win 10 设备，暂时还没体验到），似乎对于目前在 Windows 下的开发，命令行增强是个刚需。现在这样的工">
+<meta property="og:updated_time" content="2017-04-08T05:48:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="windows 下的命令行替代工具">
+<meta name="twitter:description" content="写代码的时候，总免不了和命令行打交道。但是在 Windows 下，默认的命令行 cmd.exe 实在难用。 Windows 7 之后，微软推出了 powershell 作为 cmd 的替代品，但是仍然有很多缺点（PS：Windows 10 又推出了 Bash shell，不过手头还没有 Win 10 设备，暂时还没体验到），似乎对于目前在 Windows 下的开发，命令行增强是个刚需。现在这样的工">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/04/07/windows-cmd-alternative/"/>
+
+
+
+
+
+  <title> windows 下的命令行替代工具 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/04/07/windows-cmd-alternative/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                windows 下的命令行替代工具
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-07T00:19:24+08:00">
+                2017-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/07/windows-cmd-alternative/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/07/windows-cmd-alternative/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>写代码的时候，总免不了和命令行打交道。但是在 Windows 下，默认的命令行 cmd.exe 实在难用。 Windows 7 之后，微软推出了 powershell 作为 cmd 的替代品，但是仍然有很多缺点（PS：Windows 10 又推出了 Bash shell，不过手头还没有 Win 10 设备，暂时还没体验到），似乎对于目前在 Windows 下的开发，命令行增强是个刚需。现在这样的工具随便搜搜也能找出一堆，质量却参差不齐，本文将对几个人气比较高的工具做一些对比评测。</p>
+<a id="more"></a>
+<h2 id="shell，终端-terminal-，控制台-console-与-tty-pty"><a href="#shell，终端-terminal-，控制台-console-与-tty-pty" class="headerlink" title="shell，终端(terminal)，控制台(console)与 tty/pty"></a>shell，终端(terminal)，控制台(console)与 tty/pty</h2><p>在进入正题之前，我们需要先弄清楚 shell，terminal，console 三个概念。这三个概念都是从早期的大型机保留下来的，我们这里只讨论在类 unix 环境下这三个概念的区别。同时，unix 上还有 tty 与 pty 之间的区别，这里也需要做一个简单的区分。</p>
+<p><strong>太长懒看版本：</strong></p>
+<ol>
+<li>Shell : 命令行解释器</li>
+<li>Terminal : 命令行的 I/O 环境</li>
+<li>Console : 物理 Terminal</li>
+<li>tty: Terminal 的简称</li>
+<li>pty: 和 Terminal 的接口一致，但内部用不同方式处理的模拟 Terminal</li>
+</ol>
+<p>Shell 是实际处理我们输入的指令，并返回输出的程序。在 *nix 环境下，shell 一般特指命令行 shell（一般以应用程序 + 参数 + Enter 的方式调用），在其他环境（如 Windows）下一般不使用 shell 这个词。通俗的说，虽然 shell 的意思是“壳”，但它却是实际完成工作的组件。我们常说的 bash, zsh, fish 等等，都属于 shell。</p>
+<p>Terminal 一般指代文本的I/O 环境（运行 Shell 的环境）。简单意义上，它的工作就是接受输入，将其转换成 shell 识别的控制序列传递给 shell，然后接受 shell 的 output 并显示。当然，一个良好设计的 Terminal 一定会有一些附加功能，比如显示配置、多任务多窗口管理等等。它还有一个常见的指代名称是 tty。比如 Mac 上的 iTerm，Gnome 下的 Gnome Terminal 和 Guake，都属于 Terminal。</p>
+<p>Console 是一种特殊的 Terminal，一般指代物理终端，例如键盘、显示器。</p>
+<p>pty（虚拟终端 pseudo-tty）是指有着和终端一致的 I/O 接口，但内部会使用不同的处理方式对输入的指令进行处理的设备。比如我们常用的 ssh/xterm 就用到了 pty ：比如当我们 ssh 到一台机器上，执行<code>ls</code>，这时<code>ls</code>的结果将会输出到与 ssh 进程连接的 pty 中。</p>
+<p>然而在 Windows 上，并不能太严格的区分出这几个概念。比如<strong>Windows 上没有 pty 的概念</strong>，而我们平时说的 cmd / powershell ，实际对应的是封装好 Shell + Terminal 的一个完整的应用。实际与“终端”对应的概念是 Windows 的内部进程<code>conhost.exe</code>（在 Vista 以及之前是<code>csrss.exe</code>）。</p>
+<h2 id="Cygwin-与-MinGW"><a href="#Cygwin-与-MinGW" class="headerlink" title="Cygwin 与 MinGW"></a>Cygwin 与 MinGW</h2><p>想要在 Windows 上使用命令行，我们可能马上会想到 Cygwin/MinGW。Cygwin 和 MinGW 都提供了在 windows 上使用 GNU 工具的能力，但是他们两个之间有一些差别需要注意。</p>
+<p>Cygwin 的用途，它的<a href="http://www.cygwin.com/" target="_blank" rel="external">官方网站</a>已经描述的非常清楚了：</p>
+<blockquote>
+<p>Cygwin 是：</p>
+<ul>
+<li>一个 GNU 和开源工具的合集，为 Windows 提供类似 Linux 发行版的功能</li>
+<li>一个提供大量 POSIX API 的功能的 DLL(cygwin1.dll)</li>
+</ul>
+<p>Cygwin <strong>不是</strong>：</p>
+<ul>
+<li>一个在 Windows 上运行原生 Linux 程序的方法。如果想要在 Windows 上运行，你必须从源代码重新构建。</li>
+<li>一个神奇的让 Windows 程序感知 Unix<sup>®</sup>的功能（如信号、pty 等）。同样，如果要利用 Cygwin 的功能，还需要从源代码重新构建。</li>
+</ul>
+</blockquote>
+<p>再来看 <a href="http://www.mingw.org/" target="_blank" rel="external">MinGW</a>：</p>
+<blockquote>
+<p>MinGW提供了一个完整的开源编程工具集，适用于开发本地MS-Windows应用程序，而不依赖于任何第三方C-Runtime DLL。</p>
+<p>MinGW 编译器提供对对 Microsoft C （和某些特定语言）的运行时访问的功能。简单来讲，<strong> MinGW 不会试图为一个 POSIX 应用提供在 Windows 上的 POSIX 运行时的环境。 </strong>如果你有类似的需求，可以尝试 Cygwin。</p>
+</blockquote>
+<p>MinGW 使用了 MSYS 作为他的命令行解释环境。MSYS（Minimal SYStem）是一个 Cygwin-1.3 的轻量分支，包括一小部分 Unix 的工具链。但是，MSYS 现在已经基本没人维护了，MinGW 的主要维护者牵头建立了 MSYS2 ，这是一个基于 Cygwin 更新版本的分支，基本可以替代 MSYS。</p>
+<p>回到我们的需求来看，如果我们只是需要一个<strong>类 Unix 命令行工具</strong>，Cygwin 是我们的首选。当然，你也可以选择轻量一些的 MSYS2 作为替代。需要注意的是，由于 Cygwin 并不能支持 pty 等特性，因此很多为 Windows 命令行设计的程序会出现运行问题（比如 Node.js，可以参考<a href="https://github.com/nodejs/node/issues/3006" target="_blank" rel="external">这个 issue</a>中的讨论内容），在使用的时候需要特别注意这些问题。</p>
+<h2 id="终端的局限性"><a href="#终端的局限性" class="headerlink" title="终端的局限性"></a>终端的局限性</h2><p>Windows 下的命令行，按照实现方式，大概分为两类，一类是使用 stdin/stdout 重定向实现，一类使用 Windows 的 console API 实现。</p>
+<h3 id="stdin-stdout-重定向方式"><a href="#stdin-stdout-重定向方式" class="headerlink" title="stdin/stdout 重定向方式"></a>stdin/stdout 重定向方式</h3><p>多数这类终端模拟器需要依赖一个“POSIX 层”来运行，充当这个角色的一般是 Cygwin 或 MSYS。它的优点是运行非常快，同时不需要考虑支持控制字符（因为 Cygwin 都实现了），并可以做到任意回滚。不过这种方式的最大问题在于：<strong>无法使用为 Windows 控制台设计的程序</strong>（例如 Powershell 或者 官方版的 vim , Node.js 等等）。使用这种方式实现的常见终端有 mintty，puttycyg 等。</p>
+<h3 id="Windows-console-API-方式"><a href="#Windows-console-API-方式" class="headerlink" title="Windows console API 方式"></a>Windows console API 方式</h3><p>这种方式运行的终端相当于运行在一个隐藏的标准 Windows 控制台窗口中，可以完美兼容 Windows 控制台程序。但是相应的，有些在 Cygwin 上能够正常运行的程序，运行会有些异常。使用这种方式实现的终端有 ConEmu、ConsoleZ 等。</p>
+<h2 id="几个命令行工具对比"><a href="#几个命令行工具对比" class="headerlink" title="几个命令行工具对比"></a>几个命令行工具对比</h2><p>下文提到的命令行工具，主要是指终端(terminal)。这些终端多数都支持我们选择自己的 shell ，也有些工具中直接集成了 shell 或者一些工具集。</p>
+<h3 id="minitty"><a href="#minitty" class="headerlink" title="minitty"></a>minitty</h3><p>官方网站：<a href="https://mintty.github.io/" target="_blank" rel="external">https://mintty.github.io/</a></p>
+<p>minitty 是 Cygwin 和 MinGW 的默认终端，它在保持轻量的同时，解决了不少 Windows 原生终端的痛点，包括但不限于：</p>
+<ol>
+<li>字符集支持问题</li>
+<li>窗口宽度不可调整</li>
+<li>复制粘帖困难</li>
+<li>没有主题定制</li>
+</ol>
+<p>但是 minitty 有很多地方支持的比较不完善，比如<a href="https://github.com/mintty/mintty/issues/56" target="_blank" rel="external">不支持控制台程序</a>，<a href="https://github.com/mintty/mintty/issues/645" target="_blank" rel="external">不支持多 Tab</a>，<a href="https://github.com/mintty/mintty/issues/612" target="_blank" rel="external">在输入特殊字符时，光标移动会出现问题</a>。综合来看，minitty 做到了可用，但是并不是很好用，如果你是一个轻度命令行使用者，可以考虑用 minitty 做一个 backup 方案（因为是 Cygwin 默认，省去安装的步骤）。</p>
+<h3 id="ConEmu"><a href="#ConEmu" class="headerlink" title="ConEmu"></a>ConEmu</h3><p>官方网站：<a href="https://conemu.github.io/" target="_blank" rel="external">https://conemu.github.io/</a></p>
+<p>作为一个终端，ConEmu 做的非常出色，它的 attach 功能甚至可以在 tab 中整合一些 GUI 的应用（比如整合一个其它的终端进来）。优点很多不再举例，这里只说使用中遇到的一些问题：</p>
+<ol>
+<li>滚动条表现比较奇怪，在滚动超过最后一行后，仍然可以继续滚动。</li>
+<li>使用 WriteConsoleW 输出中文时，会重复输出。详见<a href="https://github.com/Maximus5/ConEmu/issues/945" target="_blank" rel="external">这个 issue</a>。</li>
+</ol>
+<p>总得来说，我遇到的问题感觉都无伤大雅，在可以接受的范围之内，值得推荐。</p>
+<h3 id="cmder"><a href="#cmder" class="headerlink" title="cmder"></a>cmder</h3><p>官方网站：<a href="http://cmder.net" target="_blank" rel="external">http://cmder.net</a></p>
+<p>简单的讲，cmder ≈ ConEmu + <a href="https://mridgers.github.io/clink/" target="_blank" rel="external">Clink</a>。它同时具备具备了 ConEmu 终端的功能，又通过 Clink 引入了 Bash-style 的行编辑功能。但同时，它也集合了二者的缺点。比如我在使用中，遇到最大的问题是<a href="https://github.com/mridgers/clink/issues/409" target="_blank" rel="external">使用方向键进行历史补全的显示问题</a>。另外，cmder 对中文的支持有一点小问题，比如<code>ls</code>默认不能输出中文，要加上<code>--show-control-chars</code>才能解决（这个问题已经修复，见<a href="https://github.com/cmderdev/cmder/pull/1070" target="_blank" rel="external">这个PR</a>）。</p>
+<h3 id="babun"><a href="#babun" class="headerlink" title="babun"></a>babun</h3><p>官方网站：<a href="http://babun.github.io" target="_blank" rel="external">http://babun.github.io</a></p>
+<p>babun 与其说是一个终端，不如说是一个集成工具集。它使用 mintty 作为默认终端，集成了一个定制版的 Cygwin，同时使用 zsh 作为默认 shell（采用 oh-my-zsh 作为默认配置）。不仅如此，它还继承了许多第三方工具和软件（比如 python/git/curl 等等），这也导致了它的安装包体积比较大。 babun 的优点在于开箱即用，它完成的工作和我们基于 mintty 手动配置没有太大差别。另外从 Github 上的提交日志，似乎已经停止更新了，因此今后不太建议继续使用。</p>
+<h3 id="ConsoleZ"><a href="#ConsoleZ" class="headerlink" title="ConsoleZ"></a>ConsoleZ</h3><p>官方网站：<a href="https://github.com/cbucher/console" target="_blank" rel="external">https://github.com/cbucher/console</a></p>
+<p>ConsoleZ 是一个 Console 2 的分支（Console 2 似乎已经停止更新），它基于 Console 2 做了非常多的优化和改进。</p>
+<p>缺点：</p>
+<ol>
+<li>默认设置不好用，比如<a href="https://github.com/cbucher/console/issues/172" target="_blank" rel="external">默认中文显示问题</a>；默认的选中、复制粘帖鼠标快捷键比较怪等等；没有预制的 PowerShell 启动项，要自己手动选择到 PowerShell 路径才行。不过总的来说，这个都是一次性设置，不是大问题。</li>
+<li>没有初始化钩子，不能支持刚打开 terminal 时打开几个默认 task。</li>
+<li>光标默认不闪（让我总感觉终端卡死了，虽然并没有）。</li>
+<li>支持的配置项没有 ConEmu 多（不过日常需要的几乎都可以满足，缺少的只是一些个性化设置）。</li>
+</ol>
+<p>ConsoleZ 总体来说还是一个很好用的终端，但是由于以上几个体验问题，个人感觉会比 ConEmu 体验差一些。</p>
+<h3 id="XShell-和-PowerCmd"><a href="#XShell-和-PowerCmd" class="headerlink" title="XShell 和 PowerCmd"></a>XShell 和 PowerCmd</h3><p>网上也有很多人推荐 XShell 和 PowerCmd，但这两个是收费软件，而且闭源也不方便我们做一些定制化的修(zhe)改(teng)，因此这里一票否决。另外，单纯从使用体验上讲，它们并没有比其它免费的终端更加出彩的地方，这也是个人没有选择这两款软件的原因之一。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 Windows 下，个人最推荐的终端是 ConEmu 。默认的 shell 使用 powershell，如果需要使用 Linux 工具链的话，再手动切换到 Cygwin 下的 shell（bash/zsh）。当然，默认的 Powershell 也有很多不好用的地方，有很多对它进行优化的工具集/配置，如<a href="https://github.com/JanJoris/oh-my-posh#installation" target="_blank" rel="external">oh-my-posh</a>等等，这里不再详细展开。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://superuser.com/questions/144666/what-is-the-difference-between-shell-console-and-terminal#answer-144668" target="_blank" rel="external">Stackoverflow: What is the difference between shell, console, and terminal?</a></li>
+<li><a href="http://unix.stackexchange.com/questions/4126/what-is-the-exact-difference-between-a-terminal-a-shell-a-tty-and-a-con#answer-4132" target="_blank" rel="external">StackExchange: What is the exact difference between a ‘terminal’, a ‘shell’, a ‘tty’ and a ‘console’? </a></li>
+<li><a href="http://stackoverflow.com/questions/4426280/what-do-pty-and-tty-mean" target="_blank" rel="external">Stackoverflow: What do pty and tty mean?</a></li>
+<li><a href="http://stackoverflow.com/questions/771756/what-is-the-difference-between-cygwin-and-mingw" target="_blank" rel="external">Stackoverflow: What is the difference between Cygwin and MinGW?</a></li>
+<li><a href="http://conemu.github.io/en/RealConsole.html" target="_blank" rel="external">ConEmu Document: RealConsole</a></li>
+<li><a href="https://conemu.github.io/en/CygwinMsys.html#Some_techinfo_first" target="_blank" rel="external">ConEmu Document: Troubleshooting Cygwin and Msys problems</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/01/html-label-click-trigger/" rel="next" title="label 标签的点击事件">
+                <i class="fa fa-chevron-left"></i> label 标签的点击事件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/10/using-smaller-lodash/" rel="prev" title="使用更小的 Lodash">
+                使用更小的 Lodash <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2017/04/07/windows-cmd-alternative/"
+  data-title="windows 下的命令行替代工具"
+  data-content=""
+  data-url="http://blog.sevenplus.me/2017/04/07/windows-cmd-alternative/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+      <li><a class="ds-more" data-service="wechat" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-facebook" href="javascript:void(0);" data-service="facebook">Facebook</a></li>
+      <li><a class="ds-twitter" href="javascript:void(0);" data-service="twitter">Twitter</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+<style>
+.ds-share-icons-footer {
+    display: none! important;
+}
+.ds-comments-info {
+    display: none! important;
+}
+ds-powered-by {
+    display: none! important;
+}
+</style>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/07/windows-cmd-alternative/"
+           data-title="windows 下的命令行替代工具" data-url="http://blog.sevenplus.me/2017/04/07/windows-cmd-alternative/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#shell，终端-terminal-，控制台-console-与-tty-pty"><span class="nav-number">1.</span> <span class="nav-text">shell，终端(terminal)，控制台(console)与 tty/pty</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cygwin-与-MinGW"><span class="nav-number">2.</span> <span class="nav-text">Cygwin 与 MinGW</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#终端的局限性"><span class="nav-number">3.</span> <span class="nav-text">终端的局限性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stdin-stdout-重定向方式"><span class="nav-number">3.1.</span> <span class="nav-text">stdin/stdout 重定向方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows-console-API-方式"><span class="nav-number">3.2.</span> <span class="nav-text">Windows console API 方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个命令行工具对比"><span class="nav-number">4.</span> <span class="nav-text">几个命令行工具对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#minitty"><span class="nav-number">4.1.</span> <span class="nav-text">minitty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConEmu"><span class="nav-number">4.2.</span> <span class="nav-text">ConEmu</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cmder"><span class="nav-number">4.3.</span> <span class="nav-text">cmder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#babun"><span class="nav-number">4.4.</span> <span class="nav-text">babun</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConsoleZ"><span class="nav-number">4.5.</span> <span class="nav-text">ConsoleZ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XShell-和-PowerCmd"><span class="nav-number">4.6.</span> <span class="nav-text">XShell 和 PowerCmd</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hakurouken"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
