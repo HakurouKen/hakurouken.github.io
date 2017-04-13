@@ -82,19 +82,16 @@
 
 
 
-<meta name="description" content="Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。
-cherry-pick 方法Lodash 官方在 npm 上为每个方法维护了独立的包，便于我们直接引用。举个例子，如果我们需要lodash.chunk方法，可以直接安装lodash.chunk这个 npm 包，在代码中 import 即可：123">
+<meta name="description" content="Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用更小的 Lodash">
 <meta property="og:url" content="http://blog.sevenplus.me/2017/04/10/using-smaller-lodash/index.html">
 <meta property="og:site_name" content="HakuoruKen 的博客">
-<meta property="og:description" content="Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。
-cherry-pick 方法Lodash 官方在 npm 上为每个方法维护了独立的包，便于我们直接引用。举个例子，如果我们需要lodash.chunk方法，可以直接安装lodash.chunk这个 npm 包，在代码中 import 即可：123">
-<meta property="og:updated_time" content="2017-04-10T13:38:23.000Z">
+<meta property="og:description" content="Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。">
+<meta property="og:updated_time" content="2017-04-13T15:06:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用更小的 Lodash">
-<meta name="twitter:description" content="Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。
-cherry-pick 方法Lodash 官方在 npm 上为每个方法维护了独立的包，便于我们直接引用。举个例子，如果我们需要lodash.chunk方法，可以直接安装lodash.chunk这个 npm 包，在代码中 import 即可：123">
+<meta name="twitter:description" content="Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。">
 
 
 
@@ -320,6 +317,7 @@ cherry-pick 方法Lodash 官方在 npm 上为每个方法维护了独立的包�
 
       
         <p>Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。</p>
+<a id="more"></a>
 <h2 id="cherry-pick-方法"><a href="#cherry-pick-方法" class="headerlink" title="cherry-pick 方法"></a>cherry-pick 方法</h2><p>Lodash 官方在 npm 上为每个方法维护了<a href="https://github.com/lodash/lodash/tree/npm-packages" target="_blank" rel="external">独立的包</a>，便于我们直接引用。举个例子，如果我们需要<code>lodash.chunk</code>方法，可以直接安装<code>lodash.chunk</code>这个 npm 包，在代码中 import 即可：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> _chunk <span class="keyword">from</span> <span class="string">'lodash.chunk'</span>;</div><div class="line"><span class="keyword">const</span> result = _chunk([<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>], <span class="number">2</span>);</div><div class="line"><span class="built_in">console</span>.log(result);</div></pre></td></tr></table></figure></p>
 <p>这样的弊端很明显，我们如果需要使用一个新方法，就要重新 install 一个新包并 require 进来。另外，每个包之间会有一部分重复（公共）方法会被重复打包，也会增大最终的打包体积。更好的解决办法，是直接从 lodash 完整库内导入方法：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> flatten <span class="keyword">from</span> <span class="string">'lodash/flatten'</span>;</div><div class="line"><span class="keyword">import</span> flatMap <span class="keyword">from</span> <span class="string">'lodash/flatMap'</span>;</div></pre></td></tr></table></figure></p>
 <p>由于 lodash 库中，每个方法都以独立模块封装，这样的引入方法，在 webpack 打包时，只会按需取指定的两个模块进行打包。从<a href="https://github.com/lodash/lodash/blob/master/flatten.js" target="_blank" rel="external">flatten</a> 和 <a href="[flatten](https://github.com/lodash/lodash/blob/master/flatten.js">flatMap</a>) 的代码可以看出，二者都用到了<code>./.internal/baseFlatten.js</code>这个模块，在 webpack 打包时，这个模块就变成了公共模块，这就避免了引入两个独立方法的包带来的重复。这种引入方式，官方叫做 “cherry-pick methods”，就像捡樱桃一样，捡自己需要的方法。</p>
