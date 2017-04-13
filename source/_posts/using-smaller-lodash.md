@@ -6,9 +6,9 @@ tags:
 date: 2017-04-10 21:38:23
 ---
 
-
 Lodash 是个十分有用的工具库，但我们往往只需要其中的一小部分函数。这时，整个 lodash 库就显得十分庞大，我们需要减小 lodash 的体积。
 
+<!-- more -->
 ## cherry-pick 方法
 Lodash 官方在 npm 上为每个方法维护了[独立的包](https://github.com/lodash/lodash/tree/npm-packages)，便于我们直接引用。举个例子，如果我们需要`lodash.chunk`方法，可以直接安装`lodash.chunk`这个 npm 包，在代码中 import 即可：
 ```javascript
