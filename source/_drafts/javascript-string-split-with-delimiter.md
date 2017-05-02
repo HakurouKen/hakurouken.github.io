@@ -27,8 +27,22 @@ const str = '表情[哈哈]列表[假表情][嘿嘿]示例'
 const emojiRegex = new RegExp(`(\\[(?:${emoji.join('|')})\\])`)
 const result = str.split(emojiRegex)
 ```
+需要注意的是，所有的捕获分组的值都会被插入到返回的数组中，因此我们的内层分组需要采用非捕获分组。
 
-## `String.prototype.split`相关
-
+## `String.prototype.split`相关标准
+在 [ECMAScript 标准](http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype.split)中，我们可以看到，在 split 使用正则表达式分割字符串时，实际使用的方法是 `GetMethod(separator, @@split)`，即[RegExp.prototype[@@split]()](http://www.ecma-international.org/ecma-262/6.0/#sec-regexp.prototype-@@split)。在标准中，对这一特性专门做了说明：
+> 如果字符串是空字符串，（split 的）结果取决于正则表达式是否可以匹配空字符串。如果能，则返回空数组，否则返回包含一个空字符串的数组。
+>
+> 如果正则表达式包含匹配分组，每个匹配到的结果（包括`undefined`）都会被拼接到输出数组中。例如：
+>
+> `/<(\/)?([^<>]+)>/[Symbol.split]("A<B>bold</B>and<CODE>coded</CODE>")`
+>
+> 转化为:
+>
+> `["A",undefined,"B","bold","/","B","and",undefined,"CODE","coded","/","CODE",""]`
 
 ## 参考资料
+1. [MDN String.prototype.split()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+2. [MDN RegExp.prototype\[@@split\]\(\)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/@@split)
+3. [ECMA-262 String.prototype.split](http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype.split)
+4. [ECMA-262 RegExp.prototype \[ @@split \]](http://www.ecma-international.org/ecma-262/6.0/#sec-regexp.prototype-@@split)
