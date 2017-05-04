@@ -82,16 +82,19 @@
 
 
 
-<meta name="description" content="在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括exec,execFile,fork,spawn四个异步方法和execSync,execFileSync,spawnSync三个同步方法以及ChildProcess类。详细的使用说明，可以参照官方文档，本文只会简单分析一下几个代码的执行">
+<meta name="description" content="问题在 Javascript 中使用正则分隔字符串时，有时会需要保留分隔符。比如我需要在一个帖子的信息中，分割提取所有的表情占位符。如果需求只是简单的字符串替换，这里用一个 replace 即可解决问题。但是后续会对文字和表情做更复杂的处理，这里更加期望的是能够将不同的类型分割开。即我们想要将下列字符串：1const str = &apos;表情[哈哈]列表[假表情][嘿嘿]示例&apos;
+分割为：1const r">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Node.js 的 child_process 模块">
-<meta property="og:url" content="http://blog.sevenplus.me/2017/01/07/childprocess-in-nodejs/index.html">
+<meta property="og:title" content="Javascript 中保留分隔符的 split">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/05/03/javascript-string-split-with-delimiter/index.html">
 <meta property="og:site_name" content="HakuoruKen 的博客">
-<meta property="og:description" content="在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括exec,execFile,fork,spawn四个异步方法和execSync,execFileSync,spawnSync三个同步方法以及ChildProcess类。详细的使用说明，可以参照官方文档，本文只会简单分析一下几个代码的执行">
-<meta property="og:updated_time" content="2017-01-07T14:57:46.000Z">
+<meta property="og:description" content="问题在 Javascript 中使用正则分隔字符串时，有时会需要保留分隔符。比如我需要在一个帖子的信息中，分割提取所有的表情占位符。如果需求只是简单的字符串替换，这里用一个 replace 即可解决问题。但是后续会对文字和表情做更复杂的处理，这里更加期望的是能够将不同的类型分割开。即我们想要将下列字符串：1const str = &apos;表情[哈哈]列表[假表情][嘿嘿]示例&apos;
+分割为：1const r">
+<meta property="og:updated_time" content="2017-05-03T13:47:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Node.js 的 child_process 模块">
-<meta name="twitter:description" content="在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括exec,execFile,fork,spawn四个异步方法和execSync,execFileSync,spawnSync三个同步方法以及ChildProcess类。详细的使用说明，可以参照官方文档，本文只会简单分析一下几个代码的执行">
+<meta name="twitter:title" content="Javascript 中保留分隔符的 split">
+<meta name="twitter:description" content="问题在 Javascript 中使用正则分隔字符串时，有时会需要保留分隔符。比如我需要在一个帖子的信息中，分割提取所有的表情占位符。如果需求只是简单的字符串替换，这里用一个 replace 即可解决问题。但是后续会对文字和表情做更复杂的处理，这里更加期望的是能够将不同的类型分割开。即我们想要将下列字符串：1const str = &apos;表情[哈哈]列表[假表情][嘿嘿]示例&apos;
+分割为：1const r">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.sevenplus.me/2017/01/07/childprocess-in-nodejs/"/>
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/05/03/javascript-string-split-with-delimiter/"/>
 
 
 
 
 
-  <title> Node.js 的 child_process 模块 | HakuoruKen 的博客 </title>
+  <title> Javascript 中保留分隔符的 split | HakuoruKen 的博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -236,7 +239,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/01/07/childprocess-in-nodejs/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/05/03/javascript-string-split-with-delimiter/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -260,7 +263,7 @@
             
             
               
-                Node.js 的 child_process 模块
+                Javascript 中保留分隔符的 split
               
             
           </h1>
@@ -273,8 +276,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-07T22:49:09+08:00">
-                2017-01-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-03T21:47:18+08:00">
+                2017-05-03
               </time>
             
 
@@ -309,24 +312,31 @@
       
 
       
-        <p>在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括<code>exec</code>,<code>execFile</code>,<code>fork</code>,<code>spawn</code>四个异步方法和<code>execSync</code>,<code>execFileSync</code>,<code>spawnSync</code>三个同步方法以及<code>ChildProcess</code>类。详细的使用说明，可以参照<a href="https://nodejs.org/api/child_process.html" target="_blank" rel="external">官方文档</a>，本文只会简单分析一下几个代码的执行过程。</p>
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在 Javascript 中使用正则分隔字符串时，有时会需要保留分隔符。比如我需要在一个帖子的信息中，分割提取所有的表情占位符。如果需求只是简单的字符串替换，这里用一个 replace 即可解决问题。但是后续会对文字和表情做更复杂的处理，这里更加期望的是能够将不同的类型分割开。即我们想要将下列字符串：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> str = <span class="string">'表情[哈哈]列表[假表情][嘿嘿]示例'</span></div></pre></td></tr></table></figure></p>
+<p>分割为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> result = [<span class="string">'表情'</span>, <span class="string">'[哈哈]'</span>, <span class="string">'列表[假表情]'</span>, <span class="string">'嘿嘿'</span>, <span class="string">'示例'</span>]</div></pre></td></tr></table></figure></p>
+<p>这里涉及到一个 split 方法比较少用到的方法，在这里记录一下。</p>
 <a id="more"></a>
-<h2 id="函数接口"><a href="#函数接口" class="headerlink" title="函数接口"></a>函数接口</h2><p>在 Github 上可以看到<code>child_process</code>模块的<a href="https://github.com/nodejs/node/blob/master/lib/child_process.js" target="_blank" rel="external">源代码</a>。从源代码不难看出，<code>child_process</code>模块的核心是<code>ChildProcess</code>这个对象，模块中所有的函数都是基于它实现（在这里我们只关注异步函数，下同）。在 exec/execFile/fork/spawn 几个函数中，最核心的函数是<code>spawn</code>，其它的函数都是对其不同程度的封装：</p>
-<ul>
-<li><code>exec</code>: <code>execFile</code>在<code>shell != false</code>（默认为<code>true</code>）的特殊情况。</li>
-<li><code>execFile</code>: 对<code>spawn</code>的 data/close/error 事件做了监听，组装<code>spawn</code>的输出数据。</li>
-<li><code>fork</code>: <code>spawn</code>的<code>command</code>参数为<code>node</code>的特殊情况。其中<code>node</code>默认取<code>process.execPath</code>。</li>
-<li><code>spawn</code>: 新建一个<code>ChildProcess</code>对象，调用其<code>spawn</code>方法，并返回该对象。</li>
-</ul>
-<h2 id="ChildProcess-类"><a href="#ChildProcess-类" class="headerlink" title="ChildProcess 类"></a>ChildProcess 类</h2><p>ChildProcess 的实现在 <a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js" target="_blank" rel="external">lib/internal/child_process.js</a>，可以看到 ChildProcess 继承自 EventEmitter（<a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js#L229" target="_blank" rel="external">#L229</a>），因此 ChildProcess 可以像 EventEmitter 一样绑定事件。从 ChildProcess 的<a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js#L164-L228" target="_blank" rel="external">函数声明</a>可以看出，ChildProcess 的实现主要依赖<code>_handle</code>这个内部变量，它是一个<code>Process</code>类的实例，来自<code>process.binding(&#39;process_wrap&#39;)</code>。这里的<code>process.binding</code>是一个 Node.js 与 C++ 交互的函数，对于这里的<code>process.binding(&#39;process_wrap&#39;)</code>，对应的 C++ 函数调用在 <a href="https://github.com/nodejs/node/blob/master/src/process_wrap.cc" target="_blank" rel="external">src/process_wrap.cc</a>。通过函数名，可以直观的看出，node 中的<code>Process.prototype.spawn</code>对应 C++ 中的<code>Spawn</code>（见<a href="https://github.com/nodejs/node/blob/master/src/process_wrap.cc#L109-#L222" target="_blank" rel="external">#L109-#L222</a>）。Spawn 函数的结构大概如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Spawn</span><span class="params">(<span class="keyword">const</span> FunctionCallbackInfo&lt;Value&gt;&amp; args)</span> </span>&#123;</div><div class="line">  <span class="comment">// 变量初始化，options 初始化</span></div><div class="line">  <span class="comment">// ...</span></div><div class="line"></div><div class="line">  <span class="keyword">int</span> err = uv_spawn(env-&gt;event_loop(), &amp;wrap-&gt;process_, &amp;options);</div><div class="line"></div><div class="line">  <span class="comment">// 错误校验，释放内存</span></div><div class="line">  <span class="comment">// ...</span></div><div class="line"></div><div class="line">  args.GetReturnValue().Set(err);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这里调用的<code>uv_spawn</code>，是 libuv 中封装的 spawn 函数，在 <a href="https://github.com/libuv/libuv/blob/master/src/unix/process.c#L386" target="_blank" rel="external">Unix</a> 下的实现和 <a href="https://github.com/libuv/libuv/blob/master/src/win/process.c#L926" target="_blank" rel="external">Windows</a> 有所不同。ChildProcess 的整个执行过程至此结束。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://nodejs.org/api/child_process.html" target="_blank" rel="external">Node.js 官方文档</a></li>
-<li><a href="https://github.com/nodejs/node" target="_blank" rel="external">Node.js 源码</a></li>
-<li><a href="https://github.com/libuv/libuv" target="_blank" rel="external">libuv</a></li>
-<li><a href="http://stackoverflow.com/questions/24042861/nodejs-what-does-process-binding-mean" target="_blank" rel="external">Stackoverflow `process.binding`</a></li>
-<li><a href="http://lanceball.com/process-bindings/#/" target="_blank" rel="external">Process Bindings: How to do Node.js on the JVM</a></li>
-</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>在 MDN 的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split" target="_blank" rel="external">String.prototype.split()</a>说明中，有下列的描述：</p>
+<blockquote>
+<p>当找到一个 seperator 时，separator 会从字符串中被移除，返回存进一个数组当中的子字符串。如果忽略 separator 参数，则返回的数组包含一个元素，该元素是原字符串。如果 separator 是一个空字符串，则 str 将被转换为由字符串中字符组成的一个数组。</p>
+<p>如果 separator 是一个正则表达式，且包含捕获括号（capturing parentheses），则每次匹配到 separator 时，捕获括号匹配的结果将会插入到返回的数组中。然而，不是所有浏览器都支持该特性。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> emoji = [<span class="string">'哈哈'</span>, <span class="string">'微笑'</span>, <span class="string">'嘿嘿'</span>];</div><div class="line"><span class="keyword">const</span> str = <span class="string">'表情[哈哈]列表[假表情][嘿嘿]示例'</span></div><div class="line"><span class="keyword">const</span> emojiRegex = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`(\\[(?:<span class="subst">$&#123;emoji.join(<span class="string">'|'</span>)&#125;</span>)\\])`</span>)</div><div class="line"><span class="keyword">const</span> result = str.split(emojiRegex)</div></pre></td></tr></table></figure>
+<p>需要注意的是，所有的捕获分组的值都会被插入到返回的数组中，因此我们的内层分组需要采用非捕获分组。</p>
+<h2 id="String-prototype-split相关标准"><a href="#String-prototype-split相关标准" class="headerlink" title="String.prototype.split相关标准"></a><code>String.prototype.split</code>相关标准</h2><p>在 <a href="http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype.split" target="_blank" rel="external">ECMAScript 标准</a>中，我们可以看到，在 split 使用正则表达式分割字符串时，实际使用的方法是 <code>GetMethod(separator, @@split)</code>，即<a href="http://www.ecma-international.org/ecma-262/6.0/#sec-regexp.prototype-@@split" target="_blank" rel="external">RegExp.prototype<a href="">@@split</a></a>。在标准中，对这一特性专门做了说明：</p>
+<blockquote>
+<p>如果字符串是空字符串，（split 的）结果取决于正则表达式是否可以匹配空字符串。如果能，则返回空数组，否则返回包含一个空字符串的数组。</p>
+<p>如果正则表达式包含匹配分组，每个匹配到的结果（包括<code>undefined</code>）都会被拼接到输出数组中。例如：</p>
+<p><code>/&lt;(\/)?([^&lt;&gt;]+)&gt;/[Symbol.split](&quot;A&lt;B&gt;bold&lt;/B&gt;and&lt;CODE&gt;coded&lt;/CODE&gt;&quot;)</code></p>
+<p>转化为:</p>
+<p><code>[&quot;A&quot;,undefined,&quot;B&quot;,&quot;bold&quot;,&quot;/&quot;,&quot;B&quot;,&quot;and&quot;,undefined,&quot;CODE&quot;,&quot;coded&quot;,&quot;/&quot;,&quot;CODE&quot;,&quot;&quot;]</code></p>
+</blockquote>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split" target="_blank" rel="external">MDN String.prototype.split()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/@@split" target="_blank" rel="external">MDN RegExp.prototype[@@split]()</a></li>
+<li><a href="http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype.split" target="_blank" rel="external">ECMA-262 String.prototype.split</a></li>
+<li><a href="http://www.ecma-international.org/ecma-262/6.0/#sec-regexp.prototype-@@split" target="_blank" rel="external">ECMA-262 RegExp.prototype [ @@split ]</a></li>
+</ol>
 
       
     </div>
@@ -359,8 +369,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/03/build-your-own-django-inspectdb/" rel="next" title="打造自己的 django-inspectdb 命令">
-                <i class="fa fa-chevron-left"></i> 打造自己的 django-inspectdb 命令
+              <a href="/2017/04/10/using-smaller-lodash/" rel="next" title="使用更小的 Lodash">
+                <i class="fa fa-chevron-left"></i> 使用更小的 Lodash
               </a>
             
           </div>
@@ -368,10 +378,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/10/how-python-import-work/" rel="prev" title="python 的 import 是如何工作的">
-                python 的 import 是如何工作的 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -484,7 +490,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数接口"><span class="nav-number">1.</span> <span class="nav-text">函数接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ChildProcess-类"><span class="nav-number">2.</span> <span class="nav-text">ChildProcess 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String-prototype-split相关标准"><span class="nav-number">3.</span> <span class="nav-text">String.prototype.split相关标准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
