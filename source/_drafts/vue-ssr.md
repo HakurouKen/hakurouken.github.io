@@ -13,3 +13,7 @@ tags:
 ## Nuxt.js
 
 ## 参考资料
+1. [Vue.js Server-Side Rendering Guide](https://ssr.vuejs.org/)
+2. [Vue 服务端渲染](https://cn.vuejs.org/v2/guide/ssr.html)
+3. [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
+4. [Vue prerenders](https://github.com/chrisvfritz/prerender-spa-plugin)
