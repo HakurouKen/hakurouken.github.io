@@ -14,13 +14,24 @@ Vue 2.0 之后引入了服务端渲染（Server-Side Render，简称 SSR）的�
 然而，预渲染实际生成的是**静态页面**，无法适用于动态数据生成的页面。换句话说，**能使用预渲染解决的问题，几乎都可以使用直接写静态页面的方式解决**。个人认为，多数情况下，预渲染都是个比较鸡肋的功能。
 
 ## vue-server-renderer
+有关服务器渲染，官网已经给了[一个简单的例子](https://cn.vuejs.org/v2/guide/ssr.html#通过Express-Web服务器实现简单的服务端渲染)，总结下来大致分为3步：
+1. 创建一个 Vue 实例。
+这一步和在浏览器中使用 Vue 没什么区别，只是在服务端，我们不需要`$mount`方法绑定到 DOM 元素上。
+
+2. 创建一个渲染器(renderer)。
+使用`createRenderer`或`createBundleRenderer`创建一个渲染器。一般推荐使用`createBundleRenderer`，因为它支持在生产环境中的热重载。
+
+3. 将 Vue 组件渲染成 HTML。
+renderer 提供了两个 API，我们可以选择用`renderToString`渲染成字符串，或用`renderToStream`处理成流。剩下的就交由 Web Server 处理即可。一般情况下，我们会进行一些封装，把这一步放在中间件处理。
 
 ## 服务器端 Webpack
+
+## 需要注意的问题
 
 ## Nuxt.js
 
 ## 参考资料
-1. [Vue.js Server-Side Rendering Guide](https://ssr.vuejs.org/)
-2. [Vue 服务端渲染](https://cn.vuejs.org/v2/guide/ssr.html)
-3. [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
-4. [Vue prerenders](https://github.com/chrisvfritz/prerender-spa-plugin)
+1. [Vue prerenders](https://github.com/chrisvfritz/prerender-spa-plugin)
+2. [Vue.js Server-Side Rendering Guide](https://ssr.vuejs.org/en/)
+3. [Vue 服务端渲染](https://cn.vuejs.org/v2/guide/ssr.html)
+4. [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
