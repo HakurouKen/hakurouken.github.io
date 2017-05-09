@@ -19,12 +19,18 @@ Vue 2.0 之后引入了服务端渲染（Server-Side Render，简称 SSR）的�
 这一步和在浏览器中使用 Vue 没什么区别，只是在服务端，我们不需要`$mount`方法绑定到 DOM 元素上。
 
 2. 创建一个渲染器(renderer)。
-使用`createRenderer`或`createBundleRenderer`创建一个渲染器。一般推荐使用`createBundleRenderer`，因为它支持在生产环境中的热重载。
+使用`createRenderer`或`createBundleRenderer`创建一个渲染器。一般推荐使用`createBundleRenderer`，因为它支持在开发环境中的热重载。
 
 3. 将 Vue 组件渲染成 HTML。
 renderer 提供了两个 API，我们可以选择用`renderToString`渲染成字符串，或用`renderToStream`处理成流。剩下的就交由 Web Server 处理即可。一般情况下，我们会进行一些封装，把这一步放在中间件处理。
 
 ## 服务器端 Webpack
+上述例子中，避开了一些 webpack 打包的细节，如果我们使用了单文件组件(.vue 文件)，那么，服务端打包是一个不得不谈的话题。具体的配置，我们可以参照 [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0/blob/master/build/webpack.server.config.js) 和 [Nuxt.js](https://github.com/nuxt/nuxt.js/blob/master/lib/webpack/server.config.js) 的服务端配置，这里只简单介绍一些注意点。
+
+1. `vue-server-renderer/server-plugin` 和 `vue-server-renderer/client-plugin` 两个插件，可以自动帮我们生成`createBundleRenderer`时用到的 serverBundle 和 clientManifest 两个配置，因此必须要引入。
+2. 服务端**不要**使用 CommonsChunkPlugin，我们不需要提取公共部分。
+3. 我们一般不想把 node_modules 里的库也打包进来，因此把这些库全部用`externals`引入。一般采用的方式是直接遍历`package.json`里的`dependencies`(和`devDependencies`) 或 node_modules 文件夹来生成 externals 配置。当然，也可以用第三方的插件`webpack-node-externals`，但是原理也类似。
+4. 还有不少细节，比如`target`要改成`node`，`output`的`libraryTarget`一般配成`commonjs2`等等，就不再一一举了。
 
 ## 需要注意的问题
 
