@@ -32,7 +32,31 @@ renderer 提供了两个 API，我们可以选择用`renderToString`渲染成字
 3. 我们一般不想把 node_modules 里的库也打包进来，因此把这些库全部用`externals`引入。一般采用的方式是直接遍历`package.json`里的`dependencies`(和`devDependencies`) 或 node_modules 文件夹来生成 externals 配置。当然，也可以用第三方的插件`webpack-node-externals`，但是原理也类似。
 4. 还有不少细节，比如`target`要改成`node`，`output`的`libraryTarget`一般配成`commonjs2`等等，就不再一一举了。
 
-## 需要注意的问题
+## 可能会遇到的问题
+### window/document 对象未定义
+在浏览器代码中，我们经常需要操作 BOM/DOM ，这里会用到只在浏览器中才有的 window/document 对象，在 Node.js 中运行就会出现异常。
+
+如果这个问题出现在我们自己的组件中，解决方案相对简单：多数情况下我们需要操作 BOM/DOM 时，元素都已经成功 mount (比如用到`vm.$el`或者`vm.$refs`)，而服务器渲染的生命周期只会进行到 created，因此只需要将相关的逻辑直接丢到 mount 钩子即可。
+
+需要注意的是，如果你用到了一些第三方库，它们可能是专为浏览器设计的，因此可能会在库初始化时就会用到 window/document 变量（比如[flatpickr](https://github.com/chmln/flatpickr)）。使用这种第三方库，可以考虑采用下列步骤：
+- 在 webpack 配置中，用一个`DefinePlugin`变量来区分服务端和客户端。
+- 自己用一个 wrapper 包装这个库，在浏览器端返回原本的库，在服务端，返回一个**保证代码能够正常运行的 polyfill**。还以`flatpickr`为例，我们的 wrapper 大概长这样（假设我们用`process.IS_BROWSER_BUILD`来标识在浏览器中的打包）：
+
+```javascript
+let Flatpickr = {}
+if (process.IS_BROWSER_BUILD) {
+  Flatpickr = import('flatpickr')
+  require('flatpickr/dist/flatpickr.css')
+  require('flatpickr/dist/themes/airbnb.css')
+  const {zh} = import('flatpickr/dist/l10n/zh')
+  Flatpickr.localize(zh)
+}
+
+export default Flatpickr
+```
+- 所有用到这个第三方库的地方，都用我们自己这个 wrapper 替代。
+
+### DOM 操作相关
 
 ## Nuxt.js
 
