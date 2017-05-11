@@ -57,6 +57,10 @@ export default Flatpickr
 - 所有用到这个第三方库的地方，都用我们自己这个 wrapper 替代。
 
 ### DOM 操作相关
+我在使用 Vue 的 SSR 功能时，遇到最多的就是这个报错：
+```
+[Vue warn]: The client-side rendered virtual DOM tree is not matching server-rendered content. This is likely caused by incorrect HTML markup, for example nesting block-level elements inside <p>, or missing <tbody>. Bailing hydration and performing full client-side render.
+```
 
 ## Nuxt.js
 
