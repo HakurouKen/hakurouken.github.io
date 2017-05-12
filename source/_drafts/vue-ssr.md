@@ -61,6 +61,9 @@ export default Flatpickr
 ```
 [Vue warn]: The client-side rendered virtual DOM tree is not matching server-rendered content. This is likely caused by incorrect HTML markup, for example nesting block-level elements inside <p>, or missing <tbody>. Bailing hydration and performing full client-side render.
 ```
+这个报错的原因是因为服务器渲染出的 html 和客户端 Vue 生成的 DOM 树（VNode 树）结构不一致，开发版本的 Vue 会给出报错。这个错误导致的原因除了 warning 消息中提到的浏览器自动修正不规范 DOM 之外，更多的是一些修改 DOM 的 directive 导致的。官网对此给出了两个修改意见：
+1. 修改 directive ，使其工作以 Virtual-DOM 的方式工作。但是这个改造成本较高，而且对于第三方依赖库，改造难度也相对较高。
+2. 额外开发一个服务端用的 directive 版本，然后按照类似上文的处理方式引入。改造方式可以参照 [v-show](https://github.com/vuejs/vue/blob/dev/src/platforms/web/server/directives/show.js) 的服务端版本。原则上，这个服务器版本应当尽量简单，甚至不需要覆盖原有 directive 原有逻辑，只需要保证在初始化时渲染结果和原来一致即可。
 
 ## Nuxt.js
 
