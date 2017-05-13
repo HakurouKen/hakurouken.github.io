@@ -70,9 +70,11 @@ export default Flatpickr
 1. 完善的脚手架，减少了项目初始化的成本。它同时还有搭配各个服务器使用的中间件版本。
 2. 预置一些实用的 mixin ，例如`asyncData`,`fetch`,`head`,`transition`等等，可以简化开发时的繁琐操作。
 3. 基于路径的路由系统的设计，使得路由在多数情况下非常直观，而且易于配置。
+4. 在保证了易用性的同时，扩展性也不错，我们可以方便的通过 extend 方法，来扩展自己的 webpack 配置。
 
 ## 参考资料
 1. [Vue prerenders](https://github.com/chrisvfritz/prerender-spa-plugin)
 2. [Vue.js Server-Side Rendering Guide](https://ssr.vuejs.org/en/)
 3. [Vue 服务端渲染](https://cn.vuejs.org/v2/guide/ssr.html)
 4. [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
+5. [Nuxt.js](https://nuxtjs.org)
