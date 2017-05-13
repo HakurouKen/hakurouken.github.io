@@ -66,6 +66,10 @@ export default Flatpickr
 2. 额外开发一个服务端用的 directive 版本，然后按照类似上文的处理方式引入。改造方式可以参照 [v-show](https://github.com/vuejs/vue/blob/dev/src/platforms/web/server/directives/show.js) 的服务端版本。原则上，这个服务器版本应当尽量简单，甚至不需要覆盖原有 directive 原有逻辑，只需要保证在初始化时渲染结果和原来一致即可。
 
 ## Nuxt.js
+如果是一个全新的项目，可以考虑使用 [Nuxt.js](https://github.com/nuxt/nuxt.js)。这是一个类似 react 的 [next.js](https://github.com/zeit/next.js) 的项目，也收到 Vue 官方的推荐。这里简单说说它的优点：
+1. 完善的脚手架，减少了项目初始化的成本。它同时还有搭配各个服务器使用的中间件版本。
+2. 预置一些实用的 mixin ，例如`asyncData`,`fetch`,`head`,`transition`等等，可以简化开发时的繁琐操作。
+3. 基于路径的路由系统的设计，使得路由在多数情况下非常直观，而且易于配置。
 
 ## 参考资料
 1. [Vue prerenders](https://github.com/chrisvfritz/prerender-spa-plugin)
