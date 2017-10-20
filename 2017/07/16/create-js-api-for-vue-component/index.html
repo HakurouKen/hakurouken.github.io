@@ -1,0 +1,636 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,vue," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="在 Vue 单文件组件模式下，我们在引用组件时，需要局部注册 component 来使用。例如，我们需要一个类似window.alert的提示弹框组件，核心代码大致如下（使用 jsx 语法进行描述）：123456789101112131415161718192021222324export default &amp;#123;  name: &apos;MyAlert&apos;,  props: [&apos;text&apos;],  me">
+<meta name="keywords" content="javascript,vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为 Vue 组件提供 js-api">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/07/16/create-js-api-for-vue-component/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="在 Vue 单文件组件模式下，我们在引用组件时，需要局部注册 component 来使用。例如，我们需要一个类似window.alert的提示弹框组件，核心代码大致如下（使用 jsx 语法进行描述）：123456789101112131415161718192021222324export default &amp;#123;  name: &apos;MyAlert&apos;,  props: [&apos;text&apos;],  me">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-18T14:29:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="为 Vue 组件提供 js-api">
+<meta name="twitter:description" content="在 Vue 单文件组件模式下，我们在引用组件时，需要局部注册 component 来使用。例如，我们需要一个类似window.alert的提示弹框组件，核心代码大致如下（使用 jsx 语法进行描述）：123456789101112131415161718192021222324export default &amp;#123;  name: &apos;MyAlert&apos;,  props: [&apos;text&apos;],  me">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/07/16/create-js-api-for-vue-component/"/>
+
+
+
+
+
+  <title> 为 Vue 组件提供 js-api | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/07/16/create-js-api-for-vue-component/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                为 Vue 组件提供 js-api
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-16T15:17:10+08:00">
+                2017-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 Vue 单文件组件模式下，我们在引用组件时，需要局部注册 component 来使用。例如，我们需要一个类似<code>window.alert</code>的提示弹框组件，核心代码大致如下（使用 jsx 语法进行描述）：<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">  name: <span class="string">'MyAlert'</span>,</div><div class="line">  props: [<span class="string">'text'</span>],</div><div class="line">  methods: &#123;</div><div class="line">    close() &#123;</div><div class="line">      <span class="keyword">this</span>.$emit(<span class="string">'close'</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  render(h) &#123;</div><div class="line">    <span class="keyword">return</span> (</div><div class="line">      &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"popbox-container"</span>&gt;</div><div class="line">        &lt;section <span class="class"><span class="keyword">class</span></span>=<span class="string">"popbox-header"</span>&gt;</div><div class="line">          &lt;span <span class="class"><span class="keyword">class</span></span>=<span class="string">"close"</span> onClick=&#123;close&#125;&gt;&lt;/span&gt;</div><div class="line">        &lt;<span class="regexp">/section&gt;</span></div><div class="line"><span class="regexp">        &lt;section class="popbox-body"&gt;</span></div><div class="line"><span class="regexp">          &lt;p&gt;&#123;text&#125;&lt;/</span>p&gt;</div><div class="line">        &lt;<span class="regexp">/section&gt;</span></div><div class="line"><span class="regexp">        &lt;section class="popbox-footer"&gt;</span></div><div class="line"><span class="regexp">          &lt;button onClick=&#123;close&#125;&gt;确定&lt;/</span>button&gt;</div><div class="line">        &lt;<span class="regexp">/section&gt;</span></div><div class="line"><span class="regexp">      &lt;/</span>div&gt;</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在使用的时候，我们需要在父级引入：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">"popup = true"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">my-alert</span> <span class="attr">:text</span>=<span class="string">"'test'"</span> <span class="attr">v-if</span>=<span class="string">"popup"</span> @<span class="attr">close</span>=<span class="string">"popup = true"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="keyword">import</span> MyAlert <span class="keyword">from</span> <span class="string">'./my-alert'</span>;</span></div><div class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></div><div class="line"><span class="undefined">  data () &#123;</span></div><div class="line"><span class="javascript">    <span class="keyword">return</span> &#123; <span class="attr">popup</span>: <span class="literal">false</span> &#125;</span></div><div class="line"><span class="undefined">  &#125;,</span></div><div class="line"><span class="undefined">  components: &#123; MyAlert &#125;</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这样的使用方式，从“组件化”的思路上看，并没有任何问题，但是从实际工程的角度来看，它有这样几个瑕疵：</p>
+<ol>
+<li>每次使用都要然后注册到 component，比较麻烦。</li>
+<li>类似 alert 这种弹窗组件，和父组件只有逻辑上的属于关系，但是实际的 DOM 结构并不适合放在父组件内的任何位置，从直观感受上，应该直接是 body 的子元素。</li>
+<li>每个需要用到 alert 的父组件中，都要初始化一个独立的 alert 组件，不能做到像一些 jQuery 插件一样，复用现有 DOM 结构。</li>
+<li>在父组件中，需要一个额外的变量来控制 alert 组件初始化。</li>
+</ol>
+<p>在实际使用的时候，我们更希望像原生<code>alert</code>一样，使用<code>myAlert(&quot;test&quot;)</code>就能够初始化组件，同时将 DOM 结构直接放到 body 下。</p>
+<a id="more"></a>
+<h2 id="js-api-封装"><a href="#js-api-封装" class="headerlink" title="js-api 封装"></a>js-api 封装</h2><p>在 <a href="https://github.com/ElemeFE/element" target="_blank" rel="external">Element</a> 和 <a href="https://github.com/iview/iview" target="_blank" rel="external">iView</a> 库中，大量用到了类似的做法，例如 Element 的 <a href="https://github.com/ElemeFE/element/blob/dev/packages/message-box/src/main.js" target="_blank" rel="external">MessageBox</a> 和 iView 的 <a href="https://github.com/iview/iview/blob/1b785ff08bbf00c96f4b1cdca4d83aef72dd30ef/src/components/base/notification/index.js" target="_blank" rel="external">Notification</a>，其核心原理就是<strong>创建一个 Vue 示例并 mount 到一个自定义空 div 上，再手动添加到 dom 树中</strong>。在这之后，我们只需要对外暴露一套 API ，把创建 Vue 和 mount 过程隐藏在函数内部即可。</p>
+<h2 id="事件封装"><a href="#事件封装" class="headerlink" title="事件封装"></a>事件封装</h2><p>虽然我们可以直接通过 props 把外部的回调传递给组件，不过我们实际开发组件时一般不习惯这样做。为了保持组件自身的完整性，我们还是通过<code>on</code>方法来监听。当我们需要从外部手动销毁示例时，要手动销毁实例，并将插入的 dom 元素移除。</p>
+<p>按照上面两条的思路，上文的 MyAlert 组件可以做一层简单的包装，如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> MyAlert <span class="keyword">from</span> <span class="string">'./my-alert'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> (<span class="params">text, onClose</span>) </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">close</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    instance.$destroy();</div><div class="line">    <span class="built_in">document</span>.body.removeChild(instance.$el);</div><div class="line">    onClose &amp;&amp; onClose()</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> instance = <span class="keyword">new</span> Vue(&#123;</div><div class="line">    render(h) &#123;</div><div class="line">      <span class="keyword">return</span> h(MyAlert, &#123;</div><div class="line">        props: &#123;</div><div class="line">          text: text</div><div class="line">        &#125;,</div><div class="line">        on: &#123;</div><div class="line">          close: close</div><div class="line">        &#125;</div><div class="line">      &#125;)</div><div class="line">    &#125;,</div><div class="line">    el: <span class="built_in">document</span>.createElement(<span class="string">'div'</span>)</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  <span class="built_in">document</span>.body.appendChild(instance.$el);</div><div class="line"></div><div class="line">  <span class="keyword">const</span> component = instance.$children[<span class="number">0</span>];</div><div class="line"></div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    _component: component,</div><div class="line">    close</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><p>对于绝大多数情况，这种 js-api 初始化的方式都不适用。但是，对于浮层/弹窗/通知等等控件来讲，使用 js-api 进行一层封装，会大大提高开发的体验。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://github.com/iview/iview" target="_blank" rel="external">iView 源代码</a></li>
+<li><a href="https://github.com/ElemeFE/element" target="_blank" rel="external">Element 源代码</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/vue/" rel="tag"># vue</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/20/vue-scoped-slots-is-undefined/" rel="next" title="Vue 升级引发的 $scopedSlots 失效问题">
+                <i class="fa fa-chevron-left"></i> Vue 升级引发的 $scopedSlots 失效问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/01/scroll-position-bug-when-returning-from-fullscren-mode-in-chrome/" rel="prev" title="视频退出全屏时在 chrome 下的滚动问题">
+                视频退出全屏时在 chrome 下的滚动问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#js-api-封装"><span class="nav-number">1.</span> <span class="nav-text">js-api 封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件封装"><span class="nav-number">2.</span> <span class="nav-text">事件封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#适用场景"><span class="nav-number">3.</span> <span class="nav-text">适用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
