@@ -1,0 +1,633 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,vue," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="问题描述项目的 Vue 的版本从 2.3.2 升级到了 2.3.3，所有作用域插槽失效，vm.$scopedSlots 的值为 {undefined: undefined}。">
+<meta name="keywords" content="javascript,vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 升级引发的 $scopedSlots 失效问题">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/06/20/vue-scoped-slots-is-undefined/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="问题描述项目的 Vue 的版本从 2.3.2 升级到了 2.3.3，所有作用域插槽失效，vm.$scopedSlots 的值为 {undefined: undefined}。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-18T14:30:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue 升级引发的 $scopedSlots 失效问题">
+<meta name="twitter:description" content="问题描述项目的 Vue 的版本从 2.3.2 升级到了 2.3.3，所有作用域插槽失效，vm.$scopedSlots 的值为 {undefined: undefined}。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/06/20/vue-scoped-slots-is-undefined/"/>
+
+
+
+
+
+  <title> Vue 升级引发的 $scopedSlots 失效问题 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/06/20/vue-scoped-slots-is-undefined/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Vue 升级引发的 $scopedSlots 失效问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T23:44:35+08:00">
+                2017-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>项目的 Vue 的版本从 2.3.2 升级到了 2.3.3，所有作用域插槽失效，vm.$scopedSlots 的值为 <code>{undefined: undefined}</code>。</p>
+<a id="more"></a>
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>搜索了一下，发现很少有人遇到类似的问题，发现有一个一样情况的<a href="https://github.com/vuejs/vue/issues/5807" target="_blank" rel="external">issue</a>，不过完全没有反映问题根源所在。唯一的共同点是，这个问题都是由 2.3.2 升级到 2.3.3 导致的。<br>对比下 2.3.2 和 2.3.3 的源代码，果然有关作用域插槽的部分<a href="https://github.com/vuejs/vue/compare/v2.3.2...v2.3.3#diff-c93dcf5fbf55768d2f3aed1685d8f34c" target="_blank" rel="external">有所变更</a>。这也就意味着，一定是 template 转化为 render 函数的过程中出现了偏差。对于用 webpack 管理的项目，所有的 .vue 文件都是通过<code>vue-loader</code>解析的，而<code>vue-loader</code>内部的模板解析，又间接的用到了<code>vue-template-compiler</code>。分别取两个版本的 vue 跑个对比，对于下列模板：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">hello</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">template</span> <span class="attr">scope</span>=<span class="string">"props"</span>&gt;</span>&#123;&#123;props.msg&#125;&#125;<span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">hello</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>使用 vue-template-compiler 2.3.2 版本下，会编译为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;<span class="keyword">var</span> _vm=<span class="keyword">this</span>;<span class="keyword">var</span> _h=_vm.$createElement;<span class="keyword">var</span> _c=_vm._self._c||_h;</div><div class="line">  <span class="keyword">return</span> _c(<span class="string">'hello'</span>, &#123;</div><div class="line">    scopedSlots: _vm._u([</div><div class="line">      [<span class="string">"default"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">props</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> [_vm._v(_vm._s(props.msg))]</div><div class="line">      &#125;]</div><div class="line">    ])</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在 2.3.3 版本下，则是：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;<span class="keyword">var</span> _vm=<span class="keyword">this</span>;<span class="keyword">var</span> _h=_vm.$createElement;<span class="keyword">var</span> _c=_vm._self._c||_h;</div><div class="line">  <span class="keyword">return</span> _c(<span class="string">'hello'</span>, &#123;</div><div class="line">    scopedSlots: _vm._u([&#123;</div><div class="line">      key: <span class="string">"default"</span>,</div><div class="line">      fn: <span class="function"><span class="keyword">function</span>(<span class="params">props</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> [_vm._v(_vm._s(props.msg))]</div><div class="line">      &#125;</div><div class="line">    &#125;])</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>看来已经破案了，编译模板使用的<code>vue-template-compiler</code> 的 2.3.2 版本，而使用的 vue 版本是 2.3.3 ，因此导致了这个编译问题，直接把<code>package.json</code>的<code>vue-template-compile</code>改成<code>=2.3.2</code>，应该就可以复现这个 bug。但是实际操作的时候，却出现了另一个错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Vue packages version mismatch:</div><div class="line"></div><div class="line">- vue@2.3.3</div><div class="line">- vue-template-compiler@2.3.2</div><div class="line"></div><div class="line">This may cause things to work incorrectly. Make sure to use the same version for both.</div><div class="line">If you are using vue-loader@&gt;=10.0, simply update vue-template-compiler.</div><div class="line">If you are using vue-loader@&lt;10.0 or vueify, re-installing vue-loader/vueify should bump vue-template-compiler to the latest.</div></pre></td></tr></table></figure></p>
+<p>仔细检查了<code>vue-template-compiler</code>的代码，发现其中有如下校验:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">  <span class="keyword">var</span> vueVersion = <span class="built_in">require</span>(<span class="string">'vue'</span>).version</div><div class="line">&#125; <span class="keyword">catch</span> (e) &#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> packageName = <span class="built_in">require</span>(<span class="string">'./package.json'</span>).name</div><div class="line"><span class="keyword">var</span> packageVersion = <span class="built_in">require</span>(<span class="string">'./package.json'</span>).version</div><div class="line"><span class="keyword">if</span> (vueVersion &amp;&amp; vueVersion !== packageVersion) &#123;</div><div class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(</div><div class="line">    <span class="string">'\n\nVue packages version mismatch:\n\n'</span> +</div><div class="line">    <span class="string">'- vue@'</span> + vueVersion + <span class="string">'\n'</span> +</div><div class="line">    <span class="string">'- '</span> + packageName + <span class="string">'@'</span> + packageVersion + <span class="string">'\n\n'</span> +</div><div class="line">    <span class="string">'This may cause things to work incorrectly. Make sure to use the same version for both.\n'</span> +</div><div class="line">    <span class="string">'If you are using vue-loader@&gt;=10.0, simply update vue-template-compiler.\n'</span> +</div><div class="line">    <span class="string">'If you are using vue-loader@&lt;10.0 or vueify, re-installing vue-loader/vueify should bump '</span> + packageName + <span class="string">' to the latest.\n'</span></div><div class="line">  )</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码实际保证了 vue 的版本的正确性，而我们的项目是使用的 external 方式引入的 vue，为了兼容老项目，在 webpack 中 resolve 为了 <code>common/vue</code>，导致最后没有抛出这个异常。不过问题的核心还是在这里，我们直接升级一下对应的包即可解决这个问题。</p>
+<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><ol>
+<li>能用 npm 管理的包，尽量统一用 npm 管理。现有的构建工具和各种脚手架都是基于 npm 生态构建，如果自己管理包，会遇到很多不必要的麻烦。事实上，我们将 vue resove 为 <code>common/vue</code> 的方式，就在 vue 的 hot-reload 上踩了坑。</li>
+<li>如果出现 CI 构建和本地不一致的情况，多数情况下是因为 npm 包版本不一致导致的，<code>npm install</code>可以解决大部分的问题。如果不行，删掉 lock 文件再试一次。</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://github.com/vuejs/vue/issues/3941" target="_blank" rel="external">Vue issue#3941</a></li>
+<li>[Vue issue#]</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/vue/" rel="tag"># vue</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/03/javascript-string-split-with-delimiter/" rel="next" title="Javascript 中保留分隔符的 split">
+                <i class="fa fa-chevron-left"></i> Javascript 中保留分隔符的 split
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/16/create-js-api-for-vue-component/" rel="prev" title="为 Vue 组件提供 js-api">
+                为 Vue 组件提供 js-api <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题描述"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因"><span class="nav-number">2.</span> <span class="nav-text">原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反思"><span class="nav-number">3.</span> <span class="nav-text">反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
