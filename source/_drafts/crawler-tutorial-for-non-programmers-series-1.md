@@ -52,16 +52,7 @@ print('Hello!') # 注释也可以在一行的末尾
 # 例如这里就是一个多行注释
 print('Hello Python!')
 ```
-事实上，当你执行上面的代码时，python 会给出`SynatxError`的提示：这是因为我们的代码（或注释）中含有 Python 不认识的字符（中文），接下来马上介绍这个问题的解决方案。
-
-## 中文问题
-Python 默认采用了`latin-1`字符集(charset)，但是这个字符集所包含的字符非常少，并不能支持中文。我们需要在 py 文件的开头，加上下列的注释，告诉 Python 我们将使用 UTF-8 字符集：
-```python
-# -*- coding: utf-8 -*-
-```
-这也是为数不多注释能够影响到逻辑的情况，我们称这种注释叫做魔法注释(magic comment)。**建议在所有 Python 文件的头部，都加上这行注释。**
 
 ## 扩展阅读
 1. [解释型语言 - 维基百科](https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80) 或者 [解释型语言_百度百科](https://baike.baidu.com/item/%E8%A7%A3%E9%87%8A%E5%9E%8B%E8%AF%AD%E8%A8%80)
-2. [字符编码 - 阮一峰的博客](http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html)
-3. [learnpython.org](http://learnpython.org/)：一个在线的交互式学习 Python 网站
+2. [learnpython.org](http://learnpython.org/)：一个在线的交互式学习 Python 网站
