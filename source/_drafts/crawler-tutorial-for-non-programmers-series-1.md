@@ -53,6 +53,18 @@ print('Hello!') # 注释也可以在一行的末尾
 print('Hello Python!')
 ```
 
+## 几个有用的方法
+### help
+我们可以对任意的变量使用`help`方法，python 会自动在控制台打印这个变量的相关文档。例如`help("hello")`，可以输出一长串的帮助文档。
+### dir
+dir 函数会列出对应参数上所有可用的属性，例如，我们创建了一个`"hello"`的字符串，我们想看可以对它使用哪些方法：
+```python
+dir("hello")
+# 我们可以在 REPL 得到下列输出：
+# ['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map', 'index', 'isalnum', 'isalpha', 'isdecimal', 'isdigit', 'isidentifier', 'islower', 'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip', 'maketrans', 'partition', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']
+```
+我们得到了一个很长的列表，其中带`__`前后缀的都是内部方法，一般不直接使用，我们一般称之为 **魔术方法(magic method)**。Python 中的方法命名一般浅显易懂，我们可以一眼看出它们的用途，例如：`lower`方法会将字符串的所有字母变成小写；`capitalize`方法会将首字母大写。
+
 ## 扩展阅读
 1. [解释型语言 - 维基百科](https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80) 或者 [解释型语言_百度百科](https://baike.baidu.com/item/%E8%A7%A3%E9%87%8A%E5%9E%8B%E8%AF%AD%E8%A8%80)
 2. [learnpython.org](http://learnpython.org/)：一个在线的交互式学习 Python 网站
