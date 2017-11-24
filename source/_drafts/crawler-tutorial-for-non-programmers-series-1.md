@@ -66,5 +66,4 @@ dir("hello")
 我们得到了一个很长的列表，其中带`__`前后缀的都是内部方法，一般不直接使用，我们一般称之为 **魔术方法(magic method)**。Python 中的方法命名一般浅显易懂，我们可以一眼看出它们的用途，例如：`lower`方法会将字符串的所有字母变成小写；`capitalize`方法会将首字母大写。
 
 ## 扩展阅读
-1. [解释型语言 - 维基百科](https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80) 或者 [解释型语言_百度百科](https://baike.baidu.com/item/%E8%A7%A3%E9%87%8A%E5%9E%8B%E8%AF%AD%E8%A8%80)
-2. [learnpython.org](http://learnpython.org/)：一个在线的交互式学习 Python 网站
+[解释型语言 - 维基百科](https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80) 或者 [解释型语言_百度百科](https://baike.baidu.com/item/%E8%A7%A3%E9%87%8A%E5%9E%8B%E8%AF%AD%E8%A8%80)
