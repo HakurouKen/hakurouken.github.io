@@ -48,3 +48,11 @@ tags:
 2. 爬虫框架
 3. 正则表达式
 4. 下一步应该学习什么
+
+## 参考资料
+由于篇幅限制，本文不会详细的介绍一些语法细节，只是简单介绍一些必要且基础的部分。在实际开发过程中，你可能会用到一些高级语法，这时可以查阅官方文档或其它教程来进一步学习。这里推荐一些 Python 语言的学习网站，可以选择一个作为 Python 的主要学习教程。
+1. [计算机科学](http://open.163.com/special/Khan/computer.html)，网易课堂一个 Python 的视频教程
+2. [CodeCademy 的 Python 课程](https://www.codecademy.com/zh/learn/learn-python)，一个交互式学习 Python 的网站，
+3. [learnpython.org](http://www.learnpython.org/)另一个交互式学习 Python 的网站。
+
+如果你从来没有接触过编程语言，比起语法来，你可能更加需要的是一些程序化的思维模式。在掌握一定的语法基础的时候，可以尝试去做一些练习题。基本上，各类的编程入门书籍都会配套一些练习题，CodeCademy 这种交互式学习的网站也会有。题目基本都大同小异，可以作为在学习初期的参考、练习使用。
