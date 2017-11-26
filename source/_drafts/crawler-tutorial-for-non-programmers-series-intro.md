@@ -50,9 +50,11 @@ tags:
 4. 下一步应该学习什么
 
 ## 参考资料
-由于篇幅限制，本文不会详细的介绍一些语法细节，只是简单介绍一些必要且基础的部分。在实际开发过程中，你可能会用到一些高级语法，这时可以查阅官方文档或其它教程来进一步学习。这里推荐一些 Python 语言的学习网站，可以选择一个作为 Python 的主要学习教程。
-1. [计算机科学](http://open.163.com/special/Khan/computer.html)，网易课堂一个 Python 的视频教程
-2. [CodeCademy 的 Python 课程](https://www.codecademy.com/zh/learn/learn-python)，一个交互式学习 Python 的网站，
+由于篇幅限制，本文不会详细的介绍一些语法细节，只是简单介绍一些必要且基础的部分。本教程中介绍的语言方面的知识非常片面，在实际开发过程中，你可能会用到一些没有见过的函数或语法，这时可以查阅官方文档或其它教程来进一步学习。这里推荐一些 Python 语言的学习网站，可以选择一个作为 Python 的主要学习教程。
+1. [计算机科学](http://open.163.com/special/Khan/computer.html)是网易课堂一个 Python 的视频教程，适合零基础的人首次接触编程时学习。
+2. [CodeCademy 的 Python 课程](https://www.codecademy.com/zh/learn/learn-python)是一个交互式学习 Python 的网站，我们可以在网站上输入代码，并即时得到结果。
 3. [learnpython.org](http://www.learnpython.org/)另一个交互式学习 Python 的网站。
+4. [Runoob.com 的 python 教程](http://www.runoob.com/python/python-tutorial.html) 一个面向初学者的 Python 教程，同时还可以看到其它人的学习笔记，对我们理解一些重点会有帮助。
+5. [Python 官方文档](https://docs.python.org/3/)永远是最好的学习资料，但是对于初学者来讲有一定的理解难度，建议有了一定基础之后阅读。
 
 如果你从来没有接触过编程语言，比起语法来，你可能更加需要的是一些程序化的思维模式。在掌握一定的语法基础的时候，可以尝试去做一些练习题。基本上，各类的编程入门书籍都会配套一些练习题，CodeCademy 这种交互式学习的网站也会有。题目基本都大同小异，可以作为在学习初期的参考、练习使用。
