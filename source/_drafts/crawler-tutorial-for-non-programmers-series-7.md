@@ -48,6 +48,22 @@ HTTP 协议中定义一系列的方法，来方便客户端以不同方式操作
 
 ### HTTP 响应
 #### 状态码
+HTTP 的响应状态码是一个三位数字，描述了当前返回响应的状态。例如我们常见的 404，表示页面不存在；200 表示请求成功等等。状态码的第一位，标识了该状态所属的类型：
+1. 1xx —— 请求已被服务器接收，继续处理
+2. 2xx —— 请求已成功被服务器接收、理解、并接受
+3. 3xx —— 需要后续操作才能完成这一请求
+4. 4xx —— 请求含有词法错误或者无法被执行
+5. 5xx —— 服务器在处理某个正确请求时发生错误
+
+下面列举几个常见的错误码：
+* 200(OK): 请求成功
+* 301(Moved Permanently)：请求重定向(永久)
+* 302(Moved Temporarily)：请求重定向(临时)
+* 400(Bad Request): 请求格式有错误，服务器不能处理
+* 403(Forbidden): 服务器拒绝执行该请求(一般是权限不足)
+* 404(Not Found): 资源未找到
+* 500(Server Internal Error): 服务器异常
+
 #### 响应头
 #### 响应
 
@@ -60,4 +76,5 @@ HTTPS 的通信过程和 HTTP 完全一致，不同的是它传输的数据都�
 1. [维基百科：统一资源标志符(URI)](https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E6%A0%87%E5%BF%97%E7%AC%A6)
 2. [维基百科：统一资源定位符(URL)](https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6)
 3. [维基百科：超文本传输协议(HTTP)](https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE)
-4. [维基百科:]
+4. [维基百科: 超文本传输安全协议(HTTPS)](https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE)
+5. [维基百科：HTTP状态码](https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81)
