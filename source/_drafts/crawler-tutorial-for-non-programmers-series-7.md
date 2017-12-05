@@ -43,7 +43,14 @@ HTTP 协议中定义一系列的方法，来方便客户端以不同方式操作
 
 在上文列出的方法中，最常用的是 GET 和 POST。需要注意的是：上文对这些方法的作用，仅仅是一种约定，具体的实现还是要看服务器端的具体实现。然而，很多服务器端的实现并不规范，我们写爬虫时，只需将请求方法保持和网页端的请求保持一致即可。
 
-#### 请求头
+#### 请求头(request header)
+HTTP 协议允许我们使用请求头，来附加一些请求的额外信息。标准中规定了一系列的请求头，我们列出几个写爬虫时经常需要注意的头：
+* Cookie: 浏览器 Cookie，一般用于标识用户身份，以及储存一些数据。
+* Host: 服务器的域名。
+* User-Agent: 浏览器的身份标识字符串。
+* Referer: 表示浏览器访问的前一个页面。
+
+除了标准中定义的请求头，很多网站也会自定义一些请求头，例如很多 Javascript 框架会用`X-Requested-With`来标识是否是 **ajax 请求**。
 
 ### HTTP 响应
 #### 状态码
@@ -81,4 +88,5 @@ HTTPS 的通信过程和 HTTP 完全一致，不同的是它传输的数据都�
 2. [维基百科：统一资源定位符(URL)](https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6)
 3. [维基百科：超文本传输协议(HTTP)](https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE)
 4. [维基百科: 超文本传输安全协议(HTTPS)](https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE)
-5. [维基百科：HTTP状态码](https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81)
+5. [维基百科：HTTP头字段](https://zh.wikipedia.org/zh-hans/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5)
+6. [维基百科：HTTP状态码](https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81)
