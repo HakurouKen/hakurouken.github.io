@@ -6,6 +6,8 @@ tags:
 ---
 
 爬虫程序设计的初衷，就是让程序来替代人来获取数据。人获取数据一般都是通过浏览器，爬虫也就是**模拟浏览器获取数据**。具体的说，我们需要模拟的就是从地址栏输入网址到浏览器拿到数据的过程。为此，我们需要先要引入一系列的基础概念。
+
+本章的概念相对抽象，我们可以结合下一章的“浏览器的调试工具”，在浏览器中通过真实网站的请求，辅助理解本章的概念。
 
 ## URL
 我们平时输入的网址，是一种**统一资源定位符(Uniform Resource Locator)**，简称 URL。它有一套标准的格式：
@@ -82,6 +84,28 @@ HTTP 响应体就是我们拿到的数据，它有可能是文本/脚本，也�
 HTTPS 的通信过程和 HTTP 完全一致，不同的是它传输的数据都是加密的。它利用一种特殊的算法(RSA 加密算法)，保证只有发出方能够解密出 HTTP 的信息。这一过程，在底层已经做了处理，我们的上层应用不感知，在我们编写爬虫或网站时，就默认 HTTP 和 HTTPS 传输的信息格式一致即可。
 
 ## HTML、CSS 与 Javascript
+HTML、CSS 和 Javascript 是构成 Web 站点的三个不可或缺的组件。想要构建一个 Web 爬虫，我们也必须对这三个组件有些基本了解。
+
+### HTML
+HTML(HyperText Markup Language，超文本标记语言)是用来描述网页的**标记语言**。它并不是一种编程语言，因为它本身没有包含逻辑。HTML 由一系列的嵌套的**标签(tag)**组成，例如，我们可以写一个简单的 HTML 页面：
+```html
+<!DOCTYPE html> 
+<html> 
+<body> 
+  <h1>标题</h1> 
+  <p>段落</p> 
+</body> 
+</html>
+```
+把上述代码复制到文件中，并重命名为`test.html`，在浏览器内即可打开。上文中的`<h1>标题</h1>`和`<p>段落</p>`，都是一对标签。**我们能够在页面上看到的数据，必定会有对应的 HTML 标签，因此有人把 HTML 称为 Web 的“骨架”。**有关 HTML 的更多细节，我们可以参照[W3Cschool HTML 教程](https://www.w3cschool.cn/html/)进行进一步的了解。在看这个教程的时候，无需刻意记住每个标签对应的含义，最重要的是通过一系列的示例，去切实的理解“标签”这一概念。
+
+### CSS
+CSS(Cascading Style Sheets，层叠样式表) 是用来描述页面样式的一种标记语言。我们可以简单把 CSS 理解为“皮肤”：它并不会影响我们看到的核心数据。在写爬虫时，我们基本无需关注 CSS 的影响。
+
+### Javascript
+javascript 是在 Web 页中使用的**脚本语言**。和 HTML/CSS 不同，javascript 是一个拥有逻辑的完整语言。最早的网页中，javascript 只负责在网页中实现一些小的动画和交互效果使用，然而随着浏览器的不断发展和 Web 页的复杂度不断的提升，javascript 在 Web 中的角色变得越来越重要。javascript 可以在页面不刷新的情况下，从服务器获取数据，同时也可以动态插入 HTML/CSS。今天，javascript 承担了互联网中大部分的交互需求，我们已经很难找到不使用 javascript 的网站了。
+
+尽管 javascript 在 Web 中占有如此重要的地位，但是值得注意的是：**数据是不会无中生有的**。绝大部分有价值的数据，都是存储在服务器上（如果只是存储在本地，则无法多地同步），一定有数据下载到客户端（即浏览器）这一过程。因此，对于爬虫，我们只要关注对应的请求，无需完整的了解 Web 的 javascript 逻辑。由于 HTTP 是**无状态协议**，我们的每个请求都是相对独立的，我们完全可以绕过 javascript 逻辑，直接调用接口，也可以拿到正常的结果。
 
 ## 扩展阅读
 1. [维基百科：统一资源标志符(URI)](https://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E6%A0%87%E5%BF%97%E7%AC%A6)
@@ -90,3 +114,5 @@ HTTPS 的通信过程和 HTTP 完全一致，不同的是它传输的数据都�
 4. [维基百科: 超文本传输安全协议(HTTPS)](https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE)
 5. [维基百科：HTTP头字段](https://zh.wikipedia.org/zh-hans/HTTP%E5%A4%B4%E5%AD%97%E6%AE%B5)
 6. [维基百科：HTTP状态码](https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81)
+7. [W3Cschool HTML 教程](https://www.w3cschool.cn/html/)
+8. [维基百科：无状态协议](https://zh.wikipedia.org/zh-hans/%E6%97%A0%E7%8A%B6%E6%80%81%E5%8D%8F%E8%AE%AE)
