@@ -50,5 +50,21 @@ tags:
 这些规则也可以任意组合，例如想要选中“标题”，可以使用：`#popup-title`,`.title` 或`.header p`或`.header p.title` 等等。想要选中"确定"按钮，可以使用`.button.button-confirm` 或者`.button-confirm`等。
 
 ## XML
+XML(Xtensible Markup Language) ，中文翻译为可扩展标记语言，是一个和 HTML 非常类似的格式。不同的是，HTML 中允许有“自闭合标签”（例如 img），而且 HTML 已经有预设语义（例如 p 标签表示段落、b 标签表示加粗等等）。我们可以把 HTML 理解为一个不严格的 XML 的子集，比起 HTML 来，XML 不仅限于描述 Web，是一种更加通用的数据结构。例如，我们想要描述一个学生的数据，可能会使用下列 XML：
+```
+<student>
+  <name>leroy</name>
+  <age>18</age>
+  <score>100</score>
+</student>
+```
+类比 Python 中内置的数据结构，我们可能会用`dict`这样表示：
+```python
+{
+  "name": "leroy",
+  "age": 10,
+  "score": 100
+}
+```
 
-## JSON
+## JSON 
