@@ -1,5 +1,5 @@
 ---
-title: 给非程序员的爬虫教程（八）：Web 中常见的数据格式
+title: 给非程序员的爬虫教程（九）：Web 中常见的数据格式
 tags:
   - python
   - 非程序员的爬虫教程
@@ -94,3 +94,11 @@ data = {
 json_str = json.dumps(data)
 print(json_str)
 ```
+
+## 扩展阅读
+1. [w3cschool CSS 选择器](http://www.w3school.com.cn/cssref/css_selectors.asp)
+2. [维基百科：XML](https://zh.wikipedia.org/wiki/XML)
+3. [w3cshool XML 教程](https://www.w3cschool.cn/xml/)
+4. [w3cshool XPath 教程](https://www.w3cschool.cn/xpath/)
+5. [JSON 官网(中文)](http://json.org/json-zh.html)
+6. [Python 的 JSON 库官方文档](https://docs.python.org/3.6/library/json.html)
