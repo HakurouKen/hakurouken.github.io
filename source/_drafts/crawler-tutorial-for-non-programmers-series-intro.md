@@ -38,10 +38,9 @@ tags:
 ### 浏览器与 HTTP 相关
 1. HTTP 协议与 Web 基础概念
 2. Chrome 调试工具
-3. CSS 选择器
-4. XML 与 json
-5. requests
-6. python 中的 HTML 解析库
+3. Web 中常见的数据结构
+4. python requests
+5. python 中的 HTML 解析库
 
 ### 更多
 1. 反反爬虫措施
