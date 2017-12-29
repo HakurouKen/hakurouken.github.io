@@ -59,6 +59,8 @@ def get_ext(filepath):
 def get():
   resp = requests.get(URL)
   arr = resp.json().get('fix',[])
+  # 这里我们使用了“列表推导”来简化我们的代码
+  # 当然，我们也可以将其转化成传统的 for 循环
   return [{
     'name': data["title"] + get_ext(data["icon"]),
     'url': data["icon"]
