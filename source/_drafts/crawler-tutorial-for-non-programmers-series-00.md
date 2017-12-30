@@ -61,7 +61,7 @@ from datetime import datetime
 def get_date(d):
   return '{}-{}-{}'.format(d.year, d.month, d.day)
 
-print get_date(datetime.now())
+print(get_date(datetime.now()))
 ```
 之后，使用上文的`cd`命令切换到`test.py`所在的目录，输入`python date.py`，可以发现控制台中输出了今天的日期。恭喜，我们已经成功完成了一个简单的 Python 脚本的编写！
 
