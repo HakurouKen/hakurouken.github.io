@@ -3,12 +3,14 @@ title: 给非程序员的爬虫教程（五）：文件读写
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 21:19:20
 ---
 
 Python 提供了`open`函数打开文件，返回一个文件对象，后续我们可以使用这个对象的方法，对文件进行读写。open函数的完整定义为：
 `open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)`
 虽然这里列出了很多参数，我们绝大多数情况下，都只需要用到少部分的几个参数即可。
 
+<!-- more -->
 ## 常用参数说明
 `file`: 文件路径的字符串。这个文件路径，可以是绝对路径，也可以是**相对当前运行环境的路径**。
 

@@ -3,6 +3,7 @@ title: 给非程序员的爬虫教程（一）：编程基础概念
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 21:17:12
 ---
 
 Python 是一种[解释型语言(Interpreted language)](https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80)，解释型语言的代码可以直接由机器执行，而无需编译(compile)成机器码。完成一个 Python 程序，一般只需要两步：
@@ -11,6 +12,7 @@ Python 是一种[解释型语言(Interpreted language)](https://zh.wikipedia.org
 
 下面我们先用几个简单示例程序，来简单介绍一下在编程中，我们用到的一些基础概念。
 
+<!-- more -->
 ## Hello World！
 当我们接触一门新的编程语言的时候，写的第一个程序往往是输出“Hello World”，这已经成为了一种程序员文化。下面就是一个 Python 的 Hello World 程序：
 ```python

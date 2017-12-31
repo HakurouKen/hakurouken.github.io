@@ -1,21 +1,21 @@
 ---
-title: 给非程序员的爬虫教程（十四）：实例：500px 首页风景图
+title: 给非程序员的爬虫教程（十四）：实例：500px 首页风景图
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 22:55:19
 ---
 
 ## 目标
-
 入口 URL：http://500px.com/
-
-[图片]
+![截图](http://ww1.sinaimg.cn/large/9f9426adgy1fn0cb7s8nhj21z20zi1gl.jpg)
 
 获取 500px 首页的风景(landscape)图。
 
+<!-- more -->
 ## 分析
 
-[图片]
+![查看源代码](http://ww1.sinaimg.cn/large/9f9426adgy1fn0c4r6bz9j21z415u1kx.jpg)
 
 通过查看源代码，我们很容易发现，我们要的数据就写在 HTML 代码中。准确的说，这个数据被`<script>`标签包裹着，是一段 Javascript 代码。我们首先需要定位到这段代码，由于网页中有很多`<script>`标签，它们明显的差异只有内容部分：我们可以尝试通过内容(`.text()`)来区分。例如，我们可以通过是不是以`window.photos`开头，来定位到我们需要找的代码所在的标签。
 定位到这个标签之后，我们可以看到我们需要的数据，都被赋给了一个 javascript 变量。Python 是无法直接执行 JavaScript 代码的，我们只能将其作为**普通字符串**来处理。不过 JavaScript 的对象和 JSON 的格式非常类似，我们也可以考虑经过一些手段变换/提取之后，再使用`json.load`处理。

@@ -1,12 +1,13 @@
 ---
-title: 给非程序员的爬虫教程（十）：使用 Python 发送 HTTP 请求
+title: 给非程序员的爬虫教程（十）：使用 Python 发送 HTTP 请求
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 21:31:36
 ---
-
 要写一个爬虫，第一步就是要模拟一个 HTTP 请求，我们需要用到 Python 内置的`urllib`库。
 
+<!-- more -->
 ## urllib
 ### GET 请求
 我们使用`urllib`中的`request`来做发送请求的基础。

@@ -3,10 +3,12 @@ title: 给非程序员的爬虫教程（四）：函数/类与封装
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 21:18:58
 ---
 
 在这章之前，我们已经接触过函数这一概念，我们使用过很多次的`print`就是一个函数。我们称这种 Python 原生提供给我们的函数为 **内置函数(built-in functions)**。我们从 Python 的[官方文档](https://docs.python.org/3/library/functions.html)中，找到所有的内置函数。除了这些内置函数，我们还可以自定义一些函数。
 
+<!-- more -->
 ## 函数的定义
 在 Python 中，我们想要定义一个函数，需要通过`def`这个关键字(对应英文的 define)，大致格式如下：
 ```

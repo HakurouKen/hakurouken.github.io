@@ -1,21 +1,21 @@
 ---
-title: 给非程序员的爬虫教程（十五）：实例：微博热搜榜
+title: 给非程序员的爬虫教程（十五）：实例：微博热搜榜
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 23:04:48
 ---
 
 ## 目标
-
-[图片]
+![截图](http://ww1.sinaimg.cn/large/9f9426adgy1fn0cey308fj21z413wgno.jpg)
 
 获取微博的实时热搜榜。
 
 http://s.weibo.com/top/summary
-
+<!-- more -->
 ## 分析
 
-[图片]
+![查看源代码](http://ww1.sinaimg.cn/large/9f9426adgy1fn0clfywwyj21xy0ugad3.jpg)
 
 我们直接通过查看源码([view-source:http://s.weibo.com/top/summary](view-source:http://s.weibo.com/top/summary))可以看到，整个页面的 HTML 部分（不包括 JavaScript 脚本）非常少，但同时，JavaScript 代码中有很多的 HTML 代码。我们需要的数据也正位于一段以`STK && STK.pageletM && STK.pageletM.view`开头的 JavaScript 代码中。
 

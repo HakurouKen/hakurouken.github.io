@@ -3,36 +3,39 @@ title: 给非程序员的爬虫教程（零）：开发环境搭建
 tags:
   - python
   - 非程序员的爬虫教程
+date: 2017-12-31 21:15:55
 ---
-## Python 的安装与初始配置
-我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一直在开发维护着。对于我们，可以直接选择 Python 3。建议从[官网](https://www.python.org/downloads/)直接下载最新版，当前(2017.11)最新版本为 3.6.3 ，我们将以这个版本为例，介绍一下安装时需要关注的选项。
 
-[截图]
+## Python 的安装与初始配置
+我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一直在开发维护着。对于我们，可以直接选择 Python 3。建议从[官网](https://www.python.org/downloads/)直接下载最新版，当前(2017.12)最新版本为 3.6.4 ，我们将以这个版本为例，介绍一下安装时需要关注的选项。
+<!-- more -->
+
+![Python 安装截图](http://ww1.sinaimg.cn/large/9f9426adgy1fn08jrek25j20im0bg750.jpg)
 
 "Add Python to PATH" 是否把 Python 添加到 PATH 的环境变量，关系到我们能不能在命令行中使用 Python，确保这个是勾选状态，然后选择自定义安装。
 
-[截图]
+![Python 安装截图](http://ww1.sinaimg.cn/large/9f9426adgy1fn08kbiuxkj20im0bg74w.jpg)
 
 1. Documentation：文档，当我们忘记了某些具体函数的用法时，可以快速查阅，必选
 2. pip： python 的包管理工具，帮助我们快速安装第三方包，必选
 3. tcl/tk and IDLE：图形界面编辑器和交互式环境，必选
 4. py launcher：安装 launcher 后，我们可以直接双击 .py 文件来执行，就像 .exe 文件一样，建议勾选
 
-[截图]
+![Python 安装截图](http://ww1.sinaimg.cn/large/9f9426adgy1fn08ktduavj20im0bgmxw.jpg)
 
 1. Associate files with Python: 将 .py 文件和 py launcher 关联，和前文的 py launcher 配套，建议勾选
 2. Add Python to environment variables: 将 Python 添加到**环境变量**，勾选这个选项，我们才能在命令行中方便的使用`python`命令，必选
 
 安装成功后，点击完成，进入安装目录并打开 python.exe，打开一个窗口，在弹出的窗口中，输入`print("Hello World!")`，按下回车，可以得到下列输出：
 
-[截图]
+![Hello World](http://ww1.sinaimg.cn/large/9f9426adgy1fn09daqlh2j20it0camxp.jpg)
 
 可以看到，我们得到了“Hello World!”的输出，这就是一行最简单的 Python 代码。
 
 ## 命令行(command line)
 在 windows 环境下，我们说的命令行一般指 cmd.exe 或 powershell.exe 。powershell 比 cmd 更加强大，但是要相对复杂一点，对于初学者执行简单的命令，并没有太大的区别。为了方便，下文的命令行，统一指代 cmd.exe 。输入 win + R 打开“运行窗口”，输入 cmd 即可打开命令行。
 
-[截图]
+![CMD 窗口](http://ww1.sinaimg.cn/large/9f9426adgy1fn08myyw9aj20it0caglu.jpg)
 
 光标前代表我们现在所在的文件夹，我们可以在这个窗口里输入对应的命令，然后按回车执行。对于初学者，我们首先需要记住几个基础命令：
 
