@@ -82,7 +82,7 @@
 
 
 
-<meta name="description" content="在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括exec,execFile,fork,spawn四个异步方法和execSync,execFileSync,spawnSync三个同步方法以及ChildProcess类。详细的使用说明，可以参照官方文档，本文只会简单分析一下几个代码的执行">
+<meta name="description" content="在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括exec,execFile,fork,spawn四个异步方法和execSync,execFileSync,spawnSync三个同步方法以及ChildPro">
 <meta name="keywords" content="javascript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Node.js 的 child_process 模块">
@@ -311,23 +311,23 @@
       
 
       
-        <p>在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括<code>exec</code>,<code>execFile</code>,<code>fork</code>,<code>spawn</code>四个异步方法和<code>execSync</code>,<code>execFileSync</code>,<code>spawnSync</code>三个同步方法以及<code>ChildProcess</code>类。详细的使用说明，可以参照<a href="https://nodejs.org/api/child_process.html" target="_blank" rel="external">官方文档</a>，本文只会简单分析一下几个代码的执行过程。</p>
+        <p>在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括<code>exec</code>,<code>execFile</code>,<code>fork</code>,<code>spawn</code>四个异步方法和<code>execSync</code>,<code>execFileSync</code>,<code>spawnSync</code>三个同步方法以及<code>ChildProcess</code>类。详细的使用说明，可以参照<a href="https://nodejs.org/api/child_process.html" target="_blank" rel="noopener">官方文档</a>，本文只会简单分析一下几个代码的执行过程。</p>
 <a id="more"></a>
-<h2 id="函数接口"><a href="#函数接口" class="headerlink" title="函数接口"></a>函数接口</h2><p>在 Github 上可以看到<code>child_process</code>模块的<a href="https://github.com/nodejs/node/blob/master/lib/child_process.js" target="_blank" rel="external">源代码</a>。从源代码不难看出，<code>child_process</code>模块的核心是<code>ChildProcess</code>这个对象，模块中所有的函数都是基于它实现（在这里我们只关注异步函数，下同）。在 exec/execFile/fork/spawn 几个函数中，最核心的函数是<code>spawn</code>，其它的函数都是对其不同程度的封装：</p>
+<h2 id="函数接口"><a href="#函数接口" class="headerlink" title="函数接口"></a>函数接口</h2><p>在 Github 上可以看到<code>child_process</code>模块的<a href="https://github.com/nodejs/node/blob/master/lib/child_process.js" target="_blank" rel="noopener">源代码</a>。从源代码不难看出，<code>child_process</code>模块的核心是<code>ChildProcess</code>这个对象，模块中所有的函数都是基于它实现（在这里我们只关注异步函数，下同）。在 exec/execFile/fork/spawn 几个函数中，最核心的函数是<code>spawn</code>，其它的函数都是对其不同程度的封装：</p>
 <ul>
 <li><code>exec</code>: <code>execFile</code>在<code>shell != false</code>（默认为<code>true</code>）的特殊情况。</li>
 <li><code>execFile</code>: 对<code>spawn</code>的 data/close/error 事件做了监听，组装<code>spawn</code>的输出数据。</li>
 <li><code>fork</code>: <code>spawn</code>的<code>command</code>参数为<code>node</code>的特殊情况。其中<code>node</code>默认取<code>process.execPath</code>。</li>
 <li><code>spawn</code>: 新建一个<code>ChildProcess</code>对象，调用其<code>spawn</code>方法，并返回该对象。</li>
 </ul>
-<h2 id="ChildProcess-类"><a href="#ChildProcess-类" class="headerlink" title="ChildProcess 类"></a>ChildProcess 类</h2><p>ChildProcess 的实现在 <a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js" target="_blank" rel="external">lib/internal/child_process.js</a>，可以看到 ChildProcess 继承自 EventEmitter（<a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js#L229" target="_blank" rel="external">#L229</a>），因此 ChildProcess 可以像 EventEmitter 一样绑定事件。从 ChildProcess 的<a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js#L164-L228" target="_blank" rel="external">函数声明</a>可以看出，ChildProcess 的实现主要依赖<code>_handle</code>这个内部变量，它是一个<code>Process</code>类的实例，来自<code>process.binding(&#39;process_wrap&#39;)</code>。这里的<code>process.binding</code>是一个 Node.js 与 C++ 交互的函数，对于这里的<code>process.binding(&#39;process_wrap&#39;)</code>，对应的 C++ 函数调用在 <a href="https://github.com/nodejs/node/blob/master/src/process_wrap.cc" target="_blank" rel="external">src/process_wrap.cc</a>。通过函数名，可以直观的看出，node 中的<code>Process.prototype.spawn</code>对应 C++ 中的<code>Spawn</code>（见<a href="https://github.com/nodejs/node/blob/master/src/process_wrap.cc#L109-#L222" target="_blank" rel="external">#L109-#L222</a>）。Spawn 函数的结构大概如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Spawn</span><span class="params">(<span class="keyword">const</span> FunctionCallbackInfo&lt;Value&gt;&amp; args)</span> </span>&#123;</div><div class="line">  <span class="comment">// 变量初始化，options 初始化</span></div><div class="line">  <span class="comment">// ...</span></div><div class="line"></div><div class="line">  <span class="keyword">int</span> err = uv_spawn(env-&gt;event_loop(), &amp;wrap-&gt;process_, &amp;options);</div><div class="line"></div><div class="line">  <span class="comment">// 错误校验，释放内存</span></div><div class="line">  <span class="comment">// ...</span></div><div class="line"></div><div class="line">  args.GetReturnValue().Set(err);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这里调用的<code>uv_spawn</code>，是 libuv 中封装的 spawn 函数，在 <a href="https://github.com/libuv/libuv/blob/master/src/unix/process.c#L386" target="_blank" rel="external">Unix</a> 下的实现和 <a href="https://github.com/libuv/libuv/blob/master/src/win/process.c#L926" target="_blank" rel="external">Windows</a> 有所不同。ChildProcess 的整个执行过程至此结束。</p>
+<h2 id="ChildProcess-类"><a href="#ChildProcess-类" class="headerlink" title="ChildProcess 类"></a>ChildProcess 类</h2><p>ChildProcess 的实现在 <a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js" target="_blank" rel="noopener">lib/internal/child_process.js</a>，可以看到 ChildProcess 继承自 EventEmitter（<a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js#L229" target="_blank" rel="noopener">#L229</a>），因此 ChildProcess 可以像 EventEmitter 一样绑定事件。从 ChildProcess 的<a href="https://github.com/nodejs/node/blob/master/lib/internal/child_process.js#L164-L228" target="_blank" rel="noopener">函数声明</a>可以看出，ChildProcess 的实现主要依赖<code>_handle</code>这个内部变量，它是一个<code>Process</code>类的实例，来自<code>process.binding(&#39;process_wrap&#39;)</code>。这里的<code>process.binding</code>是一个 Node.js 与 C++ 交互的函数，对于这里的<code>process.binding(&#39;process_wrap&#39;)</code>，对应的 C++ 函数调用在 <a href="https://github.com/nodejs/node/blob/master/src/process_wrap.cc" target="_blank" rel="noopener">src/process_wrap.cc</a>。通过函数名，可以直观的看出，node 中的<code>Process.prototype.spawn</code>对应 C++ 中的<code>Spawn</code>（见<a href="https://github.com/nodejs/node/blob/master/src/process_wrap.cc#L109-#L222" target="_blank" rel="noopener">#L109-#L222</a>）。Spawn 函数的结构大概如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Spawn</span><span class="params">(<span class="keyword">const</span> FunctionCallbackInfo&lt;Value&gt;&amp; args)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 变量初始化，options 初始化</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> err = uv_spawn(env-&gt;event_loop(), &amp;wrap-&gt;process_, &amp;options);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 错误校验，释放内存</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  args.GetReturnValue().Set(err);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里调用的<code>uv_spawn</code>，是 libuv 中封装的 spawn 函数，在 <a href="https://github.com/libuv/libuv/blob/master/src/unix/process.c#L386" target="_blank" rel="noopener">Unix</a> 下的实现和 <a href="https://github.com/libuv/libuv/blob/master/src/win/process.c#L926" target="_blank" rel="noopener">Windows</a> 有所不同。ChildProcess 的整个执行过程至此结束。</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://nodejs.org/api/child_process.html" target="_blank" rel="external">Node.js 官方文档</a></li>
-<li><a href="https://github.com/nodejs/node" target="_blank" rel="external">Node.js 源码</a></li>
-<li><a href="https://github.com/libuv/libuv" target="_blank" rel="external">libuv</a></li>
-<li><a href="http://stackoverflow.com/questions/24042861/nodejs-what-does-process-binding-mean" target="_blank" rel="external">Stackoverflow `process.binding`</a></li>
-<li><a href="http://lanceball.com/process-bindings/#/" target="_blank" rel="external">Process Bindings: How to do Node.js on the JVM</a></li>
+<li><a href="https://nodejs.org/api/child_process.html" target="_blank" rel="noopener">Node.js 官方文档</a></li>
+<li><a href="https://github.com/nodejs/node" target="_blank" rel="noopener">Node.js 源码</a></li>
+<li><a href="https://github.com/libuv/libuv" target="_blank" rel="noopener">libuv</a></li>
+<li><a href="http://stackoverflow.com/questions/24042861/nodejs-what-does-process-binding-mean" target="_blank" rel="noopener">Stackoverflow `process.binding`</a></li>
+<li><a href="http://lanceball.com/process-bindings/#/" target="_blank" rel="noopener">Process Bindings: How to do Node.js on the JVM</a></li>
 </ul>
 
       
@@ -441,7 +441,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives/">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -451,7 +451,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

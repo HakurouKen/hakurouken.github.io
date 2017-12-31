@@ -1,0 +1,664 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="爬虫的用处网络爬虫(web crawler)泛指通过特定规则，自动访问网络的程序，并对拿到的数据做自定义处理的程序。当我们需要批量获取并处理大量网络上数据的时候，用几行代码，就可以替代大量机械重复的劳动。举几个具体的应用场景，爬虫可以帮我们：  自动从 500px 下载桌面壁纸 获取/监控淘宝指定商品的价格变动 定时获">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="爬虫的用处网络爬虫(web crawler)泛指通过特定规则，自动访问网络的程序，并对拿到的数据做自定义处理的程序。当我们需要批量获取并处理大量网络上数据的时候，用几行代码，就可以替代大量机械重复的劳动。举几个具体的应用场景，爬虫可以帮我们：  自动从 500px 下载桌面壁纸 获取/监控淘宝指定商品的价格变动 定时获取微博的热搜榜及其热度  等等。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-31T08:30:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程">
+<meta name="twitter:description" content="爬虫的用处网络爬虫(web crawler)泛指通过特定规则，自动访问网络的程序，并对拿到的数据做自定义处理的程序。当我们需要批量获取并处理大量网络上数据的时候，用几行代码，就可以替代大量机械重复的劳动。举几个具体的应用场景，爬虫可以帮我们：  自动从 500px 下载桌面壁纸 获取/监控淘宝指定商品的价格变动 定时获取微博的热搜榜及其热度  等等。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T16:09:28+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="爬虫的用处"><a href="#爬虫的用处" class="headerlink" title="爬虫的用处"></a>爬虫的用处</h2><p>网络爬虫(web crawler)泛指通过特定规则，自动访问网络的程序，并对拿到的数据做自定义处理的程序。当我们需要批量获取并处理大量网络上数据的时候，用几行代码，就可以替代大量机械重复的劳动。举几个具体的应用场景，爬虫可以帮我们：</p>
+<ol>
+<li>自动从 500px 下载桌面壁纸</li>
+<li>获取/监控淘宝指定商品的价格变动</li>
+<li>定时获取微博的热搜榜及其热度</li>
+</ol>
+<p>等等。</p>
+<a id="more"></a>
+<h2 id="为什么要写这个系列"><a href="#为什么要写这个系列" class="headerlink" title="为什么要写这个系列"></a>为什么要写这个系列</h2><p>几乎每个人在工作和生活中，都要或多或少的机械操作可以用简单的爬虫替代。网上已经有很多爬虫相关的教程，质量参差不齐且不论，它们都忽略了非程序员这个群体。本系列文章将从环境搭建和开发语言细节开始，详细的介绍一个爬虫的开发流程。</p>
+<p><strong>注意：本系列文章为结果导向，并不是详细的 Python 语言教程和网络开发教程。文中涉及到的很多概念，主要以释义为主，并不完全准确。如果你想系统的学习，还需要参照其它的编程相关的教程。</strong></p>
+<h2 id="学习路线图（Roadmap）"><a href="#学习路线图（Roadmap）" class="headerlink" title="学习路线图（Roadmap）"></a>学习路线图（Roadmap）</h2><p>我们选用 Python 作为爬虫的开发语言，学习路线图大致如下：</p>
+<h3 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h3><ol>
+<li>Python(3) 安装</li>
+<li>命令行</li>
+<li>编辑器</li>
+</ol>
+<h3 id="Python-基础"><a href="#Python-基础" class="headerlink" title="Python 基础"></a>Python 基础</h3><ol>
+<li>基本概念</li>
+<li>变量</li>
+<li>条件判断/循环</li>
+<li>函数/类</li>
+<li>文件读写</li>
+<li>包/包管理工具</li>
+<li>一些常用的内置函数和库</li>
+</ol>
+<h3 id="浏览器与-HTTP-相关"><a href="#浏览器与-HTTP-相关" class="headerlink" title="浏览器与 HTTP 相关"></a>浏览器与 HTTP 相关</h3><ol>
+<li>HTTP 协议与 Web 基础概念</li>
+<li>Chrome 调试工具</li>
+<li>Web 中常见的数据结构</li>
+<li>python requests</li>
+<li>python 中的 HTML 解析库</li>
+</ol>
+<h3 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h3><ol>
+<li>反反爬虫措施</li>
+<li>爬虫框架</li>
+<li>正则表达式</li>
+<li>下一步应该学习什么</li>
+</ol>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>由于篇幅限制，本文不会详细的介绍一些语法细节，只是简单介绍一些必要且基础的部分。本教程中介绍的语言方面的知识非常片面，在实际开发过程中，你可能会用到一些没有见过的函数或语法，这时可以查阅官方文档或其它教程来进一步学习。这里推荐一些 Python 语言的学习网站，可以选择一个作为 Python 的主要学习教程。</p>
+<ol>
+<li><a href="http://open.163.com/special/Khan/computer.html" target="_blank" rel="noopener">计算机科学</a>是网易课堂一个 Python 的视频教程，适合零基础的人首次接触编程时学习。</li>
+<li><a href="https://www.codecademy.com/zh/learn/learn-python" target="_blank" rel="noopener">CodeCademy 的 Python 课程</a>是一个交互式学习 Python 的网站，我们可以在网站上输入代码，并即时得到结果。</li>
+<li><a href="http://www.learnpython.org/" target="_blank" rel="noopener">learnpython.org</a> 另一个交互式学习 Python 的网站。</li>
+<li><a href="https://www.w3cschool.cn/python3/" target="_blank" rel="noopener">W3CSchool 的 Python3 教程</a> 一个适用于新手的 Python 教程（中文）。</li>
+<li><a href="https://docs.python.org/3/" target="_blank" rel="noopener">Python 官方文档</a>永远是最好的学习资料，但是对于初学者来讲有一定的理解难度，建议有了一定基础之后阅读。</li>
+</ol>
+<p>如果你从来没有接触过编程语言，比起语法来，你可能更加需要的是一些程序化的思维模式。在掌握一定的语法基础的时候，可以尝试去做一些练习题。基本上，各类的编程入门书籍都会配套一些练习题，CodeCademy 这种交互式学习的网站也会有。题目基本都大同小异，可以作为在学习初期的参考、练习使用。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/18/vue-camelCase-vs-kebab-case/" rel="next" title="Vue 中的驼峰和连字符命名">
+                <i class="fa fa-chevron-left"></i> Vue 中的驼峰和连字符命名
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-00/" rel="prev" title="给非程序员的爬虫教程（零）：开发环境搭建">
+                给非程序员的爬虫教程（零）：开发环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫的用处"><span class="nav-number">1.</span> <span class="nav-text">爬虫的用处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要写这个系列"><span class="nav-number">2.</span> <span class="nav-text">为什么要写这个系列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习路线图（Roadmap）"><span class="nav-number">3.</span> <span class="nav-text">学习路线图（Roadmap）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前置条件"><span class="nav-number">3.1.</span> <span class="nav-text">前置条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python-基础"><span class="nav-number">3.2.</span> <span class="nav-text">Python 基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器与-HTTP-相关"><span class="nav-number">3.3.</span> <span class="nav-text">浏览器与 HTTP 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更多"><span class="nav-number">3.4.</span> <span class="nav-text">更多</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="Python 是一种解释型语言(Interpreted language)，解释型语言的代码可以直接由机器执行，而无需编译(compile)成机器码。完成一个 Python 程序，一般只需要两步：  在编辑器内写好代码，保存成.py后缀的文件。 打开命令行，使用python xxx.py的方式执行。如果你配置了 py ">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程（一）：编程基础概念">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-01/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="Python 是一种解释型语言(Interpreted language)，解释型语言的代码可以直接由机器执行，而无需编译(compile)成机器码。完成一个 Python 程序，一般只需要两步：  在编辑器内写好代码，保存成.py后缀的文件。 打开命令行，使用python xxx.py的方式执行。如果你配置了 py launcher，也可以双击执行，不过还是建议采用前者的方式，因为这样比较方便在">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-31T13:17:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程（一）：编程基础概念">
+<meta name="twitter:description" content="Python 是一种解释型语言(Interpreted language)，解释型语言的代码可以直接由机器执行，而无需编译(compile)成机器码。完成一个 Python 程序，一般只需要两步：  在编辑器内写好代码，保存成.py后缀的文件。 打开命令行，使用python xxx.py的方式执行。如果你配置了 py launcher，也可以双击执行，不过还是建议采用前者的方式，因为这样比较方便在">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-01/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程（一）：编程基础概念 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-01/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程（一）：编程基础概念
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:17:12+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Python 是一种<a href="https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80" target="_blank" rel="noopener">解释型语言(Interpreted language)</a>，解释型语言的代码可以直接由机器执行，而无需编译(compile)成机器码。完成一个 Python 程序，一般只需要两步：</p>
+<ol>
+<li>在编辑器内写好代码，保存成<code>.py</code>后缀的文件。</li>
+<li>打开命令行，使用<code>python xxx.py</code>的方式执行。如果你配置了 py launcher，也可以双击执行，不过还是建议采用前者的方式，因为这样比较方便在控制台查看我们自定义输出的信息。</li>
+</ol>
+<p>下面我们先用几个简单示例程序，来简单介绍一下在编程中，我们用到的一些基础概念。</p>
+<a id="more"></a>
+<h2 id="Hello-World！"><a href="#Hello-World！" class="headerlink" title="Hello World！"></a>Hello World！</h2><p>当我们接触一门新的编程语言的时候，写的第一个程序往往是输出“Hello World”，这已经成为了一种程序员文化。下面就是一个 Python 的 Hello World 程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">"Hello World!"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>按下回车执行，我们即可得到 “Hello World!” 的输出。</p>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>上文的 Hello World 程序中，<code>print</code>我们称之为 <strong>函数(function)</strong> ，函数接收 n(n&gt;= 0)个用逗号隔开的参数，得到一个计算结果。有时候，我们也称之为 <strong>方法(method)</strong> 。例如这里，<code>print</code>接受了一个参数<code>&quot;Hello World!&quot;</code>，结果是在控制台中输出了这行对应的文字。</p>
+<h2 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h2><p>上文的程序片段中，<code>&quot;Hello World!&quot;</code>也有一个名字，叫做 <strong>表达式</strong>。和数学中的表达式类似，表达式是一个可以计算的运算组合，这里的计算结果就是<code>Hello World!</code>这个字符串，<code>1+2</code>,<code>3 * 5 + 7</code>等等，都是表达式。</p>
+<h2 id="与"><a href="#与" class="headerlink" title="= 与 =="></a>= 与 ==</h2><p>在绝大多数编程语言中，= 都是用来进行 <strong>赋值</strong> 的符号。例如代码<code>x = 2</code>，表示把<code>2</code>的值赋给 x，等号的右边叫做右值(R-value)，多数情况下都是表达式。<br>如果我们想要判断二者是否相等，一般使用两个等号的<code>==</code>，例如<code>a == 2</code>。在 Python 中，还有一个更加优雅的语法<code>is</code>，我们也可以写成 <code>a is 2</code>。不过 is 和 <code>==</code> 有些细微的区别，这里不展开细说。</p>
+<h2 id="缩进与代码块"><a href="#缩进与代码块" class="headerlink" title="缩进与代码块"></a>缩进与代码块</h2><p>很少有人给出代码块(code block)的严格定义，不过它的表现非常直观，我们一眼就可以看出来。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">result = <span class="number">1</span> + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> result == <span class="number">2</span>:</span><br><span class="line">  print(<span class="string">'1 + 1 = 2'</span>)</span><br><span class="line">  print(<span class="string">'Answer is corrent'</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  print(<span class="string">'Answer is wrong, what happend?'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>即使你还不会 Python 编程，你也能够大致猜到上文的代码的作用：如果<code>result</code>值为2，输出正确的提示文字，否则输出错误的文字。上文第4行和第5行，就构成了一个代码块，这里表示它们分别在上文的<code>if</code>作用范围之下。在很多语言中，是采用<code>{}</code>来划分的代码块的，但是在 Python 中，代码块是通过 <strong>缩进(indent)</strong> 来标识的。一般情况下，我们应当在所有代码中统一使用 2空格/4空格/8空格/Tab 中的一种进行缩进。注意，Tab 和空格混用也会出现各种问题，所以请 <strong>严格遵守</strong> 这一规范。本文为了排版简洁，统一采用2空格进行缩进，你可以自行选择自己习惯的一种。现代的编辑器，可以帮你智能处理很多缩进的问题，你也可以通过一些编辑器的高级设置来自行定义一些缩进的表现形式（例如将 tab 强制替换为空格等等）。</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>在 Python 中，我们以<code>#</code>作为注释的起始，类似 C 语言中的<code>//</code>和<code>/* */</code>，所有的注释只是给人来阅读的，在实际执行的时候，并不会对其它的代码产生影响。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在“#”后的都是注释</span></span><br><span class="line">print(<span class="string">'Hello!'</span>) <span class="comment"># 注释也可以在一行的末尾</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 写注释是一个好习惯，这样可以方便别人理解你的代码逻辑</span></span><br><span class="line"><span class="comment"># Python 中没有多行注释的概念，不过这并不影响我们手动对注释分行</span></span><br><span class="line"><span class="comment"># 例如这里就是一个多行注释</span></span><br><span class="line">print(<span class="string">'Hello Python!'</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="几个有用的方法"><a href="#几个有用的方法" class="headerlink" title="几个有用的方法"></a>几个有用的方法</h2><h3 id="help"><a href="#help" class="headerlink" title="help"></a>help</h3><p>我们可以对任意的变量使用<code>help</code>方法，python 会自动在控制台打印这个变量的相关文档。例如<code>help(&quot;hello&quot;)</code>，可以输出一长串的帮助文档。</p>
+<h3 id="dir"><a href="#dir" class="headerlink" title="dir"></a>dir</h3><p>dir 函数会列出对应参数上所有可用的属性，例如，我们创建了一个<code>&quot;hello&quot;</code>的字符串，我们想看可以对它使用哪些方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dir(<span class="string">"hello"</span>)</span><br><span class="line"><span class="comment"># 我们可以在 REPL 得到下列输出：</span></span><br><span class="line"><span class="comment"># ['__add__', '__class__', '__contains__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getnewargs__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mod__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__rmod__', '__rmul__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find', 'format', 'format_map', 'index', 'isalnum', 'isalpha', 'isdecimal', 'isdigit', 'isidentifier', 'islower', 'isnumeric', 'isprintable', 'isspace', 'istitle', 'isupper', 'join', 'ljust', 'lower', 'lstrip', 'maketrans', 'partition', 'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 'split', 'splitlines', 'startswith', 'strip', 'swapcase', 'title', 'translate', 'upper', 'zfill']</span></span><br></pre></td></tr></table></figure></p>
+<p>我们得到了一个很长的列表，其中带<code>__</code>前后缀的都是内部方法，一般不直接使用，我们一般称之为 <strong>魔术方法(magic method)</strong>。Python 中的方法命名一般浅显易懂，我们可以一眼看出它们的用途，例如：<code>lower</code>方法会将字符串的所有字母变成小写；<code>capitalize</code>方法会将首字母大写。</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><p><a href="https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80" target="_blank" rel="noopener">解释型语言 - 维基百科</a> 或者 <a href="https://baike.baidu.com/item/%E8%A7%A3%E9%87%8A%E5%9E%8B%E8%AF%AD%E8%A8%80" target="_blank" rel="noopener">解释型语言_百度百科</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-00/" rel="next" title="给非程序员的爬虫教程（零）：开发环境搭建">
+                <i class="fa fa-chevron-left"></i> 给非程序员的爬虫教程（零）：开发环境搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-02/" rel="prev" title="给非程序员的爬虫教程（二）：变量与类型">
+                给非程序员的爬虫教程（二）：变量与类型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hello-World！"><span class="nav-number">1.</span> <span class="nav-text">Hello World！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">2.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表达式"><span class="nav-number">3.</span> <span class="nav-text">表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与"><span class="nav-number">4.</span> <span class="nav-text">= 与 ==</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缩进与代码块"><span class="nav-number">5.</span> <span class="nav-text">缩进与代码块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注释"><span class="nav-number">6.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#几个有用的方法"><span class="nav-number">7.</span> <span class="nav-text">几个有用的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#help"><span class="nav-number">7.1.</span> <span class="nav-text">help</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dir"><span class="nav-number">7.2.</span> <span class="nav-text">dir</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展阅读"><span class="nav-number">8.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
