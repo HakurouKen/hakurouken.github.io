@@ -1,0 +1,636 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="模块(module)随着我们的程序不断的复杂，我们可能将我们的程序拆分橙多个文件以便于维护。或者，我们还可能想在几个程序中，使用同一个函数或类，而不是将定义复制到每个程序中。我们将一个这样一个包含 Python 声明和定义的文件就称为模块(module)。例如，我们将一个is_prime函数保存为prime.py文件，">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程（六）：包和包管理工具">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-06/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="模块(module)随着我们的程序不断的复杂，我们可能将我们的程序拆分橙多个文件以便于维护。或者，我们还可能想在几个程序中，使用同一个函数或类，而不是将定义复制到每个程序中。我们将一个这样一个包含 Python 声明和定义的文件就称为模块(module)。例如，我们将一个is_prime函数保存为prime.py文件，这个文件就是一个 Python 模块。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-31T13:20:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程（六）：包和包管理工具">
+<meta name="twitter:description" content="模块(module)随着我们的程序不断的复杂，我们可能将我们的程序拆分橙多个文件以便于维护。或者，我们还可能想在几个程序中，使用同一个函数或类，而不是将定义复制到每个程序中。我们将一个这样一个包含 Python 声明和定义的文件就称为模块(module)。例如，我们将一个is_prime函数保存为prime.py文件，这个文件就是一个 Python 模块。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-06/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程（六）：包和包管理工具 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-06/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程（六）：包和包管理工具
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:20:01+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="模块-module"><a href="#模块-module" class="headerlink" title="模块(module)"></a>模块(module)</h2><p>随着我们的程序不断的复杂，我们可能将我们的程序拆分橙多个文件以便于维护。或者，我们还可能想在几个程序中，使用同一个函数或类，而不是将定义复制到每个程序中。我们将一个这样一个包含 Python 声明和定义的文件就称为<strong>模块(module)</strong>。例如，我们将一个<code>is_prime</code>函数保存为<code>prime.py</code>文件，这个文件就是一个 Python 模块。<br><a id="more"></a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># prime.py</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_prime</span><span class="params">(n)</span>:</span></span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>, n):</span><br><span class="line">    <span class="keyword">if</span> n % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_not_prime</span><span class="params">(n)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">not</span> is_prime(n)</span><br></pre></td></tr></table></figure>
+<p>模块可以用<code>import</code>的方式引入，我们在和<code>prime.py</code>同文件夹下，建立一个<code>main.py</code>文件：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># main.py</span></span><br><span class="line"><span class="comment"># 我们用 import 语法，引入 prime 这个模块</span></span><br><span class="line"><span class="keyword">import</span> prime</span><br><span class="line">prime.is_prime(<span class="number">7</span>) <span class="comment"># 返回 True</span></span><br><span class="line">prime.is_not_prime(<span class="number">8</span>) <span class="comment"># 返回 False</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者采用 from ... import 的语法，引入指定的方法、类或变量</span></span><br><span class="line"><span class="keyword">from</span> prime <span class="keyword">import</span> is_prime</span><br><span class="line">is_prime(<span class="number">7</span>) <span class="comment"># 返回 True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以同时引入多个，用逗号隔开即可</span></span><br><span class="line"><span class="keyword">from</span> prime <span class="keyword">import</span> is_prime, is_not_prime</span><br><span class="line">is_not_prime(<span class="number">999</span>) <span class="comment"># 返回 True</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="包-Package"><a href="#包-Package" class="headerlink" title="包(Package)"></a>包(Package)</h2><p>包是 Python 使用“点号连接的模块名”来区分不同<strong>命名空间(namespace)</strong>的方式（我们可以简单理解为沙箱）。例如名称<code>packA.packB</code>代表着名称为<code>packA</code>的包中，名称为<code>packB</code>的子模块。举个例子，假设我们想要编写一个声音处理的模块(包)，我们把格式处理、效果器、过滤器等等分开维护，可能有如下的文件结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">sound/                          顶层包</span><br><span class="line">      __init__.py               初始化时执行，可以为空</span><br><span class="line">      formats/                  子包</span><br><span class="line">            __init__.py</span><br><span class="line">            wavread.py</span><br><span class="line">            wavwrite.py</span><br><span class="line">            aiffread.py</span><br><span class="line">            aiffwrite.py</span><br><span class="line">            auread.py</span><br><span class="line">            auwrite.py</span><br><span class="line">            ...</span><br><span class="line">      effects/                  子包</span><br><span class="line">            __init__.py</span><br><span class="line">            echo.py</span><br><span class="line">            surround.py</span><br><span class="line">            reverse.py</span><br><span class="line">            ...</span><br><span class="line">      filters/                  子包</span><br><span class="line">            __init__.py</span><br><span class="line">            equalizer.py</span><br><span class="line">            vocoder.py</span><br><span class="line">            karaoke.py</span><br><span class="line">            ...</span><br></pre></td></tr></table></figure></p>
+<p>所有的 Python 包(和其子包)的文件夹下，都<strong>必须有<code>__init__.py</code>这个文件</strong>，只有这样，Python 才会把该文件夹认定为合法的 Python 包。<code>__init__.py</code>文件可以为空，但是必须要有这个文件。</p>
+<p>我们可以单独引入某个模块，例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sound.effect.echo</span><br><span class="line"><span class="comment"># 调用模块上的 echofilter 方法</span></span><br><span class="line">sound.effects.echo.echofilter(input, output, delay=<span class="number">0.7</span>, atten=<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们也可以从包中引入单个模块：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sound.effects <span class="keyword">import</span> echo</span><br><span class="line"><span class="comment"># 调用模块上的 echofilter 方法</span></span><br><span class="line">echo.echofilter(input, output, delay=<span class="number">0.7</span>, atten=<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
+<p>我们也可以从模块中，单独引入某个函数/类/变量:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sound.effects.echo <span class="keyword">import</span> echofilter</span><br><span class="line">echofilter(input, output, delay=<span class="number">0.7</span>, atten=<span class="number">4</span>)</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是，使用<code>from package import item</code>语法时，item 可以是子模块（包），也可以是模块内的变量/函数/类。但是使用<code>import package</code>的语法时，package 必须是一个包（模块）。</p>
+<h2 id="Python-内置模块"><a href="#Python-内置模块" class="headerlink" title="Python 内置模块"></a>Python 内置模块</h2><p>除了内置方法，Python 提供了很多内置模块（包）供我们调用。举个例子，Python 有个<code>datetime</code>模块，用来处理日期/时间，举个简单的例子：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="comment"># 输出当前时间</span></span><br><span class="line">print(datetime.datetime.now())</span><br></pre></td></tr></table></figure></p>
+<p>我们也可以使用内置的<code>urllib</code>模块，来获取一个网站的 favicon (小图标)：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line">resp = urllib.request.urlopen(<span class="string">'http://www.qq.com/favicon.ico'</span>)</span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'favicon.ico'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">  f.write(resp.read())</span><br></pre></td></tr></table></figure></p>
+<p>Python 提供了非常多实用内置的模块，我们在<a href="https://docs.python.org/3/library/index.html" target="_blank" rel="noopener">官方文档</a>中查看所有的模块。</p>
+<h2 id="第三方包"><a href="#第三方包" class="headerlink" title="第三方包"></a>第三方包</h2><p>除了 Python 内置的包，我们还可以使用第三方包，合理的使用第三方包，可以大大提高我们的开发效率。例如，我们可以使用第三方包<code>requests</code>来处理 http 请求，比起<code>urllib</code>可以节省大量的代码。</p>
+<p>在使用第三方包前，我们必须先安装，我们通常用 pip 来管理 Python 的第三方模块。我们当前只需要了解安装命令：<code>pip install PACKAGE_NAME</code>，例如我们可以使用<code>pip install requests</code>来安装<code>requests</code>。</p>
+<h2 id="虚拟环境"><a href="#虚拟环境" class="headerlink" title="虚拟环境"></a>虚拟环境</h2><p>所有的第三方包，都有<strong>版本(version)</strong>的概念：任何的软件开发，都会不断有 bug 修复、新功能添加、老功能的废弃等等。假如我们的机器上有很多个 Python 项目，有些开发的比较早，依赖了 requests 1.2 的版本，那么对于新开发的项目，我们想要使用 requests 1.3 的版本，应当如何处理呢？这时，我们需要引入<strong>虚拟环境(virtual environment)</strong>的概念，z在 Python 中，我们可以使用第三方模块<code>virtualenv</code>或者<code>venv</code>来进行虚拟环境的管理。我们这里不会对这两个的使用进行过多的描述，我们初期的开发也不需要对这个进行过多了解，如果感兴趣，可以自行查看<a href="https://packaging.python.org/tutorials/installing-packages/" target="_blank" rel="noopener">官方文档</a>。</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ol>
+<li>Python 的模块机制<a href="https://docs.python.org/3/tutorial/modules.html" target="_blank" rel="noopener">官方文档</a></li>
+<li>pip 的使用，以及虚拟环境(virtualenv)的<a href="https://packaging.python.org/tutorials/installing-packages/" target="_blank" rel="noopener">官方教程</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-05/" rel="next" title="给非程序员的爬虫教程（五）：文件读写">
+                <i class="fa fa-chevron-left"></i> 给非程序员的爬虫教程（五）：文件读写
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-07/" rel="prev" title="给非程序员的爬虫教程（七）：HTTP 协议与 Web 基础概念">
+                给非程序员的爬虫教程（七）：HTTP 协议与 Web 基础概念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#模块-module"><span class="nav-number">1.</span> <span class="nav-text">模块(module)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包-Package"><span class="nav-number">2.</span> <span class="nav-text">包(Package)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-内置模块"><span class="nav-number">3.</span> <span class="nav-text">Python 内置模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三方包"><span class="nav-number">4.</span> <span class="nav-text">第三方包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟环境"><span class="nav-number">5.</span> <span class="nav-text">虚拟环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展阅读"><span class="nav-number">6.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

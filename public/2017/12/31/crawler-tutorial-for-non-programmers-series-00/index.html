@@ -1,0 +1,665 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="Python 的安装与初始配置我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程（零）：开发环境搭建">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-00/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="Python 的安装与初始配置我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一直在开发维护着。对于我们，可以直接选择 Python 3。建议从官网直接下载最新">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn08jrek25j20im0bg750.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn08kbiuxkj20im0bg74w.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn08ktduavj20im0bgmxw.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn09daqlh2j20it0camxp.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn08myyw9aj20it0caglu.jpg">
+<meta property="og:updated_time" content="2017-12-31T13:15:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程（零）：开发环境搭建">
+<meta name="twitter:description" content="Python 的安装与初始配置我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一直在开发维护着。对于我们，可以直接选择 Python 3。建议从官网直接下载最新">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn08jrek25j20im0bg750.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-00/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程（零）：开发环境搭建 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-00/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程（零）：开发环境搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:15:55+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Python-的安装与初始配置"><a href="#Python-的安装与初始配置" class="headerlink" title="Python 的安装与初始配置"></a>Python 的安装与初始配置</h2><p>我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一直在开发维护着。对于我们，可以直接选择 Python 3。建议从<a href="https://www.python.org/downloads/" target="_blank" rel="noopener">官网</a>直接下载最新版，当前(2017.12)最新版本为 3.6.4 ，我们将以这个版本为例，介绍一下安装时需要关注的选项。<br><a id="more"></a></p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn08jrek25j20im0bg750.jpg" alt="Python 安装截图"></p>
+<p>“Add Python to PATH” 是否把 Python 添加到 PATH 的环境变量，关系到我们能不能在命令行中使用 Python，确保这个是勾选状态，然后选择自定义安装。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn08kbiuxkj20im0bg74w.jpg" alt="Python 安装截图"></p>
+<ol>
+<li>Documentation：文档，当我们忘记了某些具体函数的用法时，可以快速查阅，必选</li>
+<li>pip： python 的包管理工具，帮助我们快速安装第三方包，必选</li>
+<li>tcl/tk and IDLE：图形界面编辑器和交互式环境，必选</li>
+<li>py launcher：安装 launcher 后，我们可以直接双击 .py 文件来执行，就像 .exe 文件一样，建议勾选</li>
+</ol>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn08ktduavj20im0bgmxw.jpg" alt="Python 安装截图"></p>
+<ol>
+<li>Associate files with Python: 将 .py 文件和 py launcher 关联，和前文的 py launcher 配套，建议勾选</li>
+<li>Add Python to environment variables: 将 Python 添加到<strong>环境变量</strong>，勾选这个选项，我们才能在命令行中方便的使用<code>python</code>命令，必选</li>
+</ol>
+<p>安装成功后，点击完成，进入安装目录并打开 python.exe，打开一个窗口，在弹出的窗口中，输入<code>print(&quot;Hello World!&quot;)</code>，按下回车，可以得到下列输出：</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn09daqlh2j20it0camxp.jpg" alt="Hello World"></p>
+<p>可以看到，我们得到了“Hello World!”的输出，这就是一行最简单的 Python 代码。</p>
+<h2 id="命令行-command-line"><a href="#命令行-command-line" class="headerlink" title="命令行(command line)"></a>命令行(command line)</h2><p>在 windows 环境下，我们说的命令行一般指 cmd.exe 或 powershell.exe 。powershell 比 cmd 更加强大，但是要相对复杂一点，对于初学者执行简单的命令，并没有太大的区别。为了方便，下文的命令行，统一指代 cmd.exe 。输入 win + R 打开“运行窗口”，输入 cmd 即可打开命令行。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn08myyw9aj20it0caglu.jpg" alt="CMD 窗口"></p>
+<p>光标前代表我们现在所在的文件夹，我们可以在这个窗口里输入对应的命令，然后按回车执行。对于初学者，我们首先需要记住几个基础命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X:</span><br></pre></td></tr></table></figure>
+<p><code>X</code> 可以替换为任意盘符，比如<code>D:</code>可以将当前执行路径切到 D 盘。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir</span><br></pre></td></tr></table></figure>
+<p>DIRectory ，用来列出（当前）文件夹下所有的文件，以及一些文件的基础信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> FOLDER_PATH</span><br></pre></td></tr></table></figure>
+<p>Change Directory，用于切换到 FOLDER_PATH 的文件夹，在实际执行的时候，我们可以把 FOLDER_PATH 换成我们想要的任何一个路径。我们可以用<code>..</code>来代表上一级目录，用<code>.</code>来代表这一层目录自己。需要注意的是，这里不能切换盘符，文件夹所在的路径必须和切换前一致。想要切换盘符，请用<code>X:</code>的方式来切换。<br>这里的<code>FOLDER_PATH</code>一般称为“命令行参数”，是对于我们执行的主命令的一些补充说明。</p>
+<p>类似的，我们安装的 Python 也可以像这些命令一样执行，输入<code>python</code>并回车，会进入一个和我们双击 python.exe 差不多的交互界面，我们称这个叫做 repl(Read-Eval-Print-Loop)，一般用来输入一些测试代码执行，并马上得到结果。<br>和<code>cd</code>命令一样，python 执行时也可以带参数，比如我们想要查看我们安装的 Python 版本，可以输入<code>python --version</code>，我们可以看到并没有打开 repl，而是输出了一个版本号。我们也可以将一个 python 文件(.py 后缀)作为参数（例如<code>python test.py</code>），来执行这个 python 文件。</p>
+<p>实际操作一下，打开一个记事本文件，将下列代码拷贝到记事本中，并保存为<code>date.py</code>:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_date</span><span class="params">(d)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> <span class="string">'&#123;&#125;-&#123;&#125;-&#123;&#125;'</span>.format(d.year, d.month, d.day)</span><br><span class="line"></span><br><span class="line">print(get_date(datetime.now()))</span><br></pre></td></tr></table></figure></p>
+<p>之后，使用上文的<code>cd</code>命令切换到<code>test.py</code>所在的目录，输入<code>python date.py</code>，可以发现控制台中输出了今天的日期。恭喜，我们已经成功完成了一个简单的 Python 脚本的编写！</p>
+<h2 id="编辑器"><a href="#编辑器" class="headerlink" title="编辑器"></a>编辑器</h2><p>当我们实际开始写代码的时候，我们就会体会到，如果使用记事本编辑是件很不方便的事情，因此我们需要一些专用的编辑器(editor)，来辅助我们写代码。与编辑器类似的，还有一个 IDE（Integrated Development Environment，集成开发环境）的概念，从名字可以看出来，比起编辑器来，IDE 有着更加强大的功能，但同时也相对复杂笨重一些。编辑器也可以自行通过插件扩展，实现类似 IDE 的功能，二者也没有严格意义的界限。编辑器/IDE 的选择，基本上看个人喜好，对于初学者来讲没有太大区别。这里大概推荐几款编辑器（IDE），可以按照自己的喜好随意选择：</p>
+<ol>
+<li><p>Sublime Text<br>官网：<a href="https://www.sublimetext.com/" target="_blank" rel="noopener">https://www.sublimetext.com/</a></p>
+</li>
+<li><p>VSCode <strong>（注意不是VisualStudio）</strong><br>官网：<a href="https://code.visualstudio.com/" target="_blank" rel="noopener">https://code.visualstudio.com/</a></p>
+</li>
+<li><p>Atom<br>官网：<a href="https://atom.io/" target="_blank" rel="noopener">https://atom.io/</a></p>
+</li>
+<li><p>PyCharm<br>官网：<a href="https://www.jetbrains.com/pycharm/" target="_blank" rel="noopener">https://www.jetbrains.com/pycharm/</a></p>
+</li>
+</ol>
+<p>编辑器和 IDE 的安装过程中，没有太多注意事项，像普通软件一样安装即可。有一点需要注意的是，对于这种常用软件，如果你的硬盘是混合硬盘，尽量把编辑器装在固态硬盘的分区，这样会大大提高编辑器的启动速度。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/" rel="next" title="给非程序员的爬虫教程">
+                <i class="fa fa-chevron-left"></i> 给非程序员的爬虫教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-01/" rel="prev" title="给非程序员的爬虫教程（一）：编程基础概念">
+                给非程序员的爬虫教程（一）：编程基础概念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-的安装与初始配置"><span class="nav-number">1.</span> <span class="nav-text">Python 的安装与初始配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令行-command-line"><span class="nav-number">2.</span> <span class="nav-text">命令行(command line)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编辑器"><span class="nav-number">3.</span> <span class="nav-text">编辑器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

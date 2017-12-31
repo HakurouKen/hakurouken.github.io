@@ -236,7 +236,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/04/01/html-label-click-trigger/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-06/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -261,8 +261,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/01/html-label-click-trigger/" itemprop="url">
-                  label 标签的点击事件
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-06/" itemprop="url">
+                  给非程序员的爬虫教程（六）：包和包管理工具
                 </a>
               
             
@@ -276,8 +276,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-01T14:04:04+08:00">
-                2017-04-01
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:20:01+08:00">
+                2017-12-31
               </time>
             
 
@@ -313,12 +313,10 @@
 
       
         
-          <p>在 Web 中，我们经常使用 label 标签来为 input 标签做标记。用法有两种，一种是用<code>for</code>属性：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"price"</span>&gt;</span>价格<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"number"</span> <span class="attr">id</span>=<span class="string">"price"</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>或这直接用<code>label</code>包裹对应的<code>input</code>:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">label</span>&gt;</span>开关<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"checkbox"</span>&gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>label 的这个特性，可以方便的扩大 input 的点击范围（尤其是对于 checkbox/radio 等点击范围比较小的元素）。但是这一特性，会使得在监听点击事件时需要额外注意一些事情。</p>
+          <h2 id="模块-module"><a href="#模块-module" class="headerlink" title="模块(module)"></a>模块(module)</h2><p>随着我们的程序不断的复杂，我们可能将我们的程序拆分橙多个文件以便于维护。或者，我们还可能想在几个程序中，使用同一个函数或类，而不是将定义复制到每个程序中。我们将一个这样一个包含 Python 声明和定义的文件就称为<strong>模块(module)</strong>。例如，我们将一个<code>is_prime</code>函数保存为<code>prime.py</code>文件，这个文件就是一个 Python 模块。<br>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/04/01/html-label-click-trigger/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-06/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -359,7 +357,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/03/13/optimize-local-require-paths-for-nodejs/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-05/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -384,8 +382,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/03/13/optimize-local-require-paths-for-nodejs/" itemprop="url">
-                  优化 Node.js 中的深层 require 路径
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-05/" itemprop="url">
+                  给非程序员的爬虫教程（五）：文件读写
                 </a>
               
             
@@ -399,8 +397,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-13T22:09:37+08:00">
-                2017-03-13
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:19:20+08:00">
+                2017-12-31
               </time>
             
 
@@ -436,11 +434,10 @@
 
       
         
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>随着 Node.js 应用规模的增长，我们经常会将应用划分成多个模块。随着模块变多与路径变深，我们可能不得不在<code>require</code>时，使用一长串的相对路径，比如：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> utils = <span class="built_in">require</span>(<span class="string">'../../../libs/utils'</span>)</div></pre></td></tr></table></figure></p>
-<p>这种写法不但丑陋，而且会给代码定位造成麻烦。下面针对这一问题，提供一些解决方案。</p>
+          <p>Python 提供了<code>open</code>函数打开文件，返回一个文件对象，后续我们可以使用这个对象的方法，对文件进行读写。open函数的完整定义为：<br><code>open(file, mode=&#39;r&#39;, buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)</code><br>虽然这里列出了很多参数，我们绝大多数情况下，都只需要用到少部分的几个参数即可。</p>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/03/13/optimize-local-require-paths-for-nodejs/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-05/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -481,7 +478,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/03/06/javascript-void-keyword/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-04/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -506,8 +503,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/03/06/javascript-void-keyword/" itemprop="url">
-                  JavaScript 中的 void 关键字（译）
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-04/" itemprop="url">
+                  给非程序员的爬虫教程（四）：函数/类与封装
                 </a>
               
             
@@ -521,8 +518,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-06T22:21:19+08:00">
-                2017-03-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:18:58+08:00">
+                2017-12-31
               </time>
             
 
@@ -558,14 +555,10 @@
 
       
         
-          <blockquote>
-<p>本文翻译自： <a href="http://cmichel.io/javascript-void-keyword/" target="_blank" rel="external">http://cmichel.io/javascript-void-keyword/</a></p>
-</blockquote>
-<p>这是什么语言？<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> <span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>)</span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>是的，这是 JavaScript ，我知道标题里写了。但是，我最近才在 ESLint 的<a href="http://eslint.org/docs/rules/consistent-return" target="_blank" rel="external">返回值一致性</a><sup>注①</sup>中知道<code>void</code>这个关键字。</p>
+          <p>在这章之前，我们已经接触过函数这一概念，我们使用过很多次的<code>print</code>就是一个函数。我们称这种 Python 原生提供给我们的函数为 <strong>内置函数(built-in functions)</strong>。我们从 Python 的<a href="https://docs.python.org/3/library/functions.html" target="_blank" rel="noopener">官方文档</a>中，找到所有的内置函数。除了这些内置函数，我们还可以自定义一些函数。</p>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/03/06/javascript-void-keyword/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-04/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -606,7 +599,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/02/15/two-way-bind-in-vue/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-03/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -631,8 +624,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/15/two-way-bind-in-vue/" itemprop="url">
-                  Vue 中的双向绑定
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-03/" itemprop="url">
+                  给非程序员的爬虫教程（三）：条件与循环
                 </a>
               
             
@@ -646,8 +639,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-15T00:00:22+08:00">
-                2017-02-15
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:18:33+08:00">
+                2017-12-31
               </time>
             
 
@@ -683,13 +676,10 @@
 
       
         
-          <p>在 Vue 中构建组件的时候，父子组件采用的通信方式可以简单总结为 <strong>Props down, Events up</strong>。即：父组件通过 props 向下对子组件传递数据，子组件通过 events 给父组件发消息。</p>
-<p><img src="https://vuejs.org/images/props-events.png" alt="父子组件通信示意图"></p>
-<p>可以看到，子组件是无法对 props 进行修改的，这一特性，保证了数据流是单向的，解耦了父子组件之间的数据，便于维护和管理。但是，在一些特殊的场景，我们还是希望有些局部性数据是双向绑定的，下文给一个这种场景的实例，并给出特定场景下的解决方案。</p>
-<p><strong>注意：</strong> 如果你使用了 vuex 这种状态管理的组件，不推荐使用下文的方法，请使用 action 和 mutation 来统一管理。</p>
+          <p>程序一般是代替人来执行特定的计算的一个工具，编程的本质也就是告诉计算机，应当用什么计算流程来处理我们的数据。这一计算过程，也就是程序的主要逻辑，我们称之为算法。<br>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/15/two-way-bind-in-vue/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-03/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -730,7 +720,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/02/06/web-audio/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-02/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -755,8 +745,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/02/06/web-audio/" itemprop="url">
-                  使用 Web Audio API
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-02/" itemprop="url">
+                  给非程序员的爬虫教程（二）：变量与类型
                 </a>
               
             
@@ -770,8 +760,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-06T00:09:40+08:00">
-                2017-02-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:17:14+08:00">
+                2017-12-31
               </time>
             
 
@@ -807,10 +797,10 @@
 
       
         
-          <p>Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通过它开发复杂的混音，音效，平移以及获取音频信息等等。本文将通过一个简单的可视化例子，介绍 Web Audio API 的基本应用。<br>
+          <p>变量(variable)是编程语言中最基础的一个概念，它一般用来储存我们的程序中的某个计算结果，或者是某个抽象概念。我们可以用任何一个表达式给变量赋值，例如：<code>a = 2</code>, <code>b = 99 * 5</code>, <code>c = &quot;Hello&quot;</code> 等等。变量都有一个 <strong>类型(type)</strong> ，比如一部手机的价格，我们一般用数字来表示；而手机品牌名称，则一般用字符串来描述。不同的类型的变量，后续所能进行的操作也不同。<br>在介绍类型之前，我们先介绍一个内置方法：<code>type</code>。type 方法接受一个参数，返回这个参数的类型。我们可以打开一个 REPL，输入<code>type(8)</code>，可以看到控制台的返回值是<code>&lt;type &#39;int&#39;&gt;</code>，这里的<code>int</code>，就是数字<code>8</code>的类型。<br>和其它编程语言类似，Python 有很多 <strong>内置类型(built-in types)</strong>，我们不会一一进行介绍，这里挑选一些常用的类型展开。</p>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/02/06/web-audio/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-02/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -851,7 +841,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/01/14/key-order-in-javascript-object/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-01/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -876,8 +866,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/14/key-order-in-javascript-object/" itemprop="url">
-                  javascript 中 Object 的键值顺序
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-01/" itemprop="url">
+                  给非程序员的爬虫教程（一）：编程基础概念
                 </a>
               
             
@@ -891,8 +881,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-14T14:06:35+08:00">
-                2017-01-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:17:12+08:00">
+                2017-12-31
               </time>
             
 
@@ -928,387 +918,15 @@
 
       
         
-          <p>在 javascript 中，我们通常想要遍历一个对象，通常会有下列几种方式：</p>
-<pre><code>1. Object.keys / Object.values / Object.entries
-1. for-in / for-of
-3. Object.getOwnPropertyNames(obj)
-4. Reflect.ownKeys(obj)
-5. Object.getOwnPropertySymbols(obj)
-</code></pre><p>需要注意的是，在 ES2015 标准之后，keys 除了是 String，还可以是 Symbol（之前只可以是 String）。除此之外其它的 key 值，在设置的时候，会隐式调用 toString 转化为字符串。<br>针对上述一系列情况，遍历 key 的顺序是怎样的？下文将对这个问题进行一些探究。</p>
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/14/key-order-in-javascript-object/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/01/10/how-python-import-work/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="HakurouKen">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="HakuoruKen 的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/10/how-python-import-work/" itemprop="url">
-                  python 的 import 是如何工作的
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-10T17:15:11+08:00">
-                2017-01-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>本文主要探讨 Python 中 import 的运作机制。在 Python <a href="https://docs.python.org/3/reference/simple_stmts.html#import" target="_blank" rel="external">官方文档</a>中，将 Python import 的过程简单分成<strong>查找/加载</strong>和<strong>赋值</strong>两步。</p>
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/10/how-python-import-work/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/01/07/childprocess-in-nodejs/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="HakurouKen">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="HakuoruKen 的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/07/childprocess-in-nodejs/" itemprop="url">
-                  Node.js 的 child_process 模块
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-07T22:49:09+08:00">
-                2017-01-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在 Node.js 中，我们可以使用 child_process 模块来创建一个子进程，并在这个子进程中执行一些其它任务（如执行 shell 脚本等）。这个模块包括<code>exec</code>,<code>execFile</code>,<code>fork</code>,<code>spawn</code>四个异步方法和<code>execSync</code>,<code>execFileSync</code>,<code>spawnSync</code>三个同步方法以及<code>ChildProcess</code>类。详细的使用说明，可以参照<a href="https://nodejs.org/api/child_process.html" target="_blank" rel="external">官方文档</a>，本文只会简单分析一下几个代码的执行过程。</p>
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/07/childprocess-in-nodejs/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/01/03/build-your-own-django-inspectdb/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="HakurouKen">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="HakuoruKen 的博客">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/03/build-your-own-django-inspectdb/" itemprop="url">
-                  打造自己的 django-inspectdb 命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-03T00:07:16+08:00">
-                2017-01-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Django 提供了一个 inspectdb 的指令，可以通过内省现有的数据库来创建 django 的 ORM models。执行起来也很简单:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python manage.py inspectdb --database YOUR_DB</div></pre></td></tr></table></figure></p>
-<p>但是实际上，这个 inspectdb 并没有给太多定制化的选项，并不能满足所有的场景，举几个我在业务中遇到的问题：</p>
+          <p>Python 是一种<a href="https://zh.wikipedia.org/wiki/%E7%9B%B4%E8%AD%AF%E8%AA%9E%E8%A8%80" target="_blank" rel="noopener">解释型语言(Interpreted language)</a>，解释型语言的代码可以直接由机器执行，而无需编译(compile)成机器码。完成一个 Python 程序，一般只需要两步：</p>
 <ol>
-<li>不能把 DB column 的注释直接输出到 help_text 字段</li>
-<li>没有把表注释转化为 Model 类的 docstring</li>
-<li>Model 类名直接 capitalize 转化，而我们业务比较繁杂，表名大多比较长，用大驼峰更适合</li>
-<li>同样的道理，我们希望把列名规范成下划线连接的方式</li>
+<li>在编辑器内写好代码，保存成<code>.py</code>后缀的文件。</li>
+<li>打开命令行，使用<code>python xxx.py</code>的方式执行。如果你配置了 py launcher，也可以双击执行，不过还是建议采用前者的方式，因为这样比较方便在控制台查看我们自定义输出的信息。</li>
 </ol>
-<p>鉴于以上原因，我决定基于原有根据业务改一个新的 inspectdb。<br>
+<p>下面我们先用几个简单示例程序，来简单介绍一下在编程中，我们用到的一些基础概念。</p>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/03/build-your-own-django-inspectdb/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-01/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1349,7 +967,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2016/12/30/webpack-trick/">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-00/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="HakurouKen">
@@ -1374,8 +992,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/12/30/webpack-trick/" itemprop="url">
-                  Webpack 使用技巧
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-00/" itemprop="url">
+                  给非程序员的爬虫教程（零）：开发环境搭建
                 </a>
               
             
@@ -1389,8 +1007,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-30T20:30:28+08:00">
-                2016-12-30
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:15:55+08:00">
+                2017-12-31
               </time>
             
 
@@ -1426,11 +1044,379 @@
 
       
         
-          <p>本文翻译自 Github <a href="https://github.com/rstacruz/webpack-tricks" target="_blank" rel="external">rstacruz/webpack-tricks</a>。</p>
-<p>这里列举了一些我学到的 Webpack 技巧，所有下列技巧仅适用于 Webpack 1， Webpack 2 的 API 有些变动，因此有些技巧可能无法正常在 Webpack 2 中工作。<a href="http://javascriptplayground.com/blog/2016/10/moving-to-webpack-2/" target="_blank" rel="external">这篇文章</a>详细介绍了如何迁移到 Webpack 2。</p>
+          <h2 id="Python-的安装与初始配置"><a href="#Python-的安装与初始配置" class="headerlink" title="Python 的安装与初始配置"></a>Python 的安装与初始配置</h2><p>我们选用 Python 语言来进行开发爬虫，原因是 Python 语言容易上手，而且有相对丰富的学习资料。Python 现在有 Python 2 和 Python 3 两个大版本，3 是 2 的升级版，同时语言细节表现上有些细微的不同，也正是因为这个原因，Python 2 也作为历史版本一直在开发维护着。对于我们，可以直接选择 Python 3。建议从<a href="https://www.python.org/downloads/" target="_blank" rel="noopener">官网</a>直接下载最新版，当前(2017.12)最新版本为 3.6.4 ，我们将以这个版本为例，介绍一下安装时需要关注的选项。<br>
           <!--noindex-->
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/12/30/webpack-trick/#more" rel="contents">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-00/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/" itemprop="url">
+                  给非程序员的爬虫教程
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T16:09:28+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="爬虫的用处"><a href="#爬虫的用处" class="headerlink" title="爬虫的用处"></a>爬虫的用处</h2><p>网络爬虫(web crawler)泛指通过特定规则，自动访问网络的程序，并对拿到的数据做自定义处理的程序。当我们需要批量获取并处理大量网络上数据的时候，用几行代码，就可以替代大量机械重复的劳动。举几个具体的应用场景，爬虫可以帮我们：</p>
+<ol>
+<li>自动从 500px 下载桌面壁纸</li>
+<li>获取/监控淘宝指定商品的价格变动</li>
+<li>定时获取微博的热搜榜及其热度</li>
+</ol>
+<p>等等。</p>
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/10/18/vue-camelCase-vs-kebab-case/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/10/18/vue-camelCase-vs-kebab-case/" itemprop="url">
+                  Vue 中的驼峰和连字符命名
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-18T21:31:47+08:00">
+                2017-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>由于 HTML 的大小写不敏感，当我们使用 in-dom 的模板时，<code>myProp＝&quot;123&quot;</code>会被转换成<code>myprop=&quot;123&quot;</code>。为了解决这个问题，Vue 引入了模板中驼峰/Pascal/连字符混用的机制，官方推荐开发者在所有的模板中，使用连字符的格式来描述组件/属性。</p>
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/10/18/vue-camelCase-vs-kebab-case/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/10/05/window-addeventlistener-and-document-addeventlistener/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/10/05/window-addeventlistener-and-document-addeventlistener/" itemprop="url">
+                  window.addEventListener 和 document.addEventListener 的区别
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-05T19:42:33+08:00">
+                2017-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>当我们需要监听一个”全局” DOM 事件时，往往会用到<code>window</code>和<code>document</code>这两个对象的<code>addEventListener</code>方法。那么，它们两个之间有什么区别与关联呢？</p>
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/10/05/window-addeventlistener-and-document-addeventlistener/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1466,7 +1452,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1507,7 +1493,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives/">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1517,7 +1503,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

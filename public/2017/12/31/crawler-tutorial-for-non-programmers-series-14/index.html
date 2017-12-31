@@ -1,0 +1,636 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="目标入口 URL：http://500px.com/ 获取 500px 首页的风景(landscape)图。">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程（十四）：实例：500px 首页风景图">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-14/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="目标入口 URL：http://500px.com/ 获取 500px 首页的风景(landscape)图。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0cb7s8nhj21z20zi1gl.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0c4r6bz9j21z415u1kx.jpg">
+<meta property="og:updated_time" content="2017-12-31T14:55:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程（十四）：实例：500px 首页风景图">
+<meta name="twitter:description" content="目标入口 URL：http://500px.com/ 获取 500px 首页的风景(landscape)图。">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0cb7s8nhj21z20zi1gl.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-14/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程（十四）：实例：500px 首页风景图 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-14/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程（十四）：实例：500px 首页风景图
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T22:55:19+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>入口 URL：<a href="http://500px.com/" target="_blank" rel="noopener">http://500px.com/</a><br><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0cb7s8nhj21z20zi1gl.jpg" alt="截图"></p>
+<p>获取 500px 首页的风景(landscape)图。</p>
+<a id="more"></a>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0c4r6bz9j21z415u1kx.jpg" alt="查看源代码"></p>
+<p>通过查看源代码，我们很容易发现，我们要的数据就写在 HTML 代码中。准确的说，这个数据被<code>&lt;script&gt;</code>标签包裹着，是一段 Javascript 代码。我们首先需要定位到这段代码，由于网页中有很多<code>&lt;script&gt;</code>标签，它们明显的差异只有内容部分：我们可以尝试通过内容(<code>.text()</code>)来区分。例如，我们可以通过是不是以<code>window.photos</code>开头，来定位到我们需要找的代码所在的标签。<br>定位到这个标签之后，我们可以看到我们需要的数据，都被赋给了一个 javascript 变量。Python 是无法直接执行 JavaScript 代码的，我们只能将其作为<strong>普通字符串</strong>来处理。不过 JavaScript 的对象和 JSON 的格式非常类似，我们也可以考虑经过一些手段变换/提取之后，再使用<code>json.load</code>处理。</p>
+<p>通过观察发现，我们需要的数据都在第 360 行，在<code>landscape:</code> 后到结尾逗号之前的部分是个标准的 JSON 字符串。我们可以将这段字符串匹配出来，然后采用标准的 JSON 进行解析。</p>
+<h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><ol>
+<li>拿到页面 HTML ，遍历所有的<code>&lt;script&gt;</code>标签，找到文本以<code>window.photo</code>开头的代码段。</li>
+<li>从中找到<code>landscape</code>的所在行，处理得到中间的部分，使用<code>json.load</code>处理。</li>
+<li>处理得到的数据中，我们可以方便的得到图片的名称、URL 等信息，利用这些可以下载图片到本地。</li>
+</ol>
+<p>示例代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> pyquery <span class="keyword">import</span> PyQuery</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_info</span><span class="params">()</span>:</span></span><br><span class="line">  response = requests.get(<span class="string">'https://500px.com/'</span>)</span><br><span class="line">  doc = PyQuery(response.content)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> item <span class="keyword">in</span> doc(<span class="string">'script'</span>).items():</span><br><span class="line">    text = item.text().strip()</span><br><span class="line">    <span class="comment"># 如果以 `window.photo` 开头，说明是我们需要的 script 脚本</span></span><br><span class="line">    <span class="keyword">if</span> text.startswith(<span class="string">'window.photo'</span>):</span><br><span class="line">      <span class="keyword">for</span> line <span class="keyword">in</span> text.split(<span class="string">'\n'</span>):</span><br><span class="line">        line = line.strip()</span><br><span class="line">        <span class="comment"># 我们只需要 `landscapes` 开头的行</span></span><br><span class="line">        <span class="keyword">if</span> line.startswith(<span class="string">'landscapes:'</span>):</span><br><span class="line">          dumped = line.lstrip(<span class="string">'landscapes:'</span>).rstrip(<span class="string">','</span>).strip()</span><br><span class="line">          <span class="keyword">return</span> json.loads(dumped)</span><br><span class="line"></span><br><span class="line">info = get_info()</span><br><span class="line">print(info)</span><br></pre></td></tr></table></figure></p>
+<h2 id="扩展思考"><a href="#扩展思考" class="headerlink" title="扩展思考"></a>扩展思考</h2><ol>
+<li>上文的示例代码省略了通过 URL 下载图片的部分，请通过之前的例子尝试自行补全。</li>
+<li>除了使用<code>json.load</code>来处理数据，形如<strong>从固定的格式中，提取特定的文本</strong>的需求，我们还可以尝试使用<strong>正则表达式</strong>来实现。正则表达式的上手比较困难，但是它可以大大简化很多文本的逻辑。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-13/" rel="next" title="给非程序员的爬虫教程（十三）：实例：好奇心日报长文章列表">
+                <i class="fa fa-chevron-left"></i> 给非程序员的爬虫教程（十三）：实例：好奇心日报长文章列表
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-15/" rel="prev" title="给非程序员的爬虫教程（十五）：实例：微博热搜榜">
+                给非程序员的爬虫教程（十五）：实例：微博热搜榜 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编码"><span class="nav-number">3.</span> <span class="nav-text">编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展思考"><span class="nav-number">4.</span> <span class="nav-text">扩展思考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

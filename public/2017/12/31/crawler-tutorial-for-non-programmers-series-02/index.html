@@ -1,0 +1,631 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="变量(variable)是编程语言中最基础的一个概念，它一般用来储存我们的程序中的某个计算结果，或者是某个抽象概念。我们可以用任何一个表达式给变量赋值，例如：a = 2, b = 99 * 5, c = &amp;quot;Hello&amp;quot; 等等。变量都有一个 类型(type) ，比如一部手机的价格，我们">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程（二）：变量与类型">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-02/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="变量(variable)是编程语言中最基础的一个概念，它一般用来储存我们的程序中的某个计算结果，或者是某个抽象概念。我们可以用任何一个表达式给变量赋值，例如：a = 2, b = 99 * 5, c = &amp;quot;Hello&amp;quot; 等等。变量都有一个 类型(type) ，比如一部手机的价格，我们一般用数字来表示；而手机品牌名称，则一般用字符串来描述。不同的类型的变量，后续所能进行的操作也不">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-31T13:17:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程（二）：变量与类型">
+<meta name="twitter:description" content="变量(variable)是编程语言中最基础的一个概念，它一般用来储存我们的程序中的某个计算结果，或者是某个抽象概念。我们可以用任何一个表达式给变量赋值，例如：a = 2, b = 99 * 5, c = &amp;quot;Hello&amp;quot; 等等。变量都有一个 类型(type) ，比如一部手机的价格，我们一般用数字来表示；而手机品牌名称，则一般用字符串来描述。不同的类型的变量，后续所能进行的操作也不">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-02/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程（二）：变量与类型 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-02/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程（二）：变量与类型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:17:14+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>变量(variable)是编程语言中最基础的一个概念，它一般用来储存我们的程序中的某个计算结果，或者是某个抽象概念。我们可以用任何一个表达式给变量赋值，例如：<code>a = 2</code>, <code>b = 99 * 5</code>, <code>c = &quot;Hello&quot;</code> 等等。变量都有一个 <strong>类型(type)</strong> ，比如一部手机的价格，我们一般用数字来表示；而手机品牌名称，则一般用字符串来描述。不同的类型的变量，后续所能进行的操作也不同。<br>在介绍类型之前，我们先介绍一个内置方法：<code>type</code>。type 方法接受一个参数，返回这个参数的类型。我们可以打开一个 REPL，输入<code>type(8)</code>，可以看到控制台的返回值是<code>&lt;type &#39;int&#39;&gt;</code>，这里的<code>int</code>，就是数字<code>8</code>的类型。<br>和其它编程语言类似，Python 有很多 <strong>内置类型(built-in types)</strong>，我们不会一一进行介绍，这里挑选一些常用的类型展开。</p>
+<a id="more"></a>
+<h2 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h2><p>我们在之前，已经举了很多数字的例子，例如上文的<code>a = 2</code>, a 的类型就是<code>int</code> <strong>整型(Integer)</strong>，我们可以简单把它理解成整数。类似的，小数的类型是<code>float</code>，我们称之为 <strong>浮点数(Float)</strong> ，这就是我们最常用的数字类型。你可能会看到一些其它的教程中，还提到了 long 类型，这是一个 Python 2 时代用到的类型，在 Python3 中已经删掉，和 int 进行了统一。值得一提的是，Python 中内置支持了 <strong>复数(complex)</strong> ，不过这里不进行展开，需要的话，可以去查看官方文档的相关说明。</p>
+<h2 id="文本序列（即字符串）"><a href="#文本序列（即字符串）" class="headerlink" title="文本序列（即字符串）"></a>文本序列（即字符串）</h2><p>字符串我们也已经见过，Hello World 程序中唯一的参数<code>&quot;Hello World&quot;</code>，就是一个字符串。字符串一般用单引号或双引号包裹，二者没有区别。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">greeting = <span class="string">'hello'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 我们可以对字符串做一些操作，python 的字符串内置了很多实用的方法</span></span><br><span class="line"><span class="comment"># 例如，我们想要调用首字母大写的方法</span></span><br><span class="line">capitalized = greeting.capitalize()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意，这里 greeting 变量的值并没有变，这是因为在 Python 中，所有的字符串类型为“不可变”</span></span><br><span class="line">print(greeting) <span class="comment"># 输出 “hello”</span></span><br><span class="line"><span class="comment"># 但是，`greeting.capitalize()`的计算结果`Hello`的值被保存到了 capitalized</span></span><br><span class="line">print(capitalized) <span class="comment"># 输出 "Hello"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 字符串也可以相加</span></span><br><span class="line">greeting = greeting + <span class="string">', world'</span> <span class="comment"># 这里可以简写成 `greeting += ', world'`</span></span><br><span class="line"><span class="comment"># 输出 "hello, world"</span></span><br><span class="line">print(greeting)</span><br></pre></td></tr></table></figure></p>
+<p>更多 str 的方法，可以参照<a href="https://docs.python.org/3/library/stdtypes.html#string-methods" target="_blank" rel="noopener">官方文档</a>。我们无需将这些全部记忆下来，只要在需要用到的时候查阅即可。</p>
+<h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><h3 id="列表-list"><a href="#列表-list" class="headerlink" title="列表(list)"></a>列表(list)</h3><p>最常用的序列(sequence)类型，应该非 <strong>列表(list)</strong> 莫属。下面的 DEMO 展示了一个简单的列表和其用法。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 键盘的品牌</span></span><br><span class="line">keyboards = [<span class="string">'filco'</span>, <span class="string">'cherry'</span>, <span class="string">'logitech'</span>]</span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># 我们可以通过下标取得列表第 n 个元素，注意编程语言的计数都是从 0 开始</span></span><br><span class="line">keyboard = keyboards[<span class="number">0</span>]</span><br><span class="line"><span class="comment"># keyboard 此时的值为 'filco' 字符串</span></span><br><span class="line">print(keyboard)</span><br><span class="line"><span class="comment"># 我们也可以直接更改 list 中的某个元素</span></span><br><span class="line">keyboard[<span class="number">2</span>] = <span class="string">'razer'</span></span><br><span class="line"><span class="comment"># 同样的，列表也有一些实用方法，比如我想向列表末尾追加</span></span><br><span class="line">keyboards.append(<span class="string">'rapoo'</span>)</span><br><span class="line"><span class="comment"># 我们可以直接打印出整个列表，发现 "rapoo" 已经被追加到列表的末尾</span></span><br><span class="line">print(keyboards)</span><br></pre></td></tr></table></figure></p>
+<h3 id="元组-tuple"><a href="#元组-tuple" class="headerlink" title="元组(tuple)"></a>元组(tuple)</h3><p>与 list 类似，Python 中还有一种不可变的序列，叫做 <strong>元组(tuple)</strong>。这也是一个非常常用的数据类型，不过我们暂时只需要知道，它可以强制转化为 list 即可。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tuple 和 list 声明的方式类似，只是把中括号变成了小括号</span></span><br><span class="line">keyborads = (<span class="string">'filco'</span>, <span class="string">'cherry'</span>, <span class="string">'logitech'</span>,)</span><br><span class="line"><span class="comment"># 通过 list() 方法，强制转化为 list</span></span><br><span class="line">keyboards = list(keyboards)</span><br><span class="line"><span class="comment"># 现在 keyboards 已经是个 list 了</span></span><br><span class="line">print(keyboards)</span><br></pre></td></tr></table></figure></p>
+<h2 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h2><h3 id="字典-dict"><a href="#字典-dict" class="headerlink" title="字典(dict)"></a>字典(dict)</h3><p>Python 中表达数学中的映射，一般用 <strong>字典(dict)</strong> 这个类型。字典用大括号<code>{}</code>包裹，一个典型的字典如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">person = &#123;</span><br><span class="line">  <span class="string">'name'</span>: <span class="string">'HakurouKen'</span>,</span><br><span class="line">  <span class="string">'age'</span>: <span class="number">100</span>,</span><br><span class="line">  <span class="string">'gender'</span>: <span class="string">'male'</span>,</span><br><span class="line">  <span class="string">'is_programmer'</span>: <span class="keyword">True</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们把上面的<code>&#39;name&#39;</code>,<code>&#39;age&#39;</code>这些称之为 <strong>键(key)</strong> , <code>&#39;HakurouKen&#39;</code>, <code>100</code> 这些称为 <strong>值(value)</strong>。一个字典就是一系列的 <strong>键值对(k-v pair)</strong>，它们表达从 key 到 value 的映射。我们可以自由的存/取这些值，例如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name = person[<span class="string">'name'</span>]</span><br></pre></td></tr></table></figure></p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><h3 id="布尔-Boolean"><a href="#布尔-Boolean" class="headerlink" title="布尔(Boolean)"></a>布尔(Boolean)</h3><p>我们可以简单把布尔值理解为开关，只有 True 和 False。</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ol>
+<li><a href="https://docs.python.org/3/library/stdtypes.html" target="_blank" rel="noopener">Python 官方文档：Built-in Types</a>，或其<a href="http://python.usyiyi.cn/translate/python_352/library/stdtypes.html" target="_blank" rel="noopener">中文翻译版</a>。中文翻译的版本较老，而且有些部分为机翻，并不是非常准确。</li>
+<li><a href="https://en.wikibooks.org/wiki/Python_Programming/Data_Types" target="_blank" rel="noopener">Python Programming/Data Types</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-01/" rel="next" title="给非程序员的爬虫教程（一）：编程基础概念">
+                <i class="fa fa-chevron-left"></i> 给非程序员的爬虫教程（一）：编程基础概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-03/" rel="prev" title="给非程序员的爬虫教程（三）：条件与循环">
+                给非程序员的爬虫教程（三）：条件与循环 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数字"><span class="nav-number">1.</span> <span class="nav-text">数字</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本序列（即字符串）"><span class="nav-number">2.</span> <span class="nav-text">文本序列（即字符串）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列"><span class="nav-number">3.</span> <span class="nav-text">序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#列表-list"><span class="nav-number">3.1.</span> <span class="nav-text">列表(list)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元组-tuple"><span class="nav-number">3.2.</span> <span class="nav-text">元组(tuple)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#映射"><span class="nav-number">4.</span> <span class="nav-text">映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字典-dict"><span class="nav-number">4.1.</span> <span class="nav-text">字典(dict)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">5.</span> <span class="nav-text">其它</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布尔-Boolean"><span class="nav-number">5.1.</span> <span class="nav-text">布尔(Boolean)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展阅读"><span class="nav-number">6.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

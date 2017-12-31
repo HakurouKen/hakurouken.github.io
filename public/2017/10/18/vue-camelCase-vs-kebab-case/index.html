@@ -82,7 +82,7 @@
 
 
 
-<meta name="description" content="由于 HTML 的大小写不敏感，当我们使用 in-dom 的模板时，myProp＝&amp;quot;123&amp;quot;会被转换成myprop=&amp;quot;123&amp;quot;。为了解决这个问题，Vue 引入了模板中驼峰/Pascal/连字符混用的机制，官方推荐开发者在所有的模板中，使用连字符的格式来描述组件/属性。">
+<meta name="description" content="由于 HTML 的大小写不敏感，当我们使用 in-dom 的模板时，myProp＝&amp;quot;123&amp;quot;会被转换成myprop=&amp;quot;123&amp;quot;。为了解决这个问题，Vue 引入了模板中驼峰/Pascal/连字符混用的机制，官方推荐开发者在所有的模板中，使用连字符的格">
 <meta name="keywords" content="javascript,vue">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vue 中的驼峰和连字符命名">
@@ -315,15 +315,15 @@
 <a id="more"></a>
 <h2 id="解析规则"><a href="#解析规则" class="headerlink" title="解析规则"></a>解析规则</h2><p>事实上，Vue 底层处理模板字符串的方法相对比较复杂，做了很多兼容性处理。</p>
 <ol>
-<li>在模板 html 解析(parse)的过程中，配对标签(tag)名时，是忽略大小写的，形如<code>&lt;HelloWorld&gt;text&lt;/helloworld&gt;</code>这样的模板，也可以正常配对匹配。这样处理的原因，主要是为了模拟原生 HTML 的 tag 解析方式。但是这里解析出的 AST 树中，<strong>仍然保留着大小写信息，以起始的标签为准</strong>。详细的匹配细节，可以参照 Vue 源码中的 <a href="https://github.com/vuejs/vue/blob/08bc7595fd57f8f52db83ae1b6bc9b7a33cdd4f9/src/compiler/parser/html-parser.js" target="_blank" rel="external">src/compiler/parser/html-parser.js</a>。</li>
+<li>在模板 html 解析(parse)的过程中，配对标签(tag)名时，是忽略大小写的，形如<code>&lt;HelloWorld&gt;text&lt;/helloworld&gt;</code>这样的模板，也可以正常配对匹配。这样处理的原因，主要是为了模拟原生 HTML 的 tag 解析方式。但是这里解析出的 AST 树中，<strong>仍然保留着大小写信息，以起始的标签为准</strong>。详细的匹配细节，可以参照 Vue 源码中的 <a href="https://github.com/vuejs/vue/blob/08bc7595fd57f8f52db83ae1b6bc9b7a33cdd4f9/src/compiler/parser/html-parser.js" target="_blank" rel="noopener">src/compiler/parser/html-parser.js</a>。</li>
 <li>自定义组件和属性，在模板编译时做了 Pascal/驼峰/连字符 三种方式的兼容（其中属性会在解析时，内部统一标准化为驼峰）。</li>
 <li>对于事件名，Vue 不会做处理，$emit 的事件字符串要和模板中的字符串<strong>完全匹配</strong>(keep it as it is)。</li>
 <li>IN-DOM 的模板会全部转小写(HelloWorld =&gt; helloworld)，但这并不是 Vue 的限制，而是 HTML 的限制。</li>
 </ol>
 <p>由于第4条的原因，我们习惯在模板内，全部使用连字符的格式（包括组件名/属性/事件名），这样可以保持形式上的统一。因此，事件名也统一使用形如<code>custom-event</code>的格式。</p>
-<h2 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h2><p>在 Vue 对于 jsx 的支持，一般使用官方插件 <a href="https://github.com/vuejs/babel-plugin-transform-vue-jsx" target="_blank" rel="external">babel-plugin-transform-vue-jsx</a>。和 React JSX 不同，这个插件对 JSXAttribute 中的连字符的情况做了特殊处理，我们可以在模板中(一定程度上)使用连字符格式来代替驼峰：<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div on-click=&#123;<span class="keyword">this</span>.click&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></div></pre></td></tr></table></figure></p>
-<p>但是，这个兼容做的并不完全，比如使用<code>nativeOn</code>时，我们不能使用形如<code>native-on-event</code>的格式，而必须从下列两种方式中选择一种：<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;CustomComponent nativeOn-click=&#123;<span class="keyword">this</span>.click&#125; /&gt;</div><div class="line">&lt;CustomComponent nativeOnClick=&#123;<span class="keyword">this</span>.click&#125; /&gt;</div></pre></td></tr></table></figure></p>
-<p>对于自定义事件，<strong>JSX 无法支持连字符方式的事件名</strong>，只能采用驼峰（<code>on-</code>前缀倒是可以兼容），可以参照<a href="https://github.com/vuejs/babel-plugin-transform-vue-jsx/issues/20" target="_blank" rel="external">这个 issue</a>。</p>
+<h2 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h2><p>在 Vue 对于 jsx 的支持，一般使用官方插件 <a href="https://github.com/vuejs/babel-plugin-transform-vue-jsx" target="_blank" rel="noopener">babel-plugin-transform-vue-jsx</a>。和 React JSX 不同，这个插件对 JSXAttribute 中的连字符的情况做了特殊处理，我们可以在模板中(一定程度上)使用连字符格式来代替驼峰：<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div on-click=&#123;<span class="keyword">this</span>.click&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>但是，这个兼容做的并不完全，比如使用<code>nativeOn</code>时，我们不能使用形如<code>native-on-event</code>的格式，而必须从下列两种方式中选择一种：<br><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;CustomComponent nativeOn-click=&#123;<span class="keyword">this</span>.click&#125; /&gt;</span><br><span class="line">&lt;CustomComponent nativeOnClick=&#123;<span class="keyword">this</span>.click&#125; /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>对于自定义事件，<strong>JSX 无法支持连字符方式的事件名</strong>，只能采用驼峰（<code>on-</code>前缀倒是可以兼容），可以参照<a href="https://github.com/vuejs/babel-plugin-transform-vue-jsx/issues/20" target="_blank" rel="noopener">这个 issue</a>。</p>
 <h2 id="引入JSX后的事件命名"><a href="#引入JSX后的事件命名" class="headerlink" title="引入JSX后的事件命名"></a>引入JSX后的事件命名</h2><p>这里便出现了一个争论点，在用项目用到 vue + jsx 的前提下，事件名到底有没有必要统一为驼峰？经过一系列的实践，这里的答案是不需要统一，尽量保持原有的连字符事件，只有在必要的情况下，再做修改。大致原因有以下几点：</p>
 <ol>
 <li>驼峰和下划线混用，并不会导致什么逻辑上的问题，已有的组件和开发习惯，多数情况下无需变更。</li>
@@ -334,10 +334,10 @@
 </ol>
 <p>当然，这里有一个前提，就是<strong>避免使用 IN-DOM 的模板</strong>。事实上，Vue 官方脚手架生成的代码中，也刻意避开了 IN-DOM 模版的使用，因为 HTML 的大小写不敏感的特性，确实不利于目前以 JS 为主体的业务开发。</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="https://vuejs.org/v2/guide/components.html#camelCase-vs-kebab-case" target="_blank" rel="external">Vue 官方文档： camelCase vs kebab-case</a></li>
-<li><a href="https://github.com/vuejs/vue/issues/2308" target="_blank" rel="external">Vue Issue: HTML case sensitivity workaround</a></li>
-<li><a href="https://facebook.github.io/jsx/" target="_blank" rel="external">JSX 官方文档</a></li>
-<li><a href="https://github.com/vuejs/babel-plugin-transform-vue-jsx/issues/20" target="_blank" rel="external">babel-plugin-transform-vue-jsx issuse: Compile error kebabcase event name</a></li>
+<li><a href="https://vuejs.org/v2/guide/components.html#camelCase-vs-kebab-case" target="_blank" rel="noopener">Vue 官方文档： camelCase vs kebab-case</a></li>
+<li><a href="https://github.com/vuejs/vue/issues/2308" target="_blank" rel="noopener">Vue Issue: HTML case sensitivity workaround</a></li>
+<li><a href="https://facebook.github.io/jsx/" target="_blank" rel="noopener">JSX 官方文档</a></li>
+<li><a href="https://github.com/vuejs/babel-plugin-transform-vue-jsx/issues/20" target="_blank" rel="noopener">babel-plugin-transform-vue-jsx issuse: Compile error kebabcase event name</a></li>
 </ol>
 
       
@@ -382,6 +382,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-intro/" rel="prev" title="给非程序员的爬虫教程">
+                给非程序员的爬虫教程 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -449,7 +453,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives/">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -459,7 +463,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

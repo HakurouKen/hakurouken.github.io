@@ -1,0 +1,654 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python,非程序员的爬虫教程," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="爬虫相关的基础知识，我们已经全部“介绍”完了。接下来，我们将通过一系列的实例，来综合运用之前学到的一些技能。同时从这些实例中，总结出一些通用的经验。 目标用爬虫下载 Bilibili 标题栏的 GIF 动画。">
+<meta name="keywords" content="python,非程序员的爬虫教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="给非程序员的爬虫教程（十二）：实例：下载 bilibili 标题栏小电影">
+<meta property="og:url" content="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-12/index.html">
+<meta property="og:site_name" content="HakuoruKen 的博客">
+<meta property="og:description" content="爬虫相关的基础知识，我们已经全部“介绍”完了。接下来，我们将通过一系列的实例，来综合运用之前学到的一些技能。同时从这些实例中，总结出一些通用的经验。 目标用爬虫下载 Bilibili 标题栏的 GIF 动画。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0asup8vyj210m0jpdoo.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0aypzpvqj20dc0llgqf.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0b2cmbowj21hc0xcalt.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0bd5tzc1j213w144nb8.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0b9t7oxqj213y142k2z.jpg">
+<meta property="og:updated_time" content="2017-12-31T14:44:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="给非程序员的爬虫教程（十二）：实例：下载 bilibili 标题栏小电影">
+<meta name="twitter:description" content="爬虫相关的基础知识，我们已经全部“介绍”完了。接下来，我们将通过一系列的实例，来综合运用之前学到的一些技能。同时从这些实例中，总结出一些通用的经验。 目标用爬虫下载 Bilibili 标题栏的 GIF 动画。">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fn0asup8vyj210m0jpdoo.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-12/"/>
+
+
+
+
+
+  <title> 给非程序员的爬虫教程（十二）：实例：下载 bilibili 标题栏小电影 | HakuoruKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakuoruKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2017/12/31/crawler-tutorial-for-non-programmers-series-12/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakuoruKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakuoruKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                给非程序员的爬虫教程（十二）：实例：下载 bilibili 标题栏小电影
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T22:26:10+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>爬虫相关的基础知识，我们已经全部“介绍”完了。接下来，我们将通过一系列的实例，来综合运用之前学到的一些技能。同时从这些实例中，总结出一些通用的经验。</p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>用爬虫下载 Bilibili 标题栏的 GIF 动画。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0asup8vyj210m0jpdoo.jpg" alt="Bilibili 标题栏动画"></p>
+<a id="more"></a>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>要下载一张图片，首先要拿到这个图片的 URL。在图片上点击右键“检查”，进入 Chrome 的 Element 面板，我们可以很容易的在面板中找到图片的 URL。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0aypzpvqj20dc0llgqf.jpg" alt="DOM 结构"></p>
+<p>在拿到 URL 之后，下一步我们需要确定浏览器是如何拿到这个 URL 的。我们在浏览器中常见的数据来源以及对应的解析方式大概有三种：</p>
+<ol>
+<li>原本就是完整的 HTML 标签/属性：直接解析 HTML 即可拿到对应的数据；</li>
+<li>数据<strong>直接</strong>写在 HTML 内，但是经过 Javascript 进行了一次计算后得到的：需要用一系列的手段解析处理才能得到对应的数据；</li>
+<li>通过 Ajax 请求获取，然后再被 Javascript（经过一系列的计算后）添加到 HTML 中的：我们需要模拟对应的 ajax 请求，然后处理拿到的数据（一般是 html/xml 或 json）。</li>
+</ol>
+<p>显然，我们这个例子中，我们需要的数据就是这个图片的 URL。我们首先要确定的是这个 URL 的数据源是哪里：在网页<strong>右键 ＝&gt; 查看网页源代码</strong>，我们可以看到浏览器拿到的真实文本，这也是我们通过模拟浏览器请求拿到的真正结果。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0b2cmbowj21hc0xcalt.jpg" alt="网页源代码"></p>
+<p>如果我们在源代码中可以找到图片 URL 的相关信息（即上述的情况1 或情况 2），意味着我们只需要发送<code>https://www.bilibili.com</code>这个请求并解析得到的响应，即可拿到我们想要的数据。查看源代码页面支持<code>Ctrl + F</code>进行搜索，可以节省一些我们人肉查找的时间。在使用搜索时，<strong>我们需要找到合适的关键词</strong>，因为我们在 Element 面板中看到的元素都可能是经过 Javascript 进行过处理的，原始的数据和我们看到的可能不完全一致。但是，一个简单的原则是：Javascript 一般对于我们要的关键数据，并不会做巨大的变动，一般只是简单的变换以及拼接。以我们这次需要搜的 URL 为例，<code>y4o19nyvmj</code>看上去就是一个合适的搜索关键词：它看上去像是一个唯一的 ID，不大可能由前端直接生成。当然，也有极少的情况下（例如做了前端加密），计算前和计算后的结果完全没有相似之处，这种就只能通过分析 HTML 和 Javascript 代码逻辑才能得到我们想要的数据。</p>
+<p>我们在源代码中搜索的关键字并没有得到结果，基本可以确定，这个图片的 URL 是由 Ajax 请求得到的。接下来，我们需要打开 Network 面板，刷新页面，去寻找相关的请求。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0bd5tzc1j213w144nb8.jpg" alt="首页请求"></p>
+<p>这里有非常多的请求，我们可以使用面板上的类型过滤。一般情况下，我们需要的数据都是 XHR 类型（Ajax 请求）或 Script 类型（直接把数据写在 Javascript 中）。为了维护方便，绝大多数的请求，我们都可以从命名和参数中，大致猜测出来接口的用途，因此并不需要挨个查看每个请求的详细信息。</p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fn0b9t7oxqj213y142k2z.jpg" alt="首页 XHR 请求"></p>
+<p>我们很容易能够找到名为 index-icon.json 的这个请求（实际对应的 URL 为 <a href="http://www.bilibili.com/index/index-icon.json），它包含了首页标题栏可能展示的所有" target="_blank" rel="noopener">http://www.bilibili.com/index/index-icon.json），它包含了首页标题栏可能展示的所有</a> GIF 的详细信息，包括名称、URL、展示权重等等。我们只需要读取这个 JSON，就可以拿到所有我们所有想要的数据，而无需发送 <a href="http://www.bilibili.com" target="_blank" rel="noopener">http://www.bilibili.com</a> 这个请求。</p>
+<h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>知道了数据加载过程，我们接下来只需要用代码还原这个过程即可：</p>
+<ol>
+<li>请求 <a href="http://www.bilibili.com/index/index-icon.json" target="_blank" rel="noopener">http://www.bilibili.com/index/index-icon.json</a> ，拿到原始的 JSON 数据。</li>
+<li>格式化拿到的数据，从中取出我们想要的字段（名称和 URL）。</li>
+<li>对于每张图片分别进行处理：请求对应图片得到二进制数据，并写入一个空文件。文件名取对应的<code>title</code>字段即可。我们需要额外处理一下后缀名，这里只要取和 URL 相同的后缀名即可。</li>
+</ol>
+<p>下面给出一个示例代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"> </span><br><span class="line">URL = <span class="string">'http://www.bilibili.com/index/index-icon.json'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_ext</span><span class="params">(filepath)</span>:</span></span><br><span class="line">  <span class="keyword">return</span> os.path.splitext(filepath)[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">()</span>:</span></span><br><span class="line">  resp = requests.get(URL)</span><br><span class="line">  arr = resp.json().get(<span class="string">'fix'</span>,[])</span><br><span class="line">  <span class="comment"># 这里我们使用了“列表推导”来简化我们的代码</span></span><br><span class="line">  <span class="comment"># 当然，我们也可以将其转化成传统的 for 循环</span></span><br><span class="line">  <span class="keyword">return</span> [&#123;</span><br><span class="line">    <span class="string">'name'</span>: data[<span class="string">"title"</span>] + get_ext(data[<span class="string">"icon"</span>]),</span><br><span class="line">    <span class="string">'url'</span>: data[<span class="string">"icon"</span>]</span><br><span class="line">  &#125; <span class="keyword">for</span> data <span class="keyword">in</span> arr]</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">download</span><span class="params">()</span>:</span></span><br><span class="line">  all_data = get()</span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> os.path.isdir(<span class="string">'icons'</span>):</span><br><span class="line">    os.mkdir(<span class="string">'icons'</span>)</span><br><span class="line">  <span class="keyword">for</span> data <span class="keyword">in</span> all_data:</span><br><span class="line">    print(<span class="string">'downloading &#123;&#125;, url: &#123;&#125;'</span>.format(data[<span class="string">'name'</span>],data[<span class="string">'url'</span>]))</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">u'icons/&#123;&#125;'</span>.format(data[<span class="string">'name'</span>]),<span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">      f.write(requests.get(data[<span class="string">'url'</span>]).content)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">  download()</span><br></pre></td></tr></table></figure></p>
+<h2 id="扩展思考"><a href="#扩展思考" class="headerlink" title="扩展思考"></a>扩展思考</h2><ol>
+<li>我们下载文件时，用的方法是用 request 请求这个文件，再将请求到的内容写入一个空文件。而在 Python 的 urllib 中，有<code>urllib.request.urlretrive</code>方法用来处理”下载”这一行为。我们可以尝试使用这个方法，来对我们的代码稍稍进行简化。</li>
+<li>index-icon 这个文件的内容可能会随着时间变更（例如加入新的动画），如果我们想要收集所有相关的图标，就要每过一段时间自动执行一次这段程序。在 Windows 下，我们可以采用计划任务来实现。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+            <a href="/tags/非程序员的爬虫教程/" rel="tag"># 非程序员的爬虫教程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-11/" rel="next" title="给非程序员的爬虫教程（十一）：使用 Python 解析 HTML">
+                <i class="fa fa-chevron-left"></i> 给非程序员的爬虫教程（十一）：使用 Python 解析 HTML
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/31/crawler-tutorial-for-non-programmers-series-13/" rel="prev" title="给非程序员的爬虫教程（十三）：实例：好奇心日报长文章列表">
+                给非程序员的爬虫教程（十三）：实例：好奇心日报长文章列表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">42</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目标"><span class="nav-number">1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编码"><span class="nav-number">3.</span> <span class="nav-text">编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展思考"><span class="nav-number">4.</span> <span class="nav-text">扩展思考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

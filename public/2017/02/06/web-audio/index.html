@@ -90,12 +90,12 @@
 <meta property="og:site_name" content="HakuoruKen 的博客">
 <meta property="og:description" content="Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通过它开发复杂的混音，音效，平移以及获取音频信息等等。本文将通过一个简单的可视化例子，介绍 Web Audio API 的基本应用。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ok880r6rs.bkt.clouddn.com/blog/web-audio/audio-context.png">
-<meta property="og:updated_time" content="2017-02-05T16:36:07.000Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fmzza88d6gj20hl06qjrb.jpg">
+<meta property="og:updated_time" content="2017-12-31T07:24:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Web Audio API">
 <meta name="twitter:description" content="Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通过它开发复杂的混音，音效，平移以及获取音频信息等等。本文将通过一个简单的可视化例子，介绍 Web Audio API 的基本应用。">
-<meta name="twitter:image" content="http://ok880r6rs.bkt.clouddn.com/blog/web-audio/audio-context.png">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/9f9426adgy1fmzza88d6gj20hl06qjrb.jpg">
 
 
 
@@ -322,33 +322,33 @@
 <li>如果需要输出，选择 <strong>一个</strong> 音频输出目的地</li>
 <li>连接 源、效果器、分析节点、输出</li>
 </ol>
-<p><img src="http://ok880r6rs.bkt.clouddn.com/blog/web-audio/audio-context.png" alt="Audio Context"></p>
+<p><img src="http://ww1.sinaimg.cn/large/9f9426adgy1fmzza88d6gj20hl06qjrb.jpg" alt="Audio Context"></p>
 <p>在一个 AudioContext 中，允许有多个输入以及多个效果器，但是只有一个输出。</p>
 <h2 id="示例：音乐可视化"><a href="#示例：音乐可视化" class="headerlink" title="示例：音乐可视化"></a>示例：音乐可视化</h2><p>有了上述概念之后，下文以一个简单的音乐可视化的 DEMO，详细介绍下 Web Audio API 的使用方法。</p>
-<h3 id="创建-AudioContext-上下文"><a href="#创建-AudioContext-上下文" class="headerlink" title="创建 AudioContext 上下文"></a>创建 AudioContext 上下文</h3><p>使用 canvas 绘图时，我们可以直接通过 canvas DOM 元素的 <code>getContext(&#39;2d&#39;)</code> 方法获取 canvas 对应的绘制上下文，而使用 Web Audio API 时，我们需要自己 new 一个上下文。如果必要的话，使用 webkit 前缀修正。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> audioCtx = <span class="keyword">new</span> AudioContext();</div></pre></td></tr></table></figure></p>
+<h3 id="创建-AudioContext-上下文"><a href="#创建-AudioContext-上下文" class="headerlink" title="创建 AudioContext 上下文"></a>创建 AudioContext 上下文</h3><p>使用 canvas 绘图时，我们可以直接通过 canvas DOM 元素的 <code>getContext(&#39;2d&#39;)</code> 方法获取 canvas 对应的绘制上下文，而使用 Web Audio API 时，我们需要自己 new 一个上下文。如果必要的话，使用 webkit 前缀修正。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> audioCtx = <span class="keyword">new</span> AudioContext();</span><br></pre></td></tr></table></figure></p>
 <h3 id="创建音源"><a href="#创建音源" class="headerlink" title="创建音源"></a>创建音源</h3><p>在有了上下文环境之后，我们接下来需要创建一个音频输入源。一般情况下输入源可以来自：</p>
 <ol>
-<li>用 javascript 创建正弦波。相关函数：<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createOscillator" target="_blank" rel="external">AudioContext.createOscillator()</a>。</li>
-<li>用原始 PCM 数据创建。相关函数： <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createBuffer" target="_blank" rel="external">AudioContext.createBuffer()</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createBufferSource" target="_blank" rel="external">AudioContext.createBufferSource()</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData" target="_blank" rel="external">AudioContext.decodeAudioData()</a>。</li>
-<li>从 HTML 标签(<code>&lt;video&gt;</code>和<code>&lt;audio&gt;</code>)获取。相关函数：<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource" target="_blank" rel="external">AudioContext.createMediaElementSource()</a>。</li>
-<li>从 WebRTC 的输入流中获取。相关函数：<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaStreamSource" target="_blank" rel="external">AudioContext.createMediaStreamSource()</a>。</li>
+<li>用 javascript 创建正弦波。相关函数：<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createOscillator" target="_blank" rel="noopener">AudioContext.createOscillator()</a>。</li>
+<li>用原始 PCM 数据创建。相关函数： <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createBuffer" target="_blank" rel="noopener">AudioContext.createBuffer()</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createBufferSource" target="_blank" rel="noopener">AudioContext.createBufferSource()</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData" target="_blank" rel="noopener">AudioContext.decodeAudioData()</a>。</li>
+<li>从 HTML 标签(<code>&lt;video&gt;</code>和<code>&lt;audio&gt;</code>)获取。相关函数：<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource" target="_blank" rel="noopener">AudioContext.createMediaElementSource()</a>。</li>
+<li>从 WebRTC 的输入流中获取。相关函数：<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaStreamSource" target="_blank" rel="noopener">AudioContext.createMediaStreamSource()</a>。</li>
 </ol>
 <p>音源一共有 OscillatorNode, AudioBuffer, AudioBufferSourceNode, MediaElementAudioSourceNode 和 MediaStreamAudioSourceNode 五种类型，分别对应着 AudioContext 的五个音源的 create 方法，从函数名中可以简单的看出对应关系。</p>
 <p>我们这里选用<code>&lt;audio&gt;</code>作为输入源，代码如下：</p>
-<p>HTML<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">src</span>=<span class="string">"audio.mp3"</span> <span class="attr">controls</span> <span class="attr">id</span>=<span class="string">"source"</span>&gt;</span><span class="tag">&lt;/<span class="name">audio</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>Javascript<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> audio = <span class="built_in">document</span>.getElementById(<span class="string">'source'</span>);</div><div class="line"><span class="keyword">let</span> source = audioCtx.createMediaElementSource(audio);</div></pre></td></tr></table></figure></p>
-<h3 id="构建分析节点-效果器节点"><a href="#构建分析节点-效果器节点" class="headerlink" title="构建分析节点/效果器节点"></a>构建分析节点/效果器节点</h3><p>有了音源之后，接下来需要对音源的数据进行处理/分析，就需要各种分析/效果器节点。例如我们可以用一个 GainNode 的节点来调整音量（用<code>AudioContext.createGainNode()</code>创建）、由 BiquadFilterNode 来应用一个双二阶滤波器（用<code>AudioContext.createBiquadFilter()</code>创建），全部效果器的列表可以参考 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API#Defining_audio_effects_filters" target="_blank" rel="external">MDN 文档</a>。我们这里需要获取音乐的数据，需要一个分析节点 AnalyserNode。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> analyser = audioCtx.createAnalyser();</div></pre></td></tr></table></figure></p>
+<p>HTML<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">src</span>=<span class="string">"audio.mp3"</span> <span class="attr">controls</span> <span class="attr">id</span>=<span class="string">"source"</span>&gt;</span><span class="tag">&lt;/<span class="name">audio</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Javascript<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> audio = <span class="built_in">document</span>.getElementById(<span class="string">'source'</span>);</span><br><span class="line"><span class="keyword">let</span> source = audioCtx.createMediaElementSource(audio);</span><br></pre></td></tr></table></figure></p>
+<h3 id="构建分析节点-效果器节点"><a href="#构建分析节点-效果器节点" class="headerlink" title="构建分析节点/效果器节点"></a>构建分析节点/效果器节点</h3><p>有了音源之后，接下来需要对音源的数据进行处理/分析，就需要各种分析/效果器节点。例如我们可以用一个 GainNode 的节点来调整音量（用<code>AudioContext.createGainNode()</code>创建）、由 BiquadFilterNode 来应用一个双二阶滤波器（用<code>AudioContext.createBiquadFilter()</code>创建），全部效果器的列表可以参考 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API#Defining_audio_effects_filters" target="_blank" rel="noopener">MDN 文档</a>。我们这里需要获取音乐的数据，需要一个分析节点 AnalyserNode。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> analyser = audioCtx.createAnalyser();</span><br></pre></td></tr></table></figure></p>
 <h3 id="选定输出目标"><a href="#选定输出目标" class="headerlink" title="选定输出目标"></a>选定输出目标</h3><p>多数情况下，我们的输出直接选定默认输出<code>AudioContext.destination</code>即可。在 WebRTC 应用中，如果需要输入到 WebRTC 媒体流，需要使用<code>AudioContext.createMediaStreamDestination()</code>手动新建一个输出目标。我们这里直接取 <code>audioCtx.destination</code> 即可（如果只分析不需要输出声音，也可以不选择输出源）。</p>
-<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p>用 connect 方法，按 <strong>输入 -&gt; 效果器/分析器 -&gt; 输出</strong> 顺序连接所需节点，如果需要的话，我们可以将多个输入源连接到同一个输出上。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">source.connect(analyser);</div><div class="line">analyser.connect(audioCtx.destination);</div></pre></td></tr></table></figure></p>
-<p>在连接之后，我们就可以通过修改效果器的参数，来改变输出的效果，或者通过分析器获取音频数据。例如，这里我们可以通过<code>AnalyserNode.getByteFrequencyData()</code>方法获取音频的频率数据：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">let</span> bufferLength = analyser.frequencyBinCount;</div><div class="line"><span class="keyword">let</span> dataArray = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(bufferLength);</div><div class="line">analyser.getByteFrequencyData(dataArray);</div><div class="line"><span class="comment">// console.log(dataArray);</span></div></pre></td></tr></table></figure></p>
-<h2 id="示例演示"><a href="#示例演示" class="headerlink" title="示例演示"></a>示例演示</h2><p><a class="jsbin-embed" href="http://jsbin.com/qoyemuh/embed?js,output&height=500px" target="_blank" rel="external">Audio Visualizer Demo</a></p>
+<h3 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h3><p>用 connect 方法，按 <strong>输入 -&gt; 效果器/分析器 -&gt; 输出</strong> 顺序连接所需节点，如果需要的话，我们可以将多个输入源连接到同一个输出上。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source.connect(analyser);</span><br><span class="line">analyser.connect(audioCtx.destination);</span><br></pre></td></tr></table></figure></p>
+<p>在连接之后，我们就可以通过修改效果器的参数，来改变输出的效果，或者通过分析器获取音频数据。例如，这里我们可以通过<code>AnalyserNode.getByteFrequencyData()</code>方法获取音频的频率数据：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> bufferLength = analyser.frequencyBinCount;</span><br><span class="line"><span class="keyword">let</span> dataArray = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(bufferLength);</span><br><span class="line">analyser.getByteFrequencyData(dataArray);</span><br><span class="line"><span class="comment">// console.log(dataArray);</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="示例演示"><a href="#示例演示" class="headerlink" title="示例演示"></a>示例演示</h2><p><a class="jsbin-embed" href="http://jsbin.com/qoyemuh/embed?js,output&height=500px" target="_blank" rel="noopener">Audio Visualizer Demo</a></p>
 <script src="http://static.jsbin.com/js/embed.min.js?3.41.0"></script>
 
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API" target="_blank" rel="external">Using the Web Audio API</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" target="_blank" rel="external">Web Audio API</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API" target="_blank" rel="external">Visualizations with Web Audio API</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Audio_API/Basic_concepts_behind_Web_Audio_API" target="_blank" rel="external">Basic concepts behind Web Audio API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API" target="_blank" rel="noopener">Using the Web Audio API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API" target="_blank" rel="noopener">Web Audio API</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API" target="_blank" rel="noopener">Visualizations with Web Audio API</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Audio_API/Basic_concepts_behind_Web_Audio_API" target="_blank" rel="noopener">Basic concepts behind Web Audio API</a></li>
 </ul>
 
       
@@ -462,7 +462,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives/">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">42</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -472,7 +472,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
