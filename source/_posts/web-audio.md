@@ -16,7 +16,7 @@ Web Audio API 是浏览器提供的音频处理的高级接口，我们可以通
 4. 如果需要输出，选择 **一个** 音频输出目的地
 5. 连接 源、效果器、分析节点、输出
 
-![Audio Context](http://ok880r6rs.bkt.clouddn.com/blog/web-audio/audio-context.png)
+![Audio Context](http://ww1.sinaimg.cn/large/9f9426adgy1fmzza88d6gj20hl06qjrb.jpg)
 
 在一个 AudioContext 中，允许有多个输入以及多个效果器，但是只有一个输出。
 
