@@ -23,8 +23,7 @@
     "server": "hexo server",
     "generate": "hexo generate",
     "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "hexo deploy"
   },
   "repository": {
     "type": "git",
