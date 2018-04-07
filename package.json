@@ -21,7 +21,7 @@
   "devDependencies": {},
   "scripts": {
     "server": "hexo server",
-    "generate": "hexo generate",
+    "generate": "hexo generate && cp CNAME public",
     "clean": "hexo clean",
     "deploy": "hexo deploy"
   },
