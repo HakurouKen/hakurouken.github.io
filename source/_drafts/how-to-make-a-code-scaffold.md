@@ -1,5 +1,5 @@
 ---
-title: how-to-make-a-code-scaffold
+title: 如何搭建一个项目脚手架
 tags:
   - javascript
 ---
