@@ -54,6 +54,7 @@ module.exports = {
 ```
 
 补充说明：
+
 1. 所有的规则(rules)都是一个数组：数组的第一项为等级，分为 `off`(关闭检查),`warn`(检查通过，但给予警告) 和 `error`(检查不通过) 三个等级，这三个等级也可以用 0/1/2 来标识；第二项是具体的配置参数，不同的属性的配置也不同，可以自行查看 eslint 官方文档。
 2. ESLint 是一个“完全插件化”的工具，这意味着我们拥极大的自由度，但同时意味着我们需要的配置项也非常多。对于项目，我们一般使用 `extends` 字段，来基于社区现有的预设来进行更改。当下最流行的预设是 [Airbnb](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) 、 [Google](https://github.com/google/eslint-config-google) 以及原生的 `eslint:recommend` 三个。
 3. env 标识了 ESLint 执行环境，但是 ESLint 并不会真正执行你的代码，而是通过静态检查来对代码进行约束。例如在 `browser` 为 `false` 的情况（非浏览器环境）下，就不能使用全局的 `window` 变量；同理 `commonjs` 为 `false` 时，也不能使用 `require`。
