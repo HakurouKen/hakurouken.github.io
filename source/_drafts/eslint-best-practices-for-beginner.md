@@ -65,6 +65,7 @@ module.exports = {
 在命令行中运行 eslint 也很简单，参照[官方文档](https://eslint.org/docs/user-guide/command-line-interface)，例如 `eslint src/**/*.{js,vue}`。需要特别指出，我们经常使用 `--fix` 参数来自动修正一些简单的错误。
 
 有些时候，我们的 ESLint 规则中限制了一些不能使用的规则（例如 `no-new` 禁止使用 `new`），但是在一些特定的场景下，我们十分清楚它不会带来副作用（例如新建一个 Vue 实例）。这时我们就需要使用行内注释来临时禁止某些 ESLint 规则。下面的例子均来自官方文档：
+
 ```javascript
 // 禁止所有的 eslint 规则
 /* eslint-disable */

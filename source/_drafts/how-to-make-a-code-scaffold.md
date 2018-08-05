@@ -7,6 +7,7 @@ tags:
 最近团队在推行组件的跨项目复用，需要将很多原有的代码单独抽离成包。在实际操作的过程中，我们需要创建很多的子项目，这一过程非常的繁琐，为了减小初始化项目的成本，我们决定写一个团队内部使用的脚手架。
 
 ## 基本选型
+
 社区内有很多比较成熟的脚手架，比较老的通用脚手架`yeoman`，和用于特定的`vue-cli`和`create-react-app`等等。
 
 以`vue-cli`为例，我们大概将整个脚手架的工作流程拆分成下面几个步骤：
@@ -32,7 +33,9 @@ tags:
 ## 核心代码
 
 ### render
+
 我们代码的核心部件，用于“模板 + 数据”到“输出”的转化。借助现成的模板引擎 `ejs`，核心代码非常简单：
+
 ```javascript
 const fs = require('fs');
 const ejs = require('ejs');
@@ -94,9 +97,10 @@ function createFilter(filterConfig = {}, answers = {}) {
     });
   };
 };
-
 ```
+
 如果你看过一些 `vue-cli` 的模版（例如[官方的 webpack 模板](https://github.com/vuejs-templates/webpack/blob/4ffcccb2e3b5c8f18ac5c28023ed983bb183ef96/meta.js#L160-L173)），会发现它支持简单的表达式解析。利用 `eval` 或者 `new Function` ，我们可以将这个功能简单的实现如下：
+
 ```javascript
 /**
  * 表达式求值
@@ -143,12 +147,15 @@ function createFilter(filterConfig = {}, answers = {}) {
 ```
 
 ### generator
+
 有了上述方法之后，脚手架生成代码的逻辑可以简化为：
+
 1. 递归读取文件
 2. 判断文件是否应当被过滤器过滤
 3. 根据 answers 和模板，生成文件并写入
 
 我们将这三个步骤，封装成为 `generator` 方法如下：
+
 ```javascript
 const path = require('path');
 const fsExtra = require('fs-extra');
@@ -168,7 +175,7 @@ function generator(src, dest, options = {}) {
     const relPath = path.relative(src, pathInfo.path);
     const sourcePath = pathInfo.path;
     const destPath = path.join(dest, relPath);
-    
+
     return {
       path: relPath,
       source: sourcePath,
@@ -184,7 +191,9 @@ function generator(src, dest, options = {}) {
 ```
 
 ### creator
+
 在 `generator` 的基础上，我们需要一个更加上层的 `creator` 方法：它直接接受一个模板名，根据这个模板名读取响应的交互式命令，并根据交互式命令的结果生成代码。在此之前，我们需要约定：
+
 1. 所有的模板位于我们脚手架工具的 `templates` 文件夹下。
 2. 模板内，用`.template.config.js` 来配置问题和过滤器等参数(上文的`createFilter`函数也要进行改造，将此文件名强制过滤掉)。
 
@@ -214,7 +223,9 @@ function creator(templateName) {
 ```
 
 ### bin
+
 在所有逻辑完成后，我们需要一个简单的命令行封装即可：
+
 ```javascript
 #!/usr/bin/env node
 const fs = require('fs');
@@ -239,7 +250,9 @@ if (templates.indexOf(name) < 0) {
 至此，一个简单的脚手架就完成了。
 
 ## TODO
+
 我们上文介绍的脚手架还很粗糙，只有一些基本功能。在此基础上，我们还可以做很多扩展：
+
 1. DEBUG LOG：在 DEBUG 开关打开时，输出一些 DEBUG 日志，包括性能参数等。
 2. 代码生成的运行时钩子：例如我们要实现在项目生成后，自动用 `yarn` 安装所有依赖，就需要一个后置钩子。
 3. 支持远程模板：如果脚手架从自用变为需要推广给第三方使用，支持远程（自定义）模板就变得非常重要。可以借助 `download-git-repo` 或其它类似的库，来实现实时下载模板并使用。
