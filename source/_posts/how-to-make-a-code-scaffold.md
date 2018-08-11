@@ -2,9 +2,8 @@
 title: 如何搭建一个项目脚手架
 tags:
   - javascript
-date: 2018-08-09 23:03:34
+date: 2018-05-06 12:31:34
 ---
-
 
 最近团队在推行组件的跨项目复用，需要将很多原有的代码单独抽离成包。在实际操作的过程中，我们需要创建很多的子项目，这一过程非常的繁琐，为了减小初始化项目的成本，我们决定写一个团队内部使用的脚手架。
 
@@ -57,7 +56,9 @@ function render(template, data = {}, options = {}) {
 ```
 
 ### filter
+
 除了生成文件，还有一步非常重要的操作是过滤。例如我们会通过用户选择“是否使用单元测试”，来忽略整个 `tests` 文件夹。我们会在模板中做类似如下的 map 配置：
+
 ```javascript
 {
   filter: {
@@ -68,6 +69,7 @@ function render(template, data = {}, options = {}) {
 ```
 
 根据这个配置，我们可以生成一个自定义的过滤器：
+
 ```javascript
 const minimatch = require('minimatch');
 
@@ -119,6 +121,7 @@ function exec(expression, context = {}) {
 ```
 
 我们对`createFilter`进行简单扩展：
+
 ```javascript
 function createFilter(filterConfig = {}, answers = {}) {
   const filters = Object.keys(filterConfig).map(key => {
