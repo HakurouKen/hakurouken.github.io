@@ -1,0 +1,663 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="随着业务代码的不断增多，我们需要维护的项目也会不断的变多，这时我们自然就需要关注跨项目代码的复用的问题。和一个项目内的代码不同，跨项目的代码复用受限于整个团队的开发模式和工具流，很少能够用现有的工具直接解决。">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在跨项目复用代码">
+<meta property="og:url" content="http://blog.sevenplus.me/2018/06/25/how-to-share-codes-between-projects/index.html">
+<meta property="og:site_name" content="HakurouKen 的博客">
+<meta property="og:description" content="随着业务代码的不断增多，我们需要维护的项目也会不断的变多，这时我们自然就需要关注跨项目代码的复用的问题。和一个项目内的代码不同，跨项目的代码复用受限于整个团队的开发模式和工具流，很少能够用现有的工具直接解决。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-11T19:45:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在跨项目复用代码">
+<meta name="twitter:description" content="随着业务代码的不断增多，我们需要维护的项目也会不断的变多，这时我们自然就需要关注跨项目代码的复用的问题。和一个项目内的代码不同，跨项目的代码复用受限于整个团队的开发模式和工具流，很少能够用现有的工具直接解决。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2018/06/25/how-to-share-codes-between-projects/"/>
+
+
+
+
+
+  <title> 如何在跨项目复用代码 | HakurouKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakurouKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2018/06/25/how-to-share-codes-between-projects/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakurouKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakurouKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何在跨项目复用代码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-25T22:09:51+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>随着业务代码的不断增多，我们需要维护的项目也会不断的变多，这时我们自然就需要关注跨项目代码的复用的问题。和一个项目内的代码不同，跨项目的代码复用受限于整个团队的开发模式和工具流，很少能够用现有的工具直接解决。</p>
+<a id="more"></a>
+<h2 id="git-submodule-git-subtree"><a href="#git-submodule-git-subtree" class="headerlink" title="git-submodule/git-subtree"></a>git-submodule/git-subtree</h2><p>复用代码的前提，是先要把对应的代码引入指定的项目中，我们可以使用 git 的 submodule 和 subtree 来进行操作。</p>
+<p>从名字上，我们可以大致看出他们二者的作用：git submodule 往往是把一个大项目分割成独立的各个独立的子模块(submodule)，我们如果需要对子项目进行更改，需要到子项目中进行提交，父项目中仅保留子项目的链接；git subtree 则是将一个项目的一个子树(subtree)单独拿出来，但仍然是父项目的一部分。</p>
+<p>一般的建议是，如果我们的公共组件仍然处于频繁迭代的不稳定状态，可以考虑使用 subtree，和某个主项目一起开发发布。当组件逐渐稳定下来之后，可以考虑将其变为独立模块，使用 submodule 来管理。</p>
+<p>当然，这个做法虽然可以解决大部分跨项目公用的问题，但是仍然有一些不便：</p>
+<ol>
+<li>依赖管理</li>
+</ol>
+<p>如果是在单个项目中，我们的组件不需要考虑依赖问题：所有的第三方依赖都在项目的<code>package.json</code>中管理，项目中的组件也只需要直接引入即可。而对于跨项目组件，我们只能去人肉查看它有哪些依赖，很难做到手动管理。</p>
+<ol start="2">
+<li>版本管理</li>
+</ol>
+<p>对于某些基础且重要的公共组件，我们希望能够像第三方库一样，使用独立的版本管理，业务可以自由选择自己需要的版本：这样可以方便我们针对业务进行灰度，同时也避免了升级中引入的潜在 BUG。当然，我们可以使用 git 的 tag 功能来实现，但是这样缺乏一些便利性：对于间接依赖，我们仍然要去手动管理。</p>
+<p>另：如果你还在使用 svn 做版本管理，那么可以尝试使用 svn external 来替代。</p>
+<h2 id="使用-npm-包"><a href="#使用-npm-包" class="headerlink" title="使用 npm 包"></a>使用 npm 包</h2><p>多数项目会用到 npm 来安装/管理第三方依赖，我们也可以将我们的公共库使用 npm 管理。为了避免将一些敏感的业务发到公网，我们一般需要基于一个私有的 npm 源来进行操作。我们可以基于 <a href="https://github.com/cnpm/cnpmjs.org" target="_blank" rel="noopener">cnpm</a> 来快速搭建一个自己的 npm registry。如何搭建私有的 npm 源并不是本文的重点，你可以参考一些<a href="https://github.com/jaywcjlove/handbook/blob/master/CentOS/%E5%9C%A85%E5%88%86%E9%92%9F%E5%86%85%E6%90%AD%E5%BB%BA%E4%BC%81%E4%B8%9A%E5%86%85%E9%83%A8%E7%A7%81%E6%9C%89npm%E4%BB%93%E5%BA%93.md" target="_blank" rel="noopener">现有的文章</a>。</p>
+<p>在这个基础上，我们就像维护第三方库一样维护我们自己的代码即可。但是这个解决方案仍然不是完美的：</p>
+<ol>
+<li>很多业务件是不适合有“版本”的概念的，尤其是那些依赖后台接口的组件：线上的接口永远只有一个版本。如果我们依赖的后台接口做了不兼容升级，我们对应的所有版本都要废弃掉。</li>
+<li>很多快速迭代的业务并不适合写 E2E 测试，我们需要测试人员人工保证组件的正确性。为了给到测试一个稳定的版本进行测试，我们就要不断的进行“改 BUG=&gt;发布 npm 包=&gt;upgrade=&gt;部署”的过程。这样不仅比起直接在项目中开发要繁琐，而且还会产生很多废弃的版本。</li>
+</ol>
+<h2 id="git-submodule-npm"><a href="#git-submodule-npm" class="headerlink" title="git-submodule + npm"></a>git-submodule + npm</h2><p>既然两种解决方案都有各自的优缺点，那么我们为什么不尝试将二者结合一下？下面是我们项目的具体实践。</p>
+<h3 id="工具库、UI-类库，统一发布-npm-包管理"><a href="#工具库、UI-类库，统一发布-npm-包管理" class="headerlink" title="工具库、UI 类库，统一发布 npm 包管理"></a>工具库、UI 类库，统一发布 npm 包管理</h3><p>工具库（以 <code>lodash</code> 和 <code>query-string</code> 为例）和 UI 类库（以 <code>element-ui</code> 为例）的特点是：它们适合独立发版，而且我们很容易通过单元测试来保证代码质量。开源社区中大量类似的项目已经提供了成熟的实践，这里不在赘述。</p>
+<h3 id="基础类库，发布-npm-包管理"><a href="#基础类库，发布-npm-包管理" class="headerlink" title="基础类库，发布 npm 包管理"></a>基础类库，发布 npm 包管理</h3><p>除了工具库和 UI 类库，我们的项目中几乎一定还有一些全项目通用的组件，例如登录组件、用户的资料卡、一些公共底层 API 的上层封装等等。这类组件，一般有如下几个特性：</p>
+<ol>
+<li><p>功能相对稳定<br>业务相对稳定业务组件和基础类库的最大区别是：它会依赖后台接口，这就导致了很多 edge-case 只有在某个后台状态下才能触发，对于前端组件是黑盒，这对我们写单元测试造成了很大的困难。因此，我们往往只会写一些简单的 DEMO 和小测试用例来保证业务的基本功能正常，其余的需要交由测试团队执行 E2E 测试和人工测试来保证逻辑无误。而测试的场景也往往比较难构建，需要在真实的项目中进行测试。如果功能尚不稳定，在需求迭代的过程中，会产生很多废弃的版本。</p>
+</li>
+<li><p>后台接口需要一定的向后兼容性<br>用到我们跨业务组件的项目，往往会存在不同的迭代周期，当组件及其对应的后台升级并发布之后，对应的业务可能并不能够及时升级到最新的版本。这就对后台的业务的兼容性提出了要求，不允许进行断崖式升级；每一次升级都要保持向后兼容。当确保所有的业务都升级之后（往往需要人工确认）才能去掉相关的兼容代码。</p>
+</li>
+<li><p>业务相对原子且通用<br>这个要求本身的意义并不大，但是根据我们的实践，它是保证“功能相对稳定”这个条件的关键因素。例如：绝大多数项目的登录组件都可以按这种方式管理，因为登录永远是最底层的服务，可能会牵一发动全身；而一个弹幕播放器组件则不行，因为它其中涉及到大量的业务逻辑（包括视频播放、弹幕、各种广告位等等），可以定制的需求也非常多。</p>
+</li>
+</ol>
+<h3 id="已经相对稳定的组件，使用-git-submodule-或-npm-git-module-的模式管理"><a href="#已经相对稳定的组件，使用-git-submodule-或-npm-git-module-的模式管理" class="headerlink" title="已经相对稳定的组件，使用 git-submodule 或 npm + git-module 的模式管理"></a>已经相对稳定的组件，使用 git-submodule 或 npm + git-module 的模式管理</h3><p>我们可能还有一些跨项目用到的复杂组件，例如网站的播放器组件、微博的动态组件等等。这类组件我们可以只是简单的把代码整合到一起，然后使用 git-submodule 引入。如果组件对应了很多外部依赖，我们可以把整个组件整理为合法的 npm 包的形式（但无需发布），然后使用 npm 安装指定的 git 路径。注意，我们这里的安装的代码都是未打包的，因此要在 webpack 配置中，将对应的路径纳入需要编译的范围。</p>
+<h3 id="还在迭代中项目，使用-git-submodule-git-subtree"><a href="#还在迭代中项目，使用-git-submodule-git-subtree" class="headerlink" title="还在迭代中项目，使用 git-submodule/git-subtree"></a>还在迭代中项目，使用 git-submodule/git-subtree</h3><p>这种跨项目组件往往是我们最关注的。本质上讲，这二者都可以完成我们的需求。需要稍稍注意的是，如果你使用 git-submodule 来管理跨项目组件的话，每次开发尽量拉分支处理（把每次合并 master 分支当作一次发布）。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h3><p>当整个跨项目组件稳定后，我们基本会将其切换到使用 npm 的方式来管理，这时 npm 会自动帮我们处理好所有的依赖关系。但是在项目开发的前期，每个项目都需要关注跨项目组件的依赖。从某种角度上讲，这也是合理的：在项目的前期接入时，每个项目几乎都要承担起配合联调的角色，我们理应了解一些内部实现。</p>
+<h3 id="版本管理"><a href="#版本管理" class="headerlink" title="版本管理"></a>版本管理</h3><h3 id="css"><a href="#css" class="headerlink" title="css"></a>css</h3><p>如果想要像管理 js 一样管理 css，每个组件的 css 理应有自己的作用空间，但是 css 本身并没有 scoped 的特性，而且一旦打包之后，就很难进行去重。权衡现有业务的改造成本，我们最后采取了如下的实现方式：</p>
+<ol>
+<li>所有样式使用 BEM 来约束</li>
+<li>css 文件不进行合并，发布的 .css 文件都是零散的</li>
+<li>写专门的样式入口文件<code>style.js</code>，引入所有的样式</li>
+<li>业务引用时，可以自己按需引入 .css 文件，也可以引入我们的 <code>style.js</code> 来自动引入所有的样式</li>
+</ol>
+<p>当然你也可以使用一些 CSS-IN-JS 的方案，例如<a href="https://github.com/FormidableLabs/radium" target="_blank" rel="noopener">Radium</a>，由于我们并没有采用这种方案，这里不再详细展开。</p>
+<h2 id="参考-扩展"><a href="#参考-扩展" class="headerlink" title="参考/扩展"></a>参考/扩展</h2><ol>
+<li><a href="https://stackoverflow.com/questions/31769820/differences-between-git-submodule-and-subtree" target="_blank" rel="noopener">git subversion 和 subtree 的区别</a></li>
+<li><a href="http://taobaofed.org/blog/2015/11/02/buy-component/" target="_blank" rel="noopener">淘宝FED：已买到的宝贝组件化探索</a></li>
+<li><a href="https://juejin.im/post/5a3b0e2af265da432c240216" target="_blank" rel="noopener">如何在不同的项目中共用前端资源,告别复制粘贴</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/09/npm-quick-start/" rel="next" title="npm 快速上手">
+                <i class="fa fa-chevron-left"></i> npm 快速上手
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/13/convert-to-number-in-javascript/" rel="prev" title="Javascript 中的字符串转数字">
+                Javascript 中的字符串转数字 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-submodule-git-subtree"><span class="nav-number">1.</span> <span class="nav-text">git-submodule/git-subtree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-npm-包"><span class="nav-number">2.</span> <span class="nav-text">使用 npm 包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-submodule-npm"><span class="nav-number">3.</span> <span class="nav-text">git-submodule + npm</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工具库、UI-类库，统一发布-npm-包管理"><span class="nav-number">3.1.</span> <span class="nav-text">工具库、UI 类库，统一发布 npm 包管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础类库，发布-npm-包管理"><span class="nav-number">3.2.</span> <span class="nav-text">基础类库，发布 npm 包管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#已经相对稳定的组件，使用-git-submodule-或-npm-git-module-的模式管理"><span class="nav-number">3.3.</span> <span class="nav-text">已经相对稳定的组件，使用 git-submodule 或 npm + git-module 的模式管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#还在迭代中项目，使用-git-submodule-git-subtree"><span class="nav-number">3.4.</span> <span class="nav-text">还在迭代中项目，使用 git-submodule/git-subtree</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">4.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖管理"><span class="nav-number">4.1.</span> <span class="nav-text">依赖管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#版本管理"><span class="nav-number">4.2.</span> <span class="nav-text">版本管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#css"><span class="nav-number">4.3.</span> <span class="nav-text">css</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考-扩展"><span class="nav-number">5.</span> <span class="nav-text">参考/扩展</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
