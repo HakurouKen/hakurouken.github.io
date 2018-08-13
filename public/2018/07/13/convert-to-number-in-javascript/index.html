@@ -1,0 +1,641 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="在 javascript 中，我们经常会进行一些类型转化，尤其是字符串转化为数字。由于 javascript 的灵活性，我们有很多的方法能够完成这一目的，但是对于一些 edge cases，不同的方式转化经常会得到不同的效果。被一些特殊情况坑了几次之后，这里专门对这个问题咬文嚼字一下。">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javascript 中的字符串转数字">
+<meta property="og:url" content="http://blog.sevenplus.me/2018/07/13/convert-to-number-in-javascript/index.html">
+<meta property="og:site_name" content="HakurouKen 的博客">
+<meta property="og:description" content="在 javascript 中，我们经常会进行一些类型转化，尤其是字符串转化为数字。由于 javascript 的灵活性，我们有很多的方法能够完成这一目的，但是对于一些 edge cases，不同的方式转化经常会得到不同的效果。被一些特殊情况坑了几次之后，这里专门对这个问题咬文嚼字一下。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-11T19:42:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript 中的字符串转数字">
+<meta name="twitter:description" content="在 javascript 中，我们经常会进行一些类型转化，尤其是字符串转化为数字。由于 javascript 的灵活性，我们有很多的方法能够完成这一目的，但是对于一些 edge cases，不同的方式转化经常会得到不同的效果。被一些特殊情况坑了几次之后，这里专门对这个问题咬文嚼字一下。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2018/07/13/convert-to-number-in-javascript/"/>
+
+
+
+
+
+  <title> Javascript 中的字符串转数字 | HakurouKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakurouKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2018/07/13/convert-to-number-in-javascript/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakurouKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakurouKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Javascript 中的字符串转数字
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-13T23:33:10+08:00">
+                2018-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 javascript 中，我们经常会进行一些类型转化，尤其是字符串转化为数字。由于 javascript 的灵活性，我们有很多的方法能够完成这一目的，但是对于一些 edge cases，不同的方式转化经常会得到不同的效果。被一些特殊情况坑了几次之后，这里专门对这个问题咬文嚼字一下。</p>
+<a id="more"></a>
+<h2 id="茴字的四种写法"><a href="#茴字的四种写法" class="headerlink" title="茴字的四种写法"></a>茴字的四种写法</h2><h3 id="利用位运算隐式转换"><a href="#利用位运算隐式转换" class="headerlink" title="利用位运算隐式转换"></a>利用位运算隐式转换</h3><p>在很多介绍 javascript 的奇技淫巧的文章/书籍中，都会提到这种转化，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~~<span class="string">'1000'</span> === <span class="number">1000</span></span><br><span class="line"><span class="string">'999'</span> &gt;&gt; <span class="number">0</span> === <span class="number">999</span></span><br><span class="line"><span class="number">998.1</span> | <span class="number">0</span> === <span class="number">998</span></span><br></pre></td></tr></table></figure>
+<p>这种办法的优点是<strong>省字符</strong>，但是它也有一些弊端：</p>
+<ol>
+<li>参与位运算的数字都需要在 int32 的范围内，否则会溢出</li>
+<li><code>NaN</code> 和 <code>Infinity</code> 会被当作 0 处理</li>
+</ol>
+<h2 id="Number"><a href="#Number" class="headerlink" title="Number"></a>Number</h2><p>javascript 中内置了转换数字方法 <code>Number</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Number</span>(<span class="string">'1000'</span>) === <span class="number">1000</span></span><br><span class="line"><span class="built_in">Number</span>(<span class="string">'1e3'</span>) === <span class="number">1000</span></span><br><span class="line"><span class="built_in">Number</span>(<span class="string">'-1e-3'</span>) === <span class="number">0.001</span></span><br></pre></td></tr></table></figure>
+<p>我们也可以使用四则运算来进行隐式转换，这样可以节省一些字符：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+<span class="string">'1000'</span> === <span class="number">1000</span></span><br><span class="line"><span class="string">'999'</span> * <span class="number">1</span> === <span class="number">999</span></span><br></pre></td></tr></table></figure>
+<h2 id="Math-相关方法"><a href="#Math-相关方法" class="headerlink" title="Math 相关方法"></a>Math 相关方法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Math</span>.floor(<span class="string">'1000.5'</span>) === <span class="number">1000</span></span><br><span class="line"><span class="built_in">Math</span>.ceil(<span class="string">'999.1'</span>) === <span class="number">1000</span></span><br><span class="line"><span class="built_in">Math</span>.round(<span class="string">'998.3'</span>) === <span class="number">998</span></span><br><span class="line"><span class="built_in">Math</span>.floor(<span class="string">'-999.9'</span>) === <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<p>这些方法的本质都是先调用 <code>Number</code> 隐式转换为数字，然后再执行对应的方法。不过需要额外注意的是，Math 中的这几个取整的方法和数学中的“取整”概念是一致的，在处理负数时需要额外注意。</p>
+<h2 id="parseInt"><a href="#parseInt" class="headerlink" title="parseInt"></a>parseInt</h2><p>MDN 中对 <code>parseInt</code> 的说明很言简意赅，就是字符串转整数的方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="string">'994'</span>, <span class="number">10</span>) === <span class="number">994</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">'980px'</span>, <span class="number">10</span>) === <span class="number">980</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的是，<code>parseInt</code> 在转换的时候，会先将第一个参数转化为 <code>String</code> 类型，然后再转化为字符串。这在一些输入类型不确定的场景下，会导致一些奇怪的问题，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="number">3e-6</span>, <span class="number">10</span>) === <span class="number">0</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="number">3e-7</span>, <span class="number">10</span>) === <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>出现这个问题的原因是因为 <code>3e-7</code> 超出了精度范围，因此会使用科学计数法表示，而 <code>3e-6</code> 则不会。因此上面的等式实际的执行过程是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">parseInt</span>(<span class="number">3e-6</span>, <span class="number">10</span>) === <span class="built_in">parseInt</span>(<span class="string">'0.000003'</span>, <span class="number">10</span>) === <span class="number">0</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="number">3e-7</span>, <span class="number">10</span>) === <span class="built_in">parseInt</span>(<span class="string">'3e-7'</span>, <span class="number">10</span>) === <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>因为有溢出的风险，所以<strong>不建议</strong>使用位运算的隐式转换（eslint 的 no-bitwise 规则）。</li>
+<li>如果你使用了 typescript 或者 flow 等保证了输入类型，则永远优先使用 <code>parseInt</code>（或 <code>parseFloat</code>）。它不仅语义最清晰，而且性能最好。</li>
+<li>如果是你的代码需要对数字输入和字符串输入进行兼容，尽量使用 <code>Number</code> 转换。考虑到绝大多数的类型转换，都是用于比较是否相等（例如兼容数字 ID 和字符串 ID），用 <code>Number</code> 已经足够。如果后续需要用于计算，再单独转化。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/25/how-to-share-codes-between-projects/" rel="next" title="如何在跨项目复用代码">
+                <i class="fa fa-chevron-left"></i> 如何在跨项目复用代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/29/how-to-detect-hardcodes-in-javascript/" rel="prev" title="如何检查项目中的硬编码">
+                如何检查项目中的硬编码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#茴字的四种写法"><span class="nav-number">1.</span> <span class="nav-text">茴字的四种写法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#利用位运算隐式转换"><span class="nav-number">1.1.</span> <span class="nav-text">利用位运算隐式转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Number"><span class="nav-number">2.</span> <span class="nav-text">Number</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Math-相关方法"><span class="nav-number">3.</span> <span class="nav-text">Math 相关方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parseInt"><span class="nav-number">4.</span> <span class="nav-text">parseInt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

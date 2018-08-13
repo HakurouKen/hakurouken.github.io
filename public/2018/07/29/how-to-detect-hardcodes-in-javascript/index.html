@@ -1,0 +1,682 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,vue,eslint," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="最近在对项目做国际化的适配，其中很重要的一步就是将代码中硬编码的中文提取成多语言的配置。这是一个比较繁琐的工作，一不小心就会有些遗漏。因此，我们准备开发一个简单的工具来辅助我们检查代码中的硬编码。 检查中文并不是一个很复杂的事情，复杂的是如何对注释进行过滤，以及保留每个关键词的信息用于输出。我们决定整合现有的一些现有的工具来辅助我们完成这些事情。">
+<meta name="keywords" content="javascript,vue,eslint">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何检查项目中的硬编码">
+<meta property="og:url" content="http://blog.sevenplus.me/2018/07/29/how-to-detect-hardcodes-in-javascript/index.html">
+<meta property="og:site_name" content="HakurouKen 的博客">
+<meta property="og:description" content="最近在对项目做国际化的适配，其中很重要的一步就是将代码中硬编码的中文提取成多语言的配置。这是一个比较繁琐的工作，一不小心就会有些遗漏。因此，我们准备开发一个简单的工具来辅助我们检查代码中的硬编码。 检查中文并不是一个很复杂的事情，复杂的是如何对注释进行过滤，以及保留每个关键词的信息用于输出。我们决定整合现有的一些现有的工具来辅助我们完成这些事情。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-11T19:42:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何检查项目中的硬编码">
+<meta name="twitter:description" content="最近在对项目做国际化的适配，其中很重要的一步就是将代码中硬编码的中文提取成多语言的配置。这是一个比较繁琐的工作，一不小心就会有些遗漏。因此，我们准备开发一个简单的工具来辅助我们检查代码中的硬编码。 检查中文并不是一个很复杂的事情，复杂的是如何对注释进行过滤，以及保留每个关键词的信息用于输出。我们决定整合现有的一些现有的工具来辅助我们完成这些事情。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2018/07/29/how-to-detect-hardcodes-in-javascript/"/>
+
+
+
+
+
+  <title> 如何检查项目中的硬编码 | HakurouKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakurouKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2018/07/29/how-to-detect-hardcodes-in-javascript/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakurouKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakurouKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                如何检查项目中的硬编码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-29T15:02:43+08:00">
+                2018-07-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在对项目做国际化的适配，其中很重要的一步就是将代码中硬编码的中文提取成多语言的配置。这是一个比较繁琐的工作，一不小心就会有些遗漏。因此，我们准备开发一个简单的工具来辅助我们检查代码中的硬编码。</p>
+<p>检查中文并不是一个很复杂的事情，复杂的是如何对注释进行过滤，以及保留每个关键词的信息用于输出。我们决定整合现有的一些现有的工具来辅助我们完成这些事情。</p>
+<a id="more"></a>
+<h2 id="利用-babel"><a href="#利用-babel" class="headerlink" title="利用 babel"></a>利用 babel</h2><p>在开始之前，首先推荐大家阅读 babel 的<a href="https://github.com/jamiebuilds/babel-handbook/blob/master/translations/zh-Hans/plugin-handbook.md" target="_blank" rel="noopener">官方插件手册</a>，它介绍了一些关于 babel 插件开发和 babel 编译相关的基础知识。下文将从这篇文章中，提取一些我们需要了解的概念，进行一个大致介绍。</p>
+<h3 id="AST"><a href="#AST" class="headerlink" title="AST"></a>AST</h3><p>AST(Abstract Syntax Tree)即抽象语法树，和我们认知中的树一样，它由若干个节点（Node）构成。Babel 的语法树详细说明可以参照 babel 的<a href="https://github.com/babel/babel/blob/master/packages/babel-parser/ast/spec.md" target="_blank" rel="noopener">官方文档</a>。AST 是一个相对复杂的概念，由于篇幅原因，这里不再对其进行过多的讲解。如果你想对 AST 有一个感性的认识，可以在 <a href="http://astexplorer.net/" target="_blank" rel="noopener">http://astexplorer.net/</a> 输入一些代码来查看真实的 AST 输出结果。babel 默认使用的 语法解析器是 <code>babylon</code> （后续将会更名为 <code>@babel/parser</code>），是从 <code>acorn</code> fork 出来的项目。对比 <code>acorn</code>，babylon 的解析结果中多了很多实用的信息（例如每个 token 的行列信息）。</p>
+<h3 id="babel-解析的过程"><a href="#babel-解析的过程" class="headerlink" title="babel 解析的过程"></a>babel 解析的过程</h3><p>如果你大概看过 babel 的文档，就可以知道 babel 处理代码分为三个主要步骤：解析(parse), 转换(transform) 和生成(generate)。我们分别用一句话来解释这三步：</p>
+<ol>
+<li>解析：通过词法分析，将和语法分析，将我们的源代码解析为 AST 树。</li>
+<li>转换：对生成的 AST 进行操作。这一步也是整个 babel 的核心也是最复杂的部分，同时也是各个插件的主要工作范围。</li>
+<li>生成：将 AST 再次生成代码。</li>
+</ol>
+<h3 id="几个会用到的库"><a href="#几个会用到的库" class="headerlink" title="几个会用到的库"></a>几个会用到的库</h3><ol>
+<li>babylon: babel 的解析引擎。在 <a href="mailto:babel@7.x" target="_blank" rel="noopener">babel@7.x</a> 中，更名为 <a href="https://github.com/babel/babel/tree/master/packages/babel-parser" target="_blank" rel="noopener">@babel/parser</a>。</li>
+<li>babel-types: 一个用于处理 AST 节点的工具库。在 <a href="mailto:babel@7.x" target="_blank" rel="noopener">babel@7.x</a> 中，更名为 <a href="https://github.com/babel/babel/tree/master/packages/babel-types" target="_blank" rel="noopener">@babel/types</a>。</li>
+<li>babel-traverse: 遍历 AST 树的方法。在 <a href="mailto:babel@7.x" target="_blank" rel="noopener">babel@7.x</a> 中，更名为 <a href="https://github.com/babel/babel/tree/master/packages/babel-traverse" target="_blank" rel="noopener">@babel/traverse</a>。</li>
+</ol>
+<h3 id="使用-Visitor-模式访问树的节点"><a href="#使用-Visitor-模式访问树的节点" class="headerlink" title="使用 Visitor 模式访问树的节点"></a>使用 Visitor 模式访问树的节点</h3><p>访问 AST 具体的节点，最常用的办法是定义一个“访问者(Visitor)”，这个词的来源是<a href="https://zh.wikipedia.org/zh-hans/%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8F" target="_blank" rel="noopener">访问者模式</a>。babel-ast 的一个简单的访问者大概定义如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Visitor = &#123;</span><br><span class="line">  Identifier: &#123;</span><br><span class="line">    enter(path) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Entered node: '</span>, path.node);</span><br><span class="line">    &#125;,</span><br><span class="line">    exit(path) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Exited from node: '</span>, path.node);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>上述的访问者会在所有的类型为 <code>Identifier</code> 的节点被访问的时候被调用。所有的访问者在执行的时候，都可以拿到当前的 <code>path</code> ，它标识这当前节点和整个 AST 树中整个节点的路径的关系。我们可以简单把它理解成“上下文”的概念：我们可以通过这个 path 拿到当前节点自身、临近节点、根节点、作用域等等所有的信息。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>有了上述的基础知识，我们可以很容易有一个大致思路：</p>
+<ol>
+<li>使用 babylon 将代码转换成 AST 树</li>
+<li>定义这个 AST 树的一个所有标识符（Identifier）的访问者，取所有的字符串/数字类型，然后根据我们指定的条件过滤，将结果 push 到一个外部的数组。注意这里还要简单过滤一些特殊的情况，例如 <code>import</code> 和 <code>require</code>。</li>
+<li>输出所有的结果</li>
+</ol>
+<p>下面是一段简单的 DEMO 代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> babylon <span class="keyword">from</span> <span class="string">'babylon'</span>;</span><br><span class="line"><span class="keyword">import</span> traverse <span class="keyword">from</span> <span class="string">'babel-traverse'</span>;</span><br><span class="line"><span class="keyword">import</span> t <span class="keyword">from</span> <span class="string">'babel-types'</span>;</span><br><span class="line"></span><br><span class="line">function check(code, isHardCode = () =&gt; false, plugins = []) &#123;</span><br><span class="line">  <span class="keyword">const</span> hardcodes = [];</span><br><span class="line">  <span class="keyword">const</span> ast = babylon.parse(code, &#123; <span class="attr">sourceType</span>: <span class="string">'module'</span>, plugins &#125;);</span><br><span class="line">  traverse(ast, &#123;</span><br><span class="line">    enter(path) &#123;</span><br><span class="line">      <span class="keyword">const</span> node = path.node;</span><br><span class="line">      <span class="comment">// 在基本类型中，只有 文本/数字 才算硬编码</span></span><br><span class="line">      <span class="keyword">if</span> (t.isStringLiteral(node) || t.isNumericLiteral(node)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (isHardCode(node.value, path)) &#123;</span><br><span class="line">          <span class="keyword">const</span> loc = node.loc;</span><br><span class="line">          hardcodes.push(&#123;</span><br><span class="line">            value: node.value,</span><br><span class="line">            start: loc.start,</span><br><span class="line">            end: loc.end</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (t.isTemplateElement(node)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (isHardCode(node.value.cooked, path)) &#123;</span><br><span class="line">          <span class="keyword">const</span> loc = node.loc;</span><br><span class="line">          hardcodes.push(&#123;</span><br><span class="line">            value: node.value.cooked,</span><br><span class="line">            start: loc.start,</span><br><span class="line">            end: loc.end</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> hardcodes;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 调用：</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *  check(`const cn = "中文";`, value =&gt; /[\u4e00-\u9fa5]/.test(value));</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 输出：</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * [</span></span><br><span class="line"><span class="comment"> *  &#123;</span></span><br><span class="line"><span class="comment"> *    value: '中文',</span></span><br><span class="line"><span class="comment"> *    start: &#123; line: 1, column: 11 &#125;,</span></span><br><span class="line"><span class="comment"> *    end: &#123; line: 1, column: 15 &#125;</span></span><br><span class="line"><span class="comment"> *  &#125;</span></span><br><span class="line"><span class="comment"> * ]</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>这里只处理了基本类型，如果你需要处理 jsx 等等，需要自己传入对应的 babel-plugin，之后去对于 JSX 的相关类型进行判断即可。思路完全一致，不再赘述。</p>
+<h3 id="需要注意的问题"><a href="#需要注意的问题" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h3><ol>
+<li>babel 的 7.x 版本仍处于 beta 版。7.x 版本的很多包明都发生了变化，将所有的 npm 包都加上了 @babel 的 scope，例如 <code>babylon</code> 对应 <code>@babel/parser</code>、<code>babel-core</code> 对应 <code>@babel/core</code> 等。建议我们的项目还维持在 6.x 的版本，待 7.x 稳定后再考虑升级。</li>
+<li>如果你确定要使用 babel 的 7.x 版本，且使用了 <code>stage-2</code> 以上的特性，可能会出现 <a href="https://github.com/babel/babel/issues/7786" target="_blank" rel="noopener">#7786</a> 类似的报错。我们需要稍微修改一下我们的 <code>.babelrc</code> 文件。</li>
+<li>上述的 DEMO 代码只用于过滤一个 js 文件，我们需要对项目下的所有 js(x) 进行一个遍历，同时过滤掉我们不需要的文件（例如 i18n 的语言包目录等）。</li>
+</ol>
+<h3 id="未解决的问题"><a href="#未解决的问题" class="headerlink" title="未解决的问题"></a>未解决的问题</h3><ol>
+<li>这个脚本比较难与我们现有的工作流集成，只能作为一个旁路脚本，在构建/发布前进行检查。</li>
+<li>过滤只能基于文件的维度增加特例，在某些时候我们确实需要临时打破规则 ，就不得不把定义都放到外部文件然后再引入，不但繁琐，而且不利于维护。</li>
+<li>babel 本身无法处理 <code>.vue</code> 文件。我们当然可以参照 <a href="https://github.com/vuejs/vue-loader/blob/master/lib/loaders/templateLoader.js" target="_blank" rel="noopener">vue-loader 的源代码</a>，使用 <a href="https://github.com/vuejs/component-compiler-utils" target="_blank" rel="noopener">@vue/component-compiler-utils</a> 来对 .vue 文件进行一个预处理，然后再使用 babel 解析，但是这样做会丢失掉所有 template 中的行数信息（同时 script 中的行数信息也需要自己修正）。</li>
+</ol>
+<h2 id="eslint-插件"><a href="#eslint-插件" class="headerlink" title="eslint 插件"></a>eslint 插件</h2><p>提到静态检查，我们应该会马上想到 eslint，eslint 的配置化也使得我们通过自定义插件来完成一些校验成为可能。</p>
+<h3 id="eslint-配置组成部分"><a href="#eslint-配置组成部分" class="headerlink" title="eslint 配置组成部分"></a>eslint 配置组成部分</h3><p>我们以 Vue 的 eslint 的推荐配置 <a href="https://github.com/vuejs/eslint-plugin-vue/blob/master/lib/configs/base.js" target="_blank" rel="noopener">plugin:vue/base</a> 为例，描述一个完整的 eslintrc 的配置大致需要那些部分：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  root: <span class="literal">true</span>,</span><br><span class="line">  <span class="comment">// 解析器相关配置</span></span><br><span class="line">  parser: <span class="string">'vue-eslint-parser'</span>,</span><br><span class="line">  parserOptions: &#123;</span><br><span class="line">    ecmaVersion: <span class="number">2015</span>,</span><br><span class="line">    sourceType: <span class="string">'module'</span>,</span><br><span class="line">    ecmaFeatures: &#123;</span><br><span class="line">      jsx: <span class="literal">true</span>,</span><br><span class="line">      experimentalObjectRestSpread: <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 环境配置</span></span><br><span class="line">  env: &#123;</span><br><span class="line">    browser: <span class="literal">true</span>,</span><br><span class="line">    es6: <span class="literal">true</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 插件配置</span></span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="string">'vue'</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="comment">// 具体的规则配置</span></span><br><span class="line">  rules: &#123;</span><br><span class="line">    <span class="string">'vue/comment-directive'</span>: <span class="string">'error'</span>,</span><br><span class="line">    <span class="string">'vue/jsx-uses-vars'</span>: <span class="string">'error'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="解析器（Parser）"><a href="#解析器（Parser）" class="headerlink" title="解析器（Parser）"></a>解析器（Parser）</h4><p>解析器作用是将我们的 javascript 代码解析为 AST 树，并为我们的自定义规则提供一些作用域管理的机制以及一些帮助方法。需要注意的是，一份 eslint 配置只有一个 parser。写一个 parser 是一个非常繁琐的工作，但是 <strong>绝大多数情况下，我们都无需自己手动编写一个 parser</strong>。 对于绝大多数项目，使用 <code>babel-eslint</code> 或 <code>vue-eslint-parser</code>(仅针对 Vue 项目)都足以满足需求。更多有关 parser 的详细信息，可以参考官方文档<a href="https://eslint.org/docs/developer-guide/working-with-custom-parsers" target="_blank" rel="noopener">Working with Custom Parsers</a>。</p>
+<h4 id="规则（Rule）"><a href="#规则（Rule）" class="headerlink" title="规则（Rule）"></a>规则（Rule）</h4><p>使用 eslint 时，我们大部分的关注点都在如何配置各种规则。<code>.eslintrc</code>中的 rules 只是一些简单的选项，具体的 rules 逻辑由 eslint 的插件（以及内置插件）来支持。</p>
+<h4 id="插件（Plugin）"><a href="#插件（Plugin）" class="headerlink" title="插件（Plugin）"></a>插件（Plugin）</h4><p>eslint 强大的插件机制保证了它的扩展性，一个 eslint 插件的主入口大概结构如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">// 所有支持的规则，规则的逻辑是我们最重点关注的</span></span><br><span class="line">  rules: &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 可以导出任意的环境，例如 jQuery 可以将 $ 设置为 global 等等</span></span><br><span class="line">  <span class="comment">// 非必须项</span></span><br><span class="line">  environments: &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// configs 字段导出的是一系列已经配好的 eslint 配置</span></span><br><span class="line">  <span class="comment">// 我们可以在 eslint 中使用 extend 来“继承”这些配置进行二次修改</span></span><br><span class="line">  <span class="comment">// 它的用途类似 babel 的 presets，不是必须项</span></span><br><span class="line">  configs: &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 我们可以对指定后缀的文件进行预处理/后处理，不是必须项</span></span><br><span class="line">  processors: &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="开发一个-eslint-插件"><a href="#开发一个-eslint-插件" class="headerlink" title="开发一个 eslint 插件"></a>开发一个 eslint 插件</h3><p>在 eslint 插件的开发中，<code>environments</code> 和 <code>configs</code> 只是一些简单的配置，<code>processors</code> 的逻辑往往也不复杂，我们最终大部分逻辑复杂度集中在 <code>rules</code> 上。可以说 eslint 插件的开发，就是一系列 eslint 规则的开发。</p>
+<p>在开发 eslint 插件之前，我们需要先阅读 eslint 的开发者指南。对于插件开发最有用的两篇文档是 <a href="https://eslint.org/docs/developer-guide/working-with-plugins" target="_blank" rel="noopener">Working with Plugins</a> 和 <a href="https://eslint.org/docs/developer-guide/working-with-rules" target="_blank" rel="noopener">Working with Rules</a>。当我们写测试用例时，还可以参考 eslint 的 <a href="https://eslint.org/docs/developer-guide/nodejs-api#ruletester" target="_blank" rel="noopener">Node.js API 的 RuleTester</a> 部分。</p>
+<p>eslint 插件相关的第三方资源比较少，配合官方文档，这里推荐几个 eslint 插件的源码阅读，有助于我们快速上手：</p>
+<ol>
+<li><a href="https://github.com/eslint/eslint/tree/master/lib/rules" target="_blank" rel="noopener">eslint 的内置规则</a>：官方的规则，我们</li>
+<li><a href="https://github.com/eslint/eslint-plugin-markdown" target="_blank" rel="noopener">eslint-plugin-markdown</a> ：有关 processor（尤其是 preprocessor）的应用。</li>
+<li><a href="https://github.com/vuejs/eslint-plugin-vue" target="_blank" rel="noopener">eslint-plugin-vue</a>：如果你需要开发 Vue 相关的 eslint 规则，一定要参考 vue 官方插件的功能。尤其是它会大量使用到 <a href="https://github.com/mysticatea/vue-eslint-parser" target="_blank" rel="noopener">vue-eslint-parser</a> 注入到 <code>parserServices</code> 的帮助方法，我们可以用这个 parser 服务帮我们完成很多麻烦的语法解析（例如定义 template 的 Vistor 等等）。这部分细节并没有文档化，你也可以选择去直接阅读 vue-eslint-parser 的相关源码。</li>
+<li><a href="https://github.com/BenoitZugmeyer/eslint-plugin-html" target="_blank" rel="noopener">eslint-plugin-html</a>： 这个插件的实现非常的另类，它并不是一个标准的 eslint 插件，而是通过劫持 eslint 原生的<code>verify</code> 方法来实现。相关的 Github Issues 有 <a href="https://github.com/eslint/eslint/issues/3422" target="_blank" rel="noopener">#3422</a> 和 <a href="https://github.com/eslint/eslint/issues/4153" target="_blank" rel="noopener">#4153</a>。一般情况下不建议像这种方式处理，但如果你确实有无法实现的需求，这也可以作为一个参考。</li>
+</ol>
+<h3 id="核心源代码"><a href="#核心源代码" class="headerlink" title="核心源代码"></a>核心源代码</h3><p>在有了遍历 Babel 生成的 AST 树的代码经验之后，我们的规则这里做的事情非常类似：</p>
+<ol>
+<li>遍历生成 AST 树，这一步 eslint 已经帮我们完成了。</li>
+<li>定义一系列 Visitor，根据我们的规则拿到所有的硬编码信息。这里额外说明一点，我们这里的场景是针对 Vue 来实现的，因此解析器是 <code>vue-eslint-parser</code>，它会在 parserServices 注入一个 <code>defineTemplateBodyVisitor</code> 的方法。我们需要用它来定义 <code>template</code> 和 js 代码的 Vistor 并返回。如果你不是使用的 Vue，则按照 eslint 插件的规则，直接返回一系列的 Vistor 即可。</li>
+<li>过滤掉一些场景：例如 <code>import</code> 或 <code>console.log</code> 等。</li>
+<li>输出：这一步我们也无需关心，我们只需调用 eslint 的 <code>context.report</code> 方法，所有的格式化输出都交由 eslint 即可。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildStringHardcodeChecker</span>(<span class="params">str</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (str.charAt(<span class="number">0</span>) !== <span class="string">'/'</span> &amp;&amp; str.charAt(str.length - <span class="number">1</span>) !== <span class="string">'/'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> value === str;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> tester = <span class="keyword">new</span> <span class="built_in">RegExp</span>(str.slice(<span class="number">1</span>, <span class="number">-1</span>));</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> tester.test(value);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildNumberHardcodeChecker</span>(<span class="params">v</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> checkNum = !!v;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> checkNum;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isRequireOrImport</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> parent = node.parent;</span><br><span class="line">  <span class="keyword">if</span> (!parent) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (parent.type === <span class="string">'ImportDeclaration'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    parent.type === <span class="string">'CallExpression'</span> &amp;&amp;</span><br><span class="line">    parent.callee.type === <span class="string">'Identifier'</span> &amp;&amp;</span><br><span class="line">    parent.callee.name === <span class="string">'require'</span></span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  meta: &#123;</span><br><span class="line">    docs: &#123;</span><br><span class="line">      description: <span class="string">'Check hardcodes in your js/vue files.'</span>,</span><br><span class="line">      category: <span class="string">'strongly-recommended'</span>,</span><br><span class="line">      url: <span class="string">''</span></span><br><span class="line">    &#125;,</span><br><span class="line">    schema: [</span><br><span class="line">      &#123;</span><br><span class="line">        type: <span class="string">'object'</span>,</span><br><span class="line">        properties: &#123;</span><br><span class="line">          number: &#123; <span class="attr">type</span>: <span class="string">'boolean'</span> &#125;,</span><br><span class="line">          string: &#123; <span class="attr">type</span>: <span class="string">'string'</span> &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        additionalProperties: <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  create(context) &#123;</span><br><span class="line">    <span class="keyword">const</span> defineTemplateBodyVisitor =</span><br><span class="line">      context.parserServices.defineTemplateBodyVisitor;</span><br><span class="line">    <span class="comment">// 解析器不是 vue-eslint-parser，直接返回</span></span><br><span class="line">    <span class="keyword">if</span> (defineTemplateBodyVisitor == <span class="literal">null</span>) &#123;</span><br><span class="line">      context.report(&#123;</span><br><span class="line">        loc: &#123; <span class="attr">line</span>: <span class="number">1</span>, <span class="attr">column</span>: <span class="number">0</span> &#125;,</span><br><span class="line">        message:</span><br><span class="line">          <span class="string">'Use the latest vue-eslint-parser. See also https://github.com/vuejs/eslint-plugin-vue#what-is-the-use-the-latest-vue-eslint-parser-error'</span></span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 所有硬编码都从外部定义</span></span><br><span class="line">    <span class="keyword">const</span> options = context.options[<span class="number">0</span>] || &#123;&#125;;</span><br><span class="line">    <span class="keyword">const</span> isStringHardcode = buildStringHardcodeChecker(</span><br><span class="line">      options.string || <span class="string">'/[^\\w\\s-_@:.#$%\\/()\\[\\]&#123;&#125;]/'</span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> isNumberHardcode = buildNumberHardcodeChecker(</span><br><span class="line">      options.number || <span class="literal">false</span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">const</span> isHardcode = <span class="function"><span class="params">value</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> value === <span class="string">'number'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> isNumberHardcode(value);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> value === <span class="string">'string'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> isStringHardcode(value);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">visitor</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// require('package') 或 import 'package' 的情况，不做检测</span></span><br><span class="line">      <span class="keyword">if</span> (isRequireOrImport(node)) <span class="keyword">return</span>;</span><br><span class="line">      <span class="keyword">let</span> value;</span><br><span class="line">      <span class="keyword">if</span> (node.type === <span class="string">'TemplateElement'</span>) &#123;</span><br><span class="line">        value = node.value.raw;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        value = node.value;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (isHardcode(value)) &#123;</span><br><span class="line">        context.report(&#123;</span><br><span class="line">          message: <span class="string">`Hardcode detected: "<span class="subst">$&#123;value&#125;</span>"`</span>,</span><br><span class="line">          node,</span><br><span class="line">          loc: node.loc</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// vue-eslint-parser 的 AST 类型参照</span></span><br><span class="line">    <span class="comment">// HTML 节点: https://github.com/mysticatea/vue-eslint-parser/blob/master/src/html/tokenizer.ts</span></span><br><span class="line">    <span class="comment">// VNode: https://github.com/mysticatea/vue-eslint-parser/blob/master/src/ast/nodes.ts</span></span><br><span class="line">    <span class="comment">// JSX: https://github.com/babel/babel-eslint/blob/master/lib/babylon-to-espree/toToken.js</span></span><br><span class="line">    <span class="keyword">return</span> defineTemplateBodyVisitor(</span><br><span class="line">      &#123;</span><br><span class="line">        VText: visitor,</span><br><span class="line">        HTMLText: visitor,</span><br><span class="line">        Literal: visitor,</span><br><span class="line">        TemplateElement: visitor</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        JSXText: visitor,</span><br><span class="line">        Literal: visitor,</span><br><span class="line">        TemplateElement: visitor</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>PS：在本文的写作过程中，我发现一个 <a href="https://github.com/dgraham/eslint-plugin-i18n-text/" target="_blank" rel="noopener">eslint-plugin-i18n-text</a> 的插件，它完成的事情和我们类似，但是有些具体实现有些不同，在此列出供参考。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/vue/" rel="tag"># vue</a>
+          
+            <a href="/tags/eslint/" rel="tag"># eslint</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/13/convert-to-number-in-javascript/" rel="next" title="Javascript 中的字符串转数字">
+                <i class="fa fa-chevron-left"></i> Javascript 中的字符串转数字
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/05/yarn-versions/" rel="prev" title="使用 yarn 管理版本的注意事项">
+                使用 yarn 管理版本的注意事项 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#利用-babel"><span class="nav-number">1.</span> <span class="nav-text">利用 babel</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AST"><span class="nav-number">1.1.</span> <span class="nav-text">AST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#babel-解析的过程"><span class="nav-number">1.2.</span> <span class="nav-text">babel 解析的过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几个会用到的库"><span class="nav-number">1.3.</span> <span class="nav-text">几个会用到的库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-Visitor-模式访问树的节点"><span class="nav-number">1.4.</span> <span class="nav-text">使用 Visitor 模式访问树的节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">1.5.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需要注意的问题"><span class="nav-number">1.6.</span> <span class="nav-text">需要注意的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#未解决的问题"><span class="nav-number">1.7.</span> <span class="nav-text">未解决的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eslint-插件"><span class="nav-number">2.</span> <span class="nav-text">eslint 插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#eslint-配置组成部分"><span class="nav-number">2.1.</span> <span class="nav-text">eslint 配置组成部分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#解析器（Parser）"><span class="nav-number">2.1.1.</span> <span class="nav-text">解析器（Parser）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#规则（Rule）"><span class="nav-number">2.1.2.</span> <span class="nav-text">规则（Rule）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#插件（Plugin）"><span class="nav-number">2.1.3.</span> <span class="nav-text">插件（Plugin）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发一个-eslint-插件"><span class="nav-number">2.2.</span> <span class="nav-text">开发一个 eslint 插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心源代码"><span class="nav-number">2.3.</span> <span class="nav-text">核心源代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
