@@ -11,23 +11,23 @@ date: 2018-05-06 12:31:34
 
 ## 基本选型
 
-社区内有很多比较成熟的脚手架，比较老的通用脚手架`yeoman`，和用于特定的`vue-cli`和`create-react-app`等等。
+社区内有很多比较成熟的脚手架，比较老的通用脚手架`yeoman`，和用于特定的`vue-cli`和`create-react-app`等等。
 
 以`vue-cli`为例，我们大概将整个脚手架的工作流程拆分成下面几个步骤：
 
-1. 解析输入的命令行参数：这个已经有很多成熟的库，例如 [yargs](https://github.com/yargs/yargs) 和 [commander](https://github.com/commander-rb/commander) 。对于一个脚手架来说，这一部分的工作往往并不复杂，我们也可以不借助第三方库，通过直接分析 `process.argv` 来实现。
+1. 解析输入的命令行参数：这个已经有很多成熟的库，例如 [yargs](https://github.com/yargs/yargs) 和 [commander](https://github.com/commander-rb/commander) 。对于一个脚手架来说，这一部分的工作往往并不复杂，我们也可以不借助第三方库，通过直接分析 `process.argv` 来实现。
 
-2. 获取用户指定的模板：为了方便扩展，脚手架工具往往允许我们将模板当作单独项目管理，这时，我们可以使用 [download-git-repo](https://github.com/flipxfx/download-git-repo) 来下载第三方的模板。对于自用脚手架，我们也可以将模板内置到脚手架内，直接读取本地文件系统即可。
+2. 获取用户指定的模板：为了方便扩展，脚手架工具往往允许我们将模板当作单独项目管理，这时，我们可以使用 [download-git-repo](https://github.com/flipxfx/download-git-repo) 来下载第三方的模板。对于自用脚手架，我们也可以将模板内置到脚手架内，直接读取本地文件系统即可。
 
-3. 交互式命令行：这里推荐 [inquirer.js](https://github.com/SBoudrias/Inquirer.js/)，这个库几乎覆盖了所有的交互命令行应有的场景，同时还提供了强大的插件能力。需要注意的是，这里的交互式命令行的参数会放在**模板内**而非**脚手架**内（即每个模板会有不同的选项），我们需要根据项目的需求，对原始的 `inquirer.js` 参数进行一层封装。
+3. 交互式命令行：这里推荐 [inquirer.js](https://github.com/SBoudrias/Inquirer.js/)，这个库几乎覆盖了所有的交互命令行应有的场景，同时还提供了强大的插件能力。需要注意的是，这里的交互式命令行的参数会放在**模板内**而非**脚手架**内（即每个模板会有不同的选项），我们需要根据项目的需求，对原始的 `inquirer.js` 参数进行一层封装。
 
-4. 根据用户输入的参数，将模板渲染为输出：抽象的说，我们要实现一个 `render(template, input) => output` 的函数。模板引擎也有很多可选：尽管绝大多数模板的设计目的都是为了生成 HTML 模板，但是当中的绝大多数都是“字符串模板”，即核心实现方式是字符串拼接，并不会对内容进行过多的解析，因此可以应用于通用场景。这里的一个反例就是`jade`，它对于 HTML 的语法进行了抽象，我们写的所有模板内容都会通过解析生成 HTML，因此不适用。我们在这里选择使用 `ejs`，你也可以根据个人喜好来选择。
+4. 根据用户输入的参数，将模板渲染为输出：抽象的说，我们要实现一个 `render(template, input) => output` 的函数。模板引擎也有很多可选：尽管绝大多数模板的设计目的都是为了生成 HTML 模板，但是当中的绝大多数都是“字符串模板”，即核心实现方式是字符串拼接，并不会对内容进行过多的解析，因此可以应用于通用场景。这里的一个反例就是`jade`，它对于 HTML 的语法进行了抽象，我们写的所有模板内容都会通过解析生成 HTML，因此不适用。我们在这里选择使用 `ejs`，你也可以根据个人喜好来选择。
 
-## 可能用到的帮助库
+## 可能用到的帮助库
 
-[fs-extra](https://github.com/jprichardson/node-fs-extra): 一个用于取代原生`fs`库的方法，它将原生的文件操作方法全部转化为`Promise`的方式，同时添加了一些实用方法（例如`ensureDir`和`copy`）等等。我们还可能用到类似 Python 中 `os.walk` 的递归遍历文件夹的方法，可以尝试采用 [klaw](https://github.com/jprichardson/node-klaw) 或其同步版本 [klaw-sync](https://github.com/manidlou/node-klaw-sync)。
+[fs-extra](https://github.com/jprichardson/node-fs-extra): 一个用于取代原生`fs`库的方法，它将原生的文件操作方法全部转化为`Promise`的方式，同时添加了一些实用方法（例如`ensureDir`和`copy`）等等。我们还可能用到类似 Python 中 `os.walk` 的递归遍历文件夹的方法，可以尝试采用 [klaw](https://github.com/jprichardson/node-klaw) 或其同步版本 [klaw-sync](https://github.com/manidlou/node-klaw-sync)。
 
-[minimatch](https://github.com/isaacs/minimatch): 判断指定路径是否满足通配符。类似的，我们可能还会用到[globby](https://github.com/sindresorhus/globby)，
+[minimatch](https://github.com/isaacs/minimatch): 判断指定路径是否满足通配符。类似的，我们可能还会用到[globby](https://github.com/sindresorhus/globby)，
 
 [chalk](https://github.com/chalk/chalk): 用于在终端中输出带颜色和格式的文本。
 
@@ -37,7 +37,7 @@ date: 2018-05-06 12:31:34
 
 ### render
 
-我们代码的核心部件，用于“模板 + 数据”到“输出”的转化。借助现成的模板引擎 `ejs`，核心代码非常简单：
+我们代码的核心部件，用于“模板 + 数据”到“输出”的转化。借助现成的模板引擎 `ejs`，核心代码非常简单：
 
 ```javascript
 const fs = require('fs');
@@ -59,7 +59,7 @@ function render(template, data = {}, options = {}) {
 
 ### filter
 
-除了生成文件，还有一步非常重要的操作是过滤。例如我们会通过用户选择“是否使用单元测试”，来忽略整个 `tests` 文件夹。我们会在模板中做类似如下的 map 配置：
+除了生成文件，还有一步非常重要的操作是过滤。例如我们会通过用户选择“是否使用单元测试”，来忽略整个 `tests` 文件夹。我们会在模板中做类似如下的 map 配置：
 
 ```javascript
 {
