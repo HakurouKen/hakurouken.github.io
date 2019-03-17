@@ -94,3 +94,7 @@ sudo apt install nginx
 # php
 sudo apt install php
 ```
+
+## Bonus 安装风扇
+
+红色线接树莓派 4 针脚，黑色线接树莓派 6 针脚。关于针脚的分布，可以参考[这篇教程](https://github.com/Yradex/RaspberryPi3_OS/wiki/%E6%A0%91%E8%8E%93%E6%B4%BE-3-UART-%E5%8F%8A-GPIO-%E9%92%88%E8%84%9A%E5%AE%9A%E4%B9%89)。
