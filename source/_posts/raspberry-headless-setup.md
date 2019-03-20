@@ -3,11 +3,14 @@ title: 树莓派的无头初始化
 tags:
   - raspberry pi
   - mac
+date: 2019-03-18 01:44:07
 ---
 
 ## Step.1 从树莓派官网下载镜像
 
 在[树莓派官网](https://www.raspberrypi.org/downloads/raspbian/)可以下载最新的镜像，为了后续省去安装一些软件，我们可以下载附带必要软件的完整包。
+
+<!-- more -->
 
 ## Step.2 格式化 SD 卡
 
