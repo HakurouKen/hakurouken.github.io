@@ -560,3 +560,34 @@ function debounce(func, wait) {
   };
 }
 ```
+
+## iframe 间的跨域通信
+
+### 降域
+
+当两个页面域名属于同一个父域下，且端口/协议均一致的情况下，可以直接降域处理跨域。例如对于 `https://a.example.com/index.html` 和 `https://b.example.com/index.html`
+
+```javascript
+// a.example.com
+document.domain = 'example.com';
+
+// b.example.com
+document.domain = 'example.com';
+```
+
+改写之后，二个页面即可相互调用对方的函数进行通信。
+
+### postMessage
+
+postMessage 是 HTML5 中提出的安全的跨域方案。
+
+`otherWindow.postMessage(message, targetOrigin)`
+
+- otherWindow: **接收消息页面**的 window 对象
+- message: 需要发送的数据，字符串类型。在现代浏览器中，它可以是任何可序列化的对象。
+- targetOrigin: 用于限制 otherWindow，可以用 \* 标识不限制
+
+### 参考资料与扩展阅读
+
+1. [MDN: 浏览器的同源策略](https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy)
+2. [MDN: window.postMessage](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage)
