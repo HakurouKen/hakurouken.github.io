@@ -97,3 +97,75 @@ If-None-Match: Request 头中，带上缓存的文件签名(Etag)。服务器通
 1. [MDN: HTTP 缓存](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching_FAQ)
 2. [你应该知道的浏览器缓存知识](https://excaliburhan.com/post/things-you-should-know-about-browser-cache.html)
 3. [MDN: Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
+
+## 请求跨域
+
+### JSONP
+
+JSONP 的本质是动态插入 script 标签，因此仅支持 GET 请求传递参数，不适合于做用户相关的请求。因为涉及到直接插入 script 标签并执行，因此它也是 XSRF 的重灾区，必须使用 CSP 策略严格限制来源。
+
+### 服务端反向代理
+
+避免跨域问题，最简单的方式就是不跨域。我们可以简单的使用一个反向代理即可完成。以 nginx 为例，如果我们要把 www.example.com 域名下 `/api` 路径下所有的请求，代理到 api.example.com 下，nginx 配置大致如下：
+
+```
+server {
+  listen 80;
+  server_name  www.example.com;
+  location /api {
+    proxy_pass_header Server;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Scheme $scheme;
+    proxy_pass http://api.example.com;
+  }
+}
+```
+
+### CORS
+
+#### CORS 的基本过程
+
+1. 在请求中携带 `Origin` 头，它的值包含了当前的协议路径信息（例如：`https://example.com/`），由浏览器自动设置，使用 javascript 无法更改。
+2. 服务器读取 `Origin` 头，如果允许跨域，根据条件返回 `Access-Control-Allow-Origin`, 如果允许访问，可以设置为和来源一致或者 \* 。否则，不返回 `Access-Control-Allow-Origin` 的头。
+
+如果想要携带凭证(Cookie)，还需要额外做两个事情：
+
+1. 客户端的 XHR 请求，设置 `withCredentials = true` 开关。
+2. 服务端返回 `Access-Control-Allow-Credentials: true` 的 HTTP 响应头。
+3. `Access-Control-Allow-Origin` 不允许为 \*，必须和请求的 Origin 一致
+
+注意，上述基本流程，仅适用于**简单请求**。
+
+#### 简单请求
+
+一个简单请求，必须满足下列所有条件：
+
+1. GET/POST 请求
+2. 没有自定义 HTTP 头
+3. Content-Type 只能是 application/x-www-form-urlencoded, multipart/form-data, text/plain
+
+标准如此规定，主要是为了向后的兼容性。
+
+#### 预检请求(CORS-preflight request)
+
+如果不是简单请求，那么在真实请求发送前，浏览器会先行发送一个预检请求，用于询问服务器，可以使用哪些 HTTP 方法和头信息。
+
+预检请求是一个 OPTIONS 请求，除了 `Origin` 头之外，还包括 `Access-Control-Request-Method` 和 `Access-Control-Request-Headers`（可选） 两个头，分别代表当前使用的 HTTP 方法（例如 POST、DELETE）和额外携带的 HTTP 头信息。
+
+与简单请求类似，如果服务器如果不允许跨域，返回的请求中不带 `Access-Control-Allow-Origin` 头即可。否则，返回的头会有如下额外字段：
+
+1. `Access-Control-Allow-Origin`: 和请求的 `Origin` 一致，或者是 \* （与简单请求一致）
+2. `Access-Control-Allow-Credentials`: 可选，是否允许发送 Cookie。如果有这个头，值只能为 `true` （与简单请求一致）
+3. `Access-Control-Allow-Methods`：逗号分割的字符串，标识**所有**支持跨域请求的方法（不限于浏览器发出的特定方法），避免发出多次预检请求。
+4. `Access-Control-Allow-Headers`: 可选，对应请求中的 `Access-Control-Request-Method`，标识**所有**支持的头信息字段。
+5. `Access-Control-Max-Age`：可选，标识预检请求的有效期。类似于 `Cache-Control` 的 max-age。
+
+预检请求完成后，后续发送的真实请求，和简单请求一致。
+
+### 参考资料与扩展阅读
+
+1. [MDN: Origin](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Origin)
+2. [MDN: Server-Side Access Control](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Server-Side_Access_Control)
+3. [MDN: HTTP 访问控制（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
+4. [跨域资源共享 CORS 详解](http://www.ruanyifeng.com/blog/2016/04/cors.html)
