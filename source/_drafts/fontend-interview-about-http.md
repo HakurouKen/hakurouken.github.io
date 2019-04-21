@@ -169,3 +169,29 @@ server {
 2. [MDN: Server-Side Access Control](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Server-Side_Access_Control)
 3. [MDN: HTTP 访问控制（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
 4. [跨域资源共享 CORS 详解](http://www.ruanyifeng.com/blog/2016/04/cors.html)
+
+## HTTP 方法
+
+|  方法   | 初次出现的 HTTP 版本 | 描述                                                                                                                                                                                                         |
+| :-----: | :------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|   GET   |       HTTP 0.9       | 只用于获取资源，一般要求是幂等且安全无副作用的，这样浏览器可以对同样路径和参数的资源进行缓存。                                                                                                               |
+|  POST   |       HTTP 1.0       | 向指定的资源位置提交数据，一般有副作用，可能创建/删除/修改对应的资源。                                                                                                                                       |
+|  HEAD   |       HTTP 1.0       | 和 GET 请求类似，也用于获取资源，不同的是，它只需要返回请求的头部。常用于获取数据元信息（例如图片大小），或是检测 URL 的合法性等。                                                                           |
+| OPTIONS |       HTTP 1.1       | OPTIONS 方法用于获取资源请求/响应相关的通信选项。例如预检请求就是一个 OPTIONS 请求。                                                                                                                         |
+| DELETE  |       HTTP 1.1       | 请求删除对应的资源。                                                                                                                                                                                         |
+|   PUT   |       HTTP 1.1       | 请求服务器把当前的数据实体保存到指定资源位。                                                                                                                                                                 |
+|  TRACE  |       HTTP 1.1       | 要求服务器原样返回任何客户端请求的内容（可能会附加路由中间的代理服务器的信息）。一般仅用于调试。由于 HTTP 头中有 Cookie 等敏感信息，所以可能用于欺骗合法用户并获取其隐私信息。一般建议服务器直接关闭此方法。 |
+| CONNECT |       HTTP 1.1       | CONNECT 方法用于建立一个到由目标资源标识的服务器的隧道。不常用。                                                                                                                                             |
+|  PATCH  | HTTP 1.1 (RFC 5789)  | 用于部分修改指定资源。                                                                                                                                                                                       |
+
+补充说明：
+
+1. 幂等方法：对于同一个 URL，使用同样的参数，进行一次或多次操作，造成的副作用是一样的。
+2. 所有 HTTP 方法，从定义上的作用对象都是 URI，即资源。从 HTTP 回包的结构也能看出：HTTP 的请求行只包括“请求方法”、“请求 URL”、HTTP 协议版本三个部分。例如 RESTFUL 规范是一种将所有 URI 视为资源，并充分利用 HTTP 方法（作为动词）的规范。但是以资源的方式组织数据有一定的弊端（例如字段冗余、多端点往往需要多请求等）。
+3. 所有的 HTTP 方法的作用，都是**约定**，具体的实现是由业务控制，协议本身并没有强制要求。例如，即使是在 HTTP 1.1 协议中，我们依然可以使用 POST 来替代 DELETE/PUT/PATCH 的行为。
+
+参考资料及扩展阅读：
+1. [HTTP Method详细解读(`GET` `HEAD` `POST` `OPTIONS` `PUT` `DELETE` `TRACE` `CONNECT`](https://www.cnblogs.com/machao/p/5788425.html)
+2. [HTTP协议详解（一）](https://www.jianshu.com/p/d7a97cc74203)
+3. [MDN: HTTP Methods](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods)
+
