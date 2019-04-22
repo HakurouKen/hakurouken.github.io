@@ -237,3 +237,62 @@ gzip_types text/html text/css application/javascript;
 2. [HTTP协议详解（一）](https://www.jianshu.com/p/d7a97cc74203)
 3. [MDN: HTTP Methods](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods)
 
+## HTTP 常见头部
+
+### 通用
+| HTTP 头    | 描述                     |
+| ---------- | ------------------------ |
+| Date       | 日期                     |
+| Cookie     | -                        |
+| Referer    | 页面来源                 |
+| Host       | 当前请求针对的服务器域名 |
+| User-Agent | 浏览器标识               |
+
+### 安全相关
+
+| HTTP 头                   | 描述                                           |
+| ------------------------- | ---------------------------------------------- |
+| Content-Security-Policy   | 控制当前的页面允许加载的资源来源               |
+| Strict-Transport-Security | 即 HSTS，告诉浏览器只能通过 HTTPS 访问当前资源 |
+| X-Frame-Options           | 当前页面是否允许被其它 iframe 嵌套             |
+
+### 编码
+
+| HTTP 头          | 描述                                          |
+| ---------------- | --------------------------------------------- |
+| Accept           | 浏览器期望的 MIME 类型                        |
+| Accept-Encoding  | 浏览器支持的压缩方法(如 gzip)                 |
+| Accept-Language  | 浏览器期望的语言                              |
+| Content-Encoding | 与 Accept-Encoding 对应，响应的内容的压缩方式 |
+| Content-Language | 与 Accept-Language 对应，响应的语言           |
+| Content-Type     | 返回的 MIME 类型                              |
+
+### 缓存相关
+
+| HTTP 头           | 描述                                                                       |
+| ----------------- | -------------------------------------------------------------------------- |
+| Expires           | 缓存过期时间                                                               |
+| Pragma            | 值只能是 no-cache，标识不使用缓存                                          |
+| Cache-Control     | 缓存控制策略                                                               |
+| Last-Modified     | 最后更改时间                                                               |
+| If-Modified-Since | 和 Last-Modified 配合使用，服务器根据这个字段对比，判断是返回 200 还是 304 |
+| ETag              | 文件签名                                                                   |
+| If-None-Match     | 和 ETag 配合使用，服务器根据这个字段对比，判断是返回 200 还是 304          |
+
+### CORS 相关
+
+| 头                               | 描述                                                                   |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| Origin                           | 源(协议+域名+端口)                                                     |
+| Access-Control-Allow-Origin      | 服务器接受请求的域名，和 Origin 一致，或是`*`                          |
+| Access-Control-Allow-Credentials | 服务器是否接受 Cookie                                                  |
+| Access-Control-Expose-Headers    | 服务器可能返回的响应头列表                                             |
+| Access-Control-Request-Method    | 预检请求时使用，标识浏览器的 CORS 用到的 HTTP 方法                     |
+| Access-Control-Request-Headers   | 预检请求时使用，标识浏览器会额外带上的 HTTP 头                         |
+| Access-Control-Allow-Methods     | 预检请求返回，服务器支持的**所有**支持的 HTTP 方法                     |
+| Access-Control-Allow-Headers     | 预检请求返回，服务器支持的**所有** HTTP 头                             |
+| Access-Control-Max-Age           | 预检请求返回，标识缓存有效期，类似于 Cache-Control 中的 max-age 的作用 |
+
+### 参考资料与扩展阅读
+
+1. [MDN: HTTP Headers](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers)
