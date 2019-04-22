@@ -170,6 +170,48 @@ server {
 3. [MDN: HTTP 访问控制（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
 4. [跨域资源共享 CORS 详解](http://www.ruanyifeng.com/blog/2016/04/cors.html)
 
+## gzip
+
+### gzip 启用过程
+
+1. 浏览器端在 HTTP 头中，带上 HTTP 头 `Accept-Encoding: gzip`，表明自己支持 gzip. Accept-Encoding 除了 gzip 之外还支持其它的压缩格式。
+2. 服务器端检则到客户端支持 gzip，启用 gzip 压缩，并传输给浏览器，并在响应头追加当前编码格式`Content-Encoding: gzip`。
+3. 浏览器根据 `Content-Encoding` 的值进行解包。
+
+### gzip 压缩原理
+
+gzip 默认采用 Deflate 算法来压缩字符串。deflate 算法可以简单理解为先使用 LZ77 压缩，再使用哈弗慢编码压缩。
+
+### nginx 中开启 gzip
+
+```conf
+# 开启
+gzip on;
+
+# 压缩等级，1-9。值越大，压缩率越高
+# 但对应的压缩/解压负载会变大
+# 对于静态文件，经验值是 3 或 4
+gzip_comp_level 3;
+
+# UA 检测，针对特定 UA 禁用 gzip
+gzip_disable regex ...
+
+# 最小压缩文件长度
+gzip_min_length 20;
+
+# 使用 GZIP 压缩的最小 HTTP 版本
+gzip_http_version 1.1;
+
+# 针对指定 MIME 类型进行压缩
+gzip_types text/html text/css application/javascript;
+```
+
+### 参考资料与扩展阅读
+1. [简单聊聊 GZIP 的压缩原理与日常应用](https://juejin.im/post/5b793126f265da43351d5125)
+2. [你真的了解 gzip 吗？](https://zhuanlan.zhihu.com/p/24764131)
+3. [MDN: Accept-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
+4. [MDN: Content-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)
+
 ## HTTP 方法
 
 |  方法   | 初次出现的 HTTP 版本 | 描述                                                                                                                                                                                                         |
