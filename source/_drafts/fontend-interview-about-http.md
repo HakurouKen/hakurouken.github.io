@@ -342,3 +342,29 @@ gzip_types text/html text/css application/javascript;
 3. [HTTP/2 头部压缩技术介绍 | JerryQu 的小站](https://imququ.com/post/header-compression-in-http2.html)
 4. [HTTP/2 与 WEB 性能优化（二） | JerryQu 的小站](https://imququ.com/post/http2-and-wpo-2.html)
 5. [HTTP/2 服务器推送（Server Push）教程 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2018/03/http2_server_push.html)
+
+## TCP 三次握手与四次挥手
+
+### TCP 三次握手
+
+1. 第一次握手（客户端请求建立连接）：客户端将标识位 SYN 置为 1，生成随机序列(Sequence Number) seq=i，发送给服务端。
+2. 第二次握手（服务端确认连接建立）：服务端将标识位 SYN 置为 1，ACK 位置(Acknowledgment Number)为 i+1，生成新的 seq=j，发送给客户端。
+3. 第三次握手（客户端确认连接建立）：客户端将标识位 ACK 置为 j+1，生成新的序列号 seq=k，发送给服务端。此次 TCP 传输，允许携带数据帧。
+
+### TCP 四次挥手
+
+TCP 连接的断开可以由服务端或客户端的另一方主动。
+
+1. 第一次挥手（主动方表明自己不再发送数据）：设置 FIN=1，seq=i
+2. 第二次挥手（被动方确认自己不会接收数据）：设置 Ack=i+1
+3. 第三次挥手（被动方表明自己不再发送数据）：设置 FIN=1，Ack=i+1, seq=j
+4. 第四次挥手（主动方确认自己不再接收数据，连接关闭）：Ack=j+1, seq=i+1
+
+四次挥手的额外注意点：
+
+1. 第二次挥手和第三次挥手之间，被动方仍然可能发送数据。
+2. 在第三次挥手完成，第四次挥手请求发送后，主动方会等待 2MSL（2个 Maximum Segment Lifetime，即 TCP 连接的生存周期）再关闭连接。这样做是为了**确保被动方能够成功收到 ACK**：第三次挥手实质上是最后一次双向通信的机会，被动方发送 FIN+ACK 后，如果在 2 个 MSL 内没有收到最后一次挥手的信号，会认为之前的 FIN+ACK 可能发送失败了，会重新发送一次。这样，主动方就能在这 2MSL 内等到一个重传的 FIN+ACK，然后再次进行第四次挥手，并重新开始计时。
+
+参考资料：
+1. [TCP的三次握手与四次挥手（详解+动图）](https://blog.csdn.net/qzcsu/article/details/72861891)
+1. [Maximum segment lifetime](https://en.wikipedia.org/wiki/Maximum_segment_lifetime)
