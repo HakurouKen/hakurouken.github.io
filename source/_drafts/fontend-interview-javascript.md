@@ -591,3 +591,14 @@ postMessage 是 HTML5 中提出的安全的跨域方案。
 
 1. [MDN: 浏览器的同源策略](https://developer.mozilla.org/zh-CN/docs/Web/Security/Same-origin_policy)
 2. [MDN: window.postMessage](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/postMessage)
+
+## script 标签的 async/defer
+
+script:
+HTML 解析中断，脚本被提取并立即执行。执行结束后，HTML 解析继续。
+
+async script:
+脚本的提取、执行的过程与 HTML 解析过程并行，脚本执行完毕可能在 HTML 解析完毕之前。当脚本与页面上其他脚本独立时，可以使用 async，比如用作页面统计分析。
+
+defer script:
+脚本仅提取过程与 HTML 解析过程并行，脚本的执行将在 HTML 解析完毕后进行。如果有多个含 defer 的脚本，脚本的执行顺序将按照在 document 中出现的位置，从上到下顺序执行。
