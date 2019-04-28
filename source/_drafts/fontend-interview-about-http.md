@@ -170,6 +170,44 @@ server {
 3. [MDN: HTTP 访问控制（CORS）](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS)
 4. [跨域资源共享 CORS 详解](http://www.ruanyifeng.com/blog/2016/04/cors.html)
 
+## CORB
+
+### CORB 的表现
+
+CORB(Cross-Origin Read Blocking，屏蔽跨域读写0)是浏览器加载。如果我们的请求被 CORB 拦截了，会在浏览器中有类似下列的提示（根据浏览器版本不同，提示会有一些不同）：
+
+```
+Cross-Origin Read Blocking (CORB) blocked cross-origin response https://www.example.com/example.html with MIME type text/html. See https://www.chromestatus.com/feature/5629709824032768 for more details.
+```
+
+当一个请求被 CORB 拦截时，它的请求体和请求头都会被置为空（在版本低一些的 Chrome 版本中，会保留部分 HTTP 头）。
+
+### 为什么要有 CORB
+
+事实上，由于有 CORS/CSP 规则的存在，我们的应用层并不会拿到第三方的数据，但是他们仍然会被加载到内存里。利用 Intel 的幽灵熔断漏洞（硬件级别），黑客可以进行旁路攻击，来越界获取到我们内存中的信息。为了增加漏洞的利用成本，Chrome 引入了 CORB，将不合法的返回直接置空。有关这个漏洞，可以参考下面这个视频（如果视频不能加载，可以[点击这里](https://www.bilibili.com/video/av18144159/)）：
+
+<iframe src="//player.bilibili.com/player.html?aid=18144159&cid=29622092&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+
+### 受 CORB 保护的内容
+
+在[Chromium 的官方说明中](https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md#Determining-whether-a-response-is-CORB_protected)中，对受保护的内容有详细的描述，不精确的简单概括如下：
+
+1. 如果响应头中有`X-Content-Type-Options: nosniff`，则直接使用 Content-Type 来判断，否则浏览器会根据 `Content-Type` 和响应体来“嗅探”。
+2. 受保护的类型有 html/xml/json/普通文本(text/plain).
+
+### CORB 的影响
+
+事实上，我们的业务几乎不需要对 CORB 做针对性处理，因为绝大多数场景都不受影响，包括但不限于：
+
+1. 正常的跨域请求的图片/资源。
+2. 普通的 XHR/fetch 请求。屏蔽掉非法的 CORS 请求会被屏蔽掉，但原本这些请求在 javascript 中就无法获取。
+3. 上报请求（例如使用 img 标签来进行上报），这种情况由于我们本来就不需要回包，所以不关注。
+4. Blob 和 File API. 在没有 CORB 的情况下，这些跨域请求也会被屏蔽。
+
+### 参考资料与扩展阅读
+1. [Cross-Origin Read Blocking (CORB)](https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md)
+2. [CORB for Developer](https://www.chromium.org/Home/chromium-security/corb-for-developers)
+
 ## gzip
 
 ### gzip 启用过程
@@ -365,6 +403,6 @@ TCP 连接的断开可以由服务端或客户端的另一方主动。
 1. 第二次挥手和第三次挥手之间，被动方仍然可能发送数据。
 2. 在第三次挥手完成，第四次挥手请求发送后，主动方会等待 2MSL（2个 Maximum Segment Lifetime，即 TCP 连接的生存周期）再关闭连接。这样做是为了**确保被动方能够成功收到 ACK**：第三次挥手实质上是最后一次双向通信的机会，被动方发送 FIN+ACK 后，如果在 2 个 MSL 内没有收到最后一次挥手的信号，会认为之前的 FIN+ACK 可能发送失败了，会重新发送一次。这样，主动方就能在这 2MSL 内等到一个重传的 FIN+ACK，然后再次进行第四次挥手，并重新开始计时。
 
-参考资料：
+### 参考资料与扩展阅读
 1. [TCP的三次握手与四次挥手（详解+动图）](https://blog.csdn.net/qzcsu/article/details/72861891)
 1. [Maximum segment lifetime](https://en.wikipedia.org/wiki/Maximum_segment_lifetime)
