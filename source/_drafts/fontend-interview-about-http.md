@@ -207,6 +207,7 @@ Cross-Origin Read Blocking (CORB) blocked cross-origin response https://www.exam
 ### 参考资料与扩展阅读
 1. [Cross-Origin Read Blocking (CORB)](https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md)
 2. [CORB for Developer](https://www.chromium.org/Home/chromium-security/corb-for-developers)
+3. [30 分钟理解 CORB 是什么](https://segmentfault.com/a/1190000016126079)
 
 ## gzip
 
