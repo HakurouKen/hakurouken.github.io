@@ -52,14 +52,12 @@ module.exports = {
     "semi": [ "error", "always" ]
   }
 };
-
-
 ```
 
 补充说明：
 
 1. 所有的规则(rules)都是一个数组：数组的第一项为等级，分为 `off`(关闭检查),`warn`(检查通过，但给予警告) 和 `error`(检查不通过) 三个等级，这三个等级也可以用 0/1/2 来标识；第二项是具体的配置参数，不同的属性的配置也不同，可以自行查看 eslint 官方文档。
-2. ESLint 是一个“完全插件化”的工具，这意味着我们拥极大的自由度，但同时意味着我们需要的配置项也非常多。对于项目，我们一般使用 `extends` 字段，来基于社区现有的预设来进行更改。当下最流行的预设是 [Airbnb](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) 、 [Google](https://github.com/google/eslint-config-google) 以及原生的 `eslint:recommend` 三个。
+2. ESLint 是一个“完全插件化”的工具，这意味着我们拥极大的自由度，但同时意味着我们需要的配置项也非常多。对于项目，我们一般使用 `extends` 字段，来基于社区现有的预设来进行更改。当下最流行的预设是 [Airbnb](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base) 、 [Google](https://github.com/google/eslint-config-google) 以及自带的 `eslint:recommend` ，我们可以根据自己需要来选择。
 3. env 标识了 ESLint 执行环境，但是 ESLint 并不会真正执行你的代码，而是通过静态检查来对代码进行约束。例如在 `browser` 为 `false` 的情况（非浏览器环境）下，就不能使用全局的 `window` 变量；同理 `commonjs` 为 `false` 时，也不能使用 `require`。
 
 ## 使用
@@ -68,7 +66,7 @@ module.exports = {
 
 在命令行中运行 eslint 也很简单，参照[官方文档](https://eslint.org/docs/user-guide/command-line-interface)，例如 `eslint src/**/*.{js,vue}`。需要特别指出，我们经常使用 `--fix` 参数来自动修正一些简单的错误。
 
-有些时候，我们的 ESLint 规则中限制了一些不能使用的规则（例如 `no-new` 禁止使用 `new`），但是在一些特定的场景下，我们十分清楚它不会带来副作用（例如新建一个 Vue 实例）。这时我们就需要使用行内注释来临时禁止某些 ESLint 规则。下面的例子均来自官方文档：
+有些时候，我们的 ESLint 规则中限制了一些不能使用的规则（例如 `no-new` 禁止我们使用 `new` 但不赋值），但是在一些特定的场景下，我们十分清楚它不会带来副作用（例如新建一个 Vue 实例）。这时我们就需要使用行内注释来临时禁止某些 ESLint 规则。下面的例子均来自官方文档：
 
 ```javascript
 // 禁止所有的 eslint 规则
@@ -130,3 +128,5 @@ alert('foo');
 2. [ESLint 配置 - 官方文档](https://eslint.org/docs/user-guide/configuring)
 3. [ESLint 在各主流编辑器中的插件集成 - 官方文档](https://eslint.org/docs/user-guide/integrations)
 4. [Prettier](http://github.com/prettier/prettier)
+5. [eslint-config-airbnb-base 源代码](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base)
+6. [eslint-config-alloy 源代码](https://github.com/AlloyTeam/eslint-config-alloy)，组织结构比较简单，且对规则有具体的说明，适合初学者阅读。
