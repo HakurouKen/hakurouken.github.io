@@ -88,11 +88,17 @@ tags:
 
 ### @babel/polyfill
 
-由于 polyfill 本身是有副作用的，再加上 UI 库自身无法预知外部的使用环境（例如是否只需要兼容现代浏览器，或者是还需要支持 IE9+，甚至使用方本身就是一个基于当前 UI 库二次开发的组件库），无法做到细粒度的控制，因此**不推荐在业务中引入 polyfill**。当然，为了外部引用的简便，我们的组件库应当尽量避免需要 polyfill 的语法，例如 `Array.prototype.includes` 等。
+由于 polyfill 本身是有副作用的，再加上 UI 库自身无法预知外部的使用环境（例如是否只需要兼容现代浏览器，或者是还需要支持 IE9+，甚至使用方本身就是一个基于当前 UI 库二次开发的组件库），无法做到细粒度的控制，因此**不推荐在业务中引入 polyfill**。当然，我们的组件库也应当尽量避免需要 polyfill 的语法，例如 `Array.prototype.includes` 等。
 
 ### @babel/plugin-transform-runtime
 
-两点建议：
+在使用之前，我们先看看 `@babel/plugin-transform-runtime` 做了如下几件事:
+
+1. 对于 async/await 或者 generator，导入 regenerator
+2. 对于一些内联的工具函数，例如 \_defineProperty 和 \_objectSpread ，改用 import @babel/runtime 的模块
+3. 对于一些全局的方法/属性，例如 `Promise`/`Array.from` 等，自动导入 core-js 的模块替代(默认不开启)
+
+根据其功能，我们给出两点建议：
 
 1. 根据你业务的自身情况，决定是否启用 `@babel/plugin-transform-runtime`。如果只用到了很少的帮助办法，完全可以不使用这个插件，将用到的方法 inline。如果大量的用到了需要转换的语法（如对象结构、class、taggedTemplate 等），则使用 `@babel/plugin-transform-runtime`，并将 `@babel/runtime` 加入 `dependencies`。
 2. 即使你启用了 `@babel/plugin-transform-runtime`，也不要使用可能引入 regenerator-runtime 的语法（即 `async/await` 和 `generator`），因为这个包太大了。对于 UI 组件库，我们并不需要大量的异步操作，使用 `async/await` 并不会对我们的编码效率带来太大的提升。
