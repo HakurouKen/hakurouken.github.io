@@ -3,11 +3,14 @@ title: Webpack enhanced-resolve 详解
 tags:
   - javascript
   - webpack
+date: 2019-06-09 17:04:04
 ---
 
 webpack 使用 [enhanced-resolve](https://github.com/webpack/enhanced-resolve) 来进行模块解析。它的作用类似于一个异步的 `require.resolve` 方法，将一个 `require/import` 的语句中的引入字符串，解析为引入文件的绝对路径。
 
-本文以为 `enhanced-resolve` 的 4.1.0 版本的代码为例，
+本文以为 `enhanced-resolve` 的 4.1.0 版本的代码为例，简单介绍一下其内部的工作机制，以及如何编写一个 `resolve` 的插件。
+
+<!-- more -->
 
 ### 概要说明
 
