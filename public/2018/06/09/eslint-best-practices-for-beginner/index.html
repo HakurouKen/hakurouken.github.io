@@ -90,7 +90,7 @@
 <meta property="og:site_name" content="HakurouKen 的博客">
 <meta property="og:description" content="ESLint 是当下最流行、最强大的静态代码检查工具。它不仅可以帮我们规范代码格式，同时还能够在帮助我们发现很多代码中潜在的错误。接入 ESLint 是提升项目代码质量的重要一环。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-11T19:42:33.000Z">
+<meta property="og:updated_time" content="2019-05-07T16:08:52.831Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="给初学者的 eslint 指南">
 <meta name="twitter:description" content="ESLint 是当下最流行、最强大的静态代码检查工具。它不仅可以帮我们规范代码格式，同时还能够在帮助我们发现很多代码中潜在的错误。接入 ESLint 是提升项目代码质量的重要一环。">
@@ -319,12 +319,12 @@
 <p>补充说明：</p>
 <ol>
 <li>所有的规则(rules)都是一个数组：数组的第一项为等级，分为 <code>off</code>(关闭检查),<code>warn</code>(检查通过，但给予警告) 和 <code>error</code>(检查不通过) 三个等级，这三个等级也可以用 0/1/2 来标识；第二项是具体的配置参数，不同的属性的配置也不同，可以自行查看 eslint 官方文档。</li>
-<li>ESLint 是一个“完全插件化”的工具，这意味着我们拥极大的自由度，但同时意味着我们需要的配置项也非常多。对于项目，我们一般使用 <code>extends</code> 字段，来基于社区现有的预设来进行更改。当下最流行的预设是 <a href="https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base" target="_blank" rel="noopener">Airbnb</a> 、 <a href="https://github.com/google/eslint-config-google" target="_blank" rel="noopener">Google</a> 以及原生的 <code>eslint:recommend</code> 三个。</li>
+<li>ESLint 是一个“完全插件化”的工具，这意味着我们拥极大的自由度，但同时意味着我们需要的配置项也非常多。对于项目，我们一般使用 <code>extends</code> 字段，来基于社区现有的预设来进行更改。当下最流行的预设是 <a href="https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base" target="_blank" rel="noopener">Airbnb</a> 、 <a href="https://github.com/google/eslint-config-google" target="_blank" rel="noopener">Google</a> 以及自带的 <code>eslint:recommend</code> ，我们可以根据自己需要来选择。</li>
 <li>env 标识了 ESLint 执行环境，但是 ESLint 并不会真正执行你的代码，而是通过静态检查来对代码进行约束。例如在 <code>browser</code> 为 <code>false</code> 的情况（非浏览器环境）下，就不能使用全局的 <code>window</code> 变量；同理 <code>commonjs</code> 为 <code>false</code> 时，也不能使用 <code>require</code>。</li>
 </ol>
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>一般的项目脚手架都会帮我们生成配套的 ESLint 设施（包括 eslintrc 配置和相应的 webpack-loader），基本可以做到开箱即用。如果我们需要忽略 eslint 检查，可以在 <code>.eslintignore</code> 下添加对应的文件，匹配规则和 <code>.gitignore</code> 等是一致的。</p>
 <p>在命令行中运行 eslint 也很简单，参照<a href="https://eslint.org/docs/user-guide/command-line-interface" target="_blank" rel="noopener">官方文档</a>，例如 <code>eslint src/**/*.{js,vue}</code>。需要特别指出，我们经常使用 <code>--fix</code> 参数来自动修正一些简单的错误。</p>
-<p>有些时候，我们的 ESLint 规则中限制了一些不能使用的规则（例如 <code>no-new</code> 禁止使用 <code>new</code>），但是在一些特定的场景下，我们十分清楚它不会带来副作用（例如新建一个 Vue 实例）。这时我们就需要使用行内注释来临时禁止某些 ESLint 规则。下面的例子均来自官方文档：</p>
+<p>有些时候，我们的 ESLint 规则中限制了一些不能使用的规则（例如 <code>no-new</code> 禁止我们使用 <code>new</code> 但不赋值），但是在一些特定的场景下，我们十分清楚它不会带来副作用（例如新建一个 Vue 实例）。这时我们就需要使用行内注释来临时禁止某些 ESLint 规则。下面的例子均来自官方文档：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 禁止所有的 eslint 规则</span></span><br><span class="line"><span class="comment">/* eslint-disable */</span></span><br><span class="line">alert(<span class="string">'foo'</span>);</span><br><span class="line"><span class="comment">/* eslint-enable */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 禁止指定的 eslint 规则</span></span><br><span class="line"><span class="comment">/* eslint-disable no-alert, no-console */</span></span><br><span class="line">alert(<span class="string">'foo'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'bar'</span>);</span><br><span class="line"><span class="comment">/* eslint-enable no-alert, no-console */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 禁止 eslint 规则（单行）</span></span><br><span class="line"></span><br><span class="line">alert(<span class="string">'foo'</span>); <span class="comment">// eslint-disable-line no-alert, quotes, semi</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// eslint-disable-next-line no-alert, quotes, semi</span></span><br><span class="line">alert(<span class="string">'foo'</span>);</span><br><span class="line"></span><br><span class="line">alert(<span class="string">'foo'</span>); <span class="comment">/* eslint-disable-line no-alert, quotes, semi */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* eslint-disable-next-line no-alert, quotes, semi */</span></span><br><span class="line">alert(<span class="string">'foo'</span>);</span><br></pre></td></tr></table></figure>
 <h2 id="配合-prettier-使用"><a href="#配合-prettier-使用" class="headerlink" title="配合 prettier 使用"></a>配合 prettier 使用</h2><p>上文的说明，基本都可以在 eslint 的官方文档中找到。但是实际使用的时候（尤其是当某个项目的规则不太符合你的个人风格的时候），我们经常会发现手动修改 lint 的报错是一件非常麻烦的事情。这时，我们可以使用 <a href="https://github.com/prettier/prettier" target="_blank" rel="noopener">prettier</a> 来帮助我们进行一系列的自动格式化。有关 prettier 相关的配置，我们不再展开讨论，这里简单介绍一下在主流编辑器中的插件集成。注意，prettier 仅能够帮你修正格式相关的错误，涉及到逻辑改变的（例如 <code>eqeqeq</code> 和 <code>no-console</code> 规则），仍然需要人工去干预。</p>
 <h3 id="VSCode-下的配置"><a href="#VSCode-下的配置" class="headerlink" title="VSCode 下的配置"></a>VSCode 下的配置</h3><ol>
@@ -349,6 +349,8 @@
 <li><a href="https://eslint.org/docs/user-guide/configuring" target="_blank" rel="noopener">ESLint 配置 - 官方文档</a></li>
 <li><a href="https://eslint.org/docs/user-guide/integrations" target="_blank" rel="noopener">ESLint 在各主流编辑器中的插件集成 - 官方文档</a></li>
 <li><a href="http://github.com/prettier/prettier" target="_blank" rel="noopener">Prettier</a></li>
+<li><a href="https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb-base" target="_blank" rel="noopener">eslint-config-airbnb-base 源代码</a></li>
+<li><a href="https://github.com/AlloyTeam/eslint-config-alloy" target="_blank" rel="noopener">eslint-config-alloy 源代码</a>，组织结构比较简单，且对规则有具体的说明，适合初学者阅读。</li>
 </ol>
 
       
@@ -464,7 +466,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives/">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">54</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -474,7 +476,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -544,7 +546,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-flask"></i>
   </span>

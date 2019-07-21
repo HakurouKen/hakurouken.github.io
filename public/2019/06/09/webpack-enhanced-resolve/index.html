@@ -1,0 +1,642 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,webpack," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="webpack 使用 enhanced-resolve 来进行模块解析。它的作用类似于一个异步的 require.resolve 方法，将一个 require/import 的语句中的引入字符串，解析为引入文件的绝对路径。 本文以为 enhanced-resolve 的 4.1.0 版本的代码为例，简单介绍一下其内部的工作机制，以及如何编写一个 resolve 的插件。">
+<meta name="keywords" content="javascript,webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack enhanced-resolve 详解">
+<meta property="og:url" content="http://blog.sevenplus.me/2019/06/09/webpack-enhanced-resolve/index.html">
+<meta property="og:site_name" content="HakurouKen 的博客">
+<meta property="og:description" content="webpack 使用 enhanced-resolve 来进行模块解析。它的作用类似于一个异步的 require.resolve 方法，将一个 require/import 的语句中的引入字符串，解析为引入文件的绝对路径。 本文以为 enhanced-resolve 的 4.1.0 版本的代码为例，简单介绍一下其内部的工作机制，以及如何编写一个 resolve 的插件。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-09T09:06:53.839Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack enhanced-resolve 详解">
+<meta name="twitter:description" content="webpack 使用 enhanced-resolve 来进行模块解析。它的作用类似于一个异步的 require.resolve 方法，将一个 require/import 的语句中的引入字符串，解析为引入文件的绝对路径。 本文以为 enhanced-resolve 的 4.1.0 版本的代码为例，简单介绍一下其内部的工作机制，以及如何编写一个 resolve 的插件。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2019/06/09/webpack-enhanced-resolve/"/>
+
+
+
+
+
+  <title> Webpack enhanced-resolve 详解 | HakurouKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakurouKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2019/06/09/webpack-enhanced-resolve/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakurouKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakurouKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Webpack enhanced-resolve 详解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-09T17:04:04+08:00">
+                2019-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>webpack 使用 <a href="https://github.com/webpack/enhanced-resolve" target="_blank" rel="noopener">enhanced-resolve</a> 来进行模块解析。它的作用类似于一个异步的 <code>require.resolve</code> 方法，将一个 <code>require/import</code> 的语句中的引入字符串，解析为引入文件的绝对路径。</p>
+<p>本文以为 <code>enhanced-resolve</code> 的 4.1.0 版本的代码为例，简单介绍一下其内部的工作机制，以及如何编写一个 <code>resolve</code> 的插件。</p>
+<a id="more"></a>
+<h3 id="概要说明"><a href="#概要说明" class="headerlink" title="概要说明"></a>概要说明</h3><p><code>enhanced-resolve</code> 的官方文档中，将自己描述为”高度可配置的“，这得益于它完善的插件系统。事实上，<code>enhanced-resolve</code> 的所有内置功能，也基本是通过插件来实现的。从<a href="https://github.com/webpack/enhanced-resolve/tree/v4.1.0/lib" target="_blank" rel="noopener">源代码的目录</a> 也可以看出，所有 Plugin 结尾的文件，均为内置插件。webpack 配置中的 <code>resolve</code> 中的配置，和 <code>enhanced-resolve</code> 的 resolver options 是一一对应的，这些选项决定</p>
+<p>函数的入口是 <a href="https://github.com/webpack/enhanced-resolve/blob/v4.1.0/lib/node.js" target="_blank" rel="noopener">lib/node.js</a>，它只是简单的调用了 <code>ResolverFactory.createResolver</code> 方法，生成了一个 <code>Resolver</code> 对象，并将它的 <code>resolve</code> 方法暴露给外部。</p>
+<p><code>ResolverFactory.createResolver</code>（源代码见<a href="https://github.com/webpack/enhanced-resolve/blob/v4.1.0/lib/ResolverFactory.js" target="_blank" rel="noopener">lib/ResolverFactory.js</a>），从名字就可以看出，它就是 <code>Resolver</code> 的工厂方法，它大致做了如下几个事情：</p>
+<ol>
+<li>生成一个 <code>Resolver</code> 对象</li>
+<li>定义一系列生命周期的钩子</li>
+<li>将所有外部传入的配置格式化，并根据配置加载不同的内置插件</li>
+</ol>
+<p><code>Resolver</code>（源代码见<a href="https://github.com/webpack/enhanced-resolve/blob/v4.1.0/lib/Resolver.js" target="_blank" rel="noopener">lib/Resolver.js</a>）本身是一个 <code>tapable</code> 的子类，<br>从<a href="https://github.com/webpack/enhanced-resolve/blob/635c2c7e33910bb89845bbeb8ef2c4eda36527f2/lib/ResolverFactory.js#L154-L167" target="_blank" rel="noopener">源代码</a> 可以看到所有外部插件可以使用的钩子。</p>
+<p>而所有的内部插件的运行机制，就和 webpack 插件类似：首先通过 <code>resolver.getHooks</code> 声明挂载钩子（取得<code>tapable</code>对象），然后使用 <code>tap</code> 相关方法(例如 <code>tapAsync</code>) 注册钩子回调。为了方便的维持调用栈和提示报错信息，我们不直接调用 callback，而是通过 <code>resolver.doResolve</code> 来间接调用。可以参考 <a href="https://github.com/webpack/enhanced-resolve/blob/v4.1.0/lib/AliasPlugin.js" target="_blank" rel="noopener">AliasPlugin</a>.</p>
+<h3 id="插件的基本结构"><a href="#插件的基本结构" class="headerlink" title="插件的基本结构"></a>插件的基本结构</h3><p>内部插件的结构大致如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="class"><span class="keyword">class</span> <span class="title">SomeInternalPlugin</span> </span>&#123;</span><br><span class="line">  constuctor(source, options, target) &#123;</span><br><span class="line">    <span class="keyword">this</span>.source = source;</span><br><span class="line">		<span class="keyword">this</span>.options = options;</span><br><span class="line">		<span class="keyword">this</span>.target = target;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  apply(resolver) &#123;</span><br><span class="line">    <span class="keyword">const</span> target = resolver.ensureHook(<span class="keyword">this</span>.target);</span><br><span class="line">    resolver.getHook(<span class="keyword">this</span>.source).tapAsync(<span class="string">'SomeInternalPlugin'</span>, (request, resolveContent, callback) =&gt; &#123;</span><br><span class="line">      <span class="comment">// 省略插件的具体逻辑</span></span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">      <span class="keyword">return</span> resolver.doResolve(target, request, <span class="string">'some resolve message'</span>, resolveContext, callback)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>source</code> 和 <code>target</code> 是将零散的插件逻辑串联成流程的关键：插件逻辑通过 <code>resolver.getHook</code> 将自己的逻辑注册到 <code>source</code> 的钩子上，然后再使用 <code>resolver.doResolve</code> 调用 <code>target</code> 对应的钩子。为了这个目的，内部还实现了 <a href="https://github.com/webpack/enhanced-resolve/blob/v4.1.0/lib/NextPlugin.js" target="_blank" rel="noopener"><code>NextPlugin</code></a> 和 <a href="https://github.com/webpack/enhanced-resolve/blob/v4.1.0/lib/NextPlugin.js" target="_blank" rel="noopener"><code>TryNextPlugin</code></a> 两个”空插件“（这两个插件也是内部插件中的“最简结构”）。</p>
+<h3 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h3><p>第三方插件和内部插件的结构基本是一致的，除了我们不需要支持传入 <code>source</code> 和 <code>target</code> ，在插件内部控制即可。</p>
+<p>所有可以使用的钩子名称，我们可以直接在<a href="https://github.com/webpack/enhanced-resolve/blob/635c2c7e33910bb89845bbeb8ef2c4eda36527f2/lib/ResolverFactory.js#L154-L167" target="_blank" rel="noopener">源代码</a>中找到，我们还可以通过给这些钩子添加 <code>before-</code> 或 <code>after-</code> 前缀来提高/降低当前插件的执行优先级。一个最简单的插件实现，我们可以参考 <a href="https://github.com/shaketbaby/directory-named-webpack-plugin" target="_blank" rel="noopener">directory-named-webpack-plugin</a>。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
+<li><a href="https://github.com/webpack/enhanced-resolve" target="_blank" rel="noopener">webpack/enhanced-resolve: Offers an async require.resolve function. It’s highly configurable.</a></li>
+<li><a href="https://webpack.js.org/concepts/module-resolution/" target="_blank" rel="noopener">Webpack 官方文档：Module Resolution</a></li>
+<li><a href="https://webpack.js.org/configuration/resolve/" target="_blank" rel="noopener">Webpack 官方文档：Resolve</a></li>
+<li><a href="https://webpack.js.org/api/plugins/" target="_blank" rel="noopener">Webpack 官方文档：Plugin</a></li>
+<li><a href="https://webpack.js.org/contribute/writing-a-plugin/" target="_blank" rel="noopener">Webpack 官方文档：Writing a Plugin</a></li>
+<li><a href="https://www.yuque.com/bartonding/webdev/enhanced-resolve" target="_blank" rel="noopener">[webpack] enhanced-resolve · 语雀</a></li>
+<li><a href="https://juejin.im/post/5abf33f16fb9a028e46ec352" target="_blank" rel="noopener">webpack4.0源码分析之Tapable - 掘金</a></li>
+<li><a href="https://github.com/shaketbaby/directory-named-webpack-plugin" target="_blank" rel="noopener">shaketbaby/directory-named-webpack-plugin: A Webpack plugin that treats a file with the name of directory as the index file</a></li>
+<li><a href="https://github.com/webpack/tapable" target="_blank" rel="noopener">webpack/tapable: Just a little module for plugins.</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/webpack/" rel="tag"># webpack</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/21/how-to-build-a-vue-component-library/" rel="next" title="如何打包一个 Vue 组件库">
+                <i class="fa fa-chevron-left"></i> 如何打包一个 Vue 组件库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概要说明"><span class="nav-number">1.</span> <span class="nav-text">概要说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插件的基本结构"><span class="nav-number">2.</span> <span class="nav-text">插件的基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方插件"><span class="nav-number">3.</span> <span class="nav-text">第三方插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
