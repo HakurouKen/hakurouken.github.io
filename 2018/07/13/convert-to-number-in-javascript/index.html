@@ -90,7 +90,7 @@
 <meta property="og:site_name" content="HakurouKen 的博客">
 <meta property="og:description" content="在 javascript 中，我们经常会进行一些类型转化，尤其是字符串转化为数字。由于 javascript 的灵活性，我们有很多的方法能够完成这一目的，但是对于一些 edge cases，不同的方式转化经常会得到不同的效果。被一些特殊情况坑了几次之后，这里专门对这个问题咬文嚼字一下。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-11T19:42:13.000Z">
+<meta property="og:updated_time" content="2019-05-07T16:08:52.829Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript 中的字符串转数字">
 <meta name="twitter:description" content="在 javascript 中，我们经常会进行一些类型转化，尤其是字符串转化为数字。由于 javascript 的灵活性，我们有很多的方法能够完成这一目的，但是对于一些 edge cases，不同的方式转化经常会得到不同的效果。被一些特殊情况坑了几次之后，这里专门对这个问题咬文嚼字一下。">
@@ -335,7 +335,7 @@
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
 <li>因为有溢出的风险，所以<strong>不建议</strong>使用位运算的隐式转换（eslint 的 no-bitwise 规则）。</li>
 <li>如果你使用了 typescript 或者 flow 等保证了输入类型，则永远优先使用 <code>parseInt</code>（或 <code>parseFloat</code>）。它不仅语义最清晰，而且性能最好。</li>
-<li>如果是你的代码需要对数字输入和字符串输入进行兼容，尽量使用 <code>Number</code> 转换。考虑到绝大多数的类型转换，都是用于比较是否相等（例如兼容数字 ID 和字符串 ID），用 <code>Number</code> 已经足够。如果后续需要用于计算，再单独转化。</li>
+<li>如果是你的目的是对数字输入和字符串输入进行兼容，尽量使用 <code>Number</code> 转换。考虑到绝大多数的类型转换，都是用于比较是否相等（例如兼容数字 ID 和字符串 ID），用 <code>Number</code> 已经足够。如果后续需要用于计算，再按照需要，使用 <code>Math.floor</code> 或者 <code>parseInt</code> 等进行转化。</li>
 </ol>
 
       
@@ -449,7 +449,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives/">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">54</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -459,7 +459,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -529,7 +529,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-flask"></i>
   </span>

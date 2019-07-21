@@ -1,0 +1,641 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.proxy.ustclug.org/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="raspberry pi,mac," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+
+
+
+
+
+
+<meta name="description" content="Step.1 从树莓派官网下载镜像在树莓派官网可以下载最新的镜像，为了后续省去安装一些软件，我们可以下载附带必要软件的完整包。">
+<meta name="keywords" content="raspberry pi,mac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树莓派的无头初始化">
+<meta property="og:url" content="http://blog.sevenplus.me/2019/03/18/raspberry-headless-setup/index.html">
+<meta property="og:site_name" content="HakurouKen 的博客">
+<meta property="og:description" content="Step.1 从树莓派官网下载镜像在树莓派官网可以下载最新的镜像，为了后续省去安装一些软件，我们可以下载附带必要软件的完整包。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-20T16:15:31.078Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="树莓派的无头初始化">
+<meta name="twitter:description" content="Step.1 从树莓派官网下载镜像在树莓派官网可以下载最新的镜像，为了后续省去安装一些软件，我们可以下载附带必要软件的完整包。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: false,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.sevenplus.me/2019/03/18/raspberry-headless-setup/"/>
+
+
+
+
+
+  <title> 树莓派的无头初始化 | HakurouKen 的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">HakurouKen 的博客</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">A coder.</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.sevenplus.me/2019/03/18/raspberry-headless-setup/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="HakurouKen">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="HakurouKen 的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="HakurouKen 的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                树莓派的无头初始化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-18T01:44:07+08:00">
+                2019-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Step-1-从树莓派官网下载镜像"><a href="#Step-1-从树莓派官网下载镜像" class="headerlink" title="Step.1 从树莓派官网下载镜像"></a>Step.1 从树莓派官网下载镜像</h2><p>在<a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank" rel="noopener">树莓派官网</a>可以下载最新的镜像，为了后续省去安装一些软件，我们可以下载附带必要软件的完整包。</p>
+<a id="more"></a>
+<h2 id="Step-2-格式化-SD-卡"><a href="#Step-2-格式化-SD-卡" class="headerlink" title="Step.2 格式化 SD 卡"></a>Step.2 格式化 SD 卡</h2><p>使用 <a href="https://www.sdcard.org/downloads/formatter_4/index.html" target="_blank" rel="noopener">SD Memory Card Formatter</a>对 SD 卡格式化，这个软件同时提供 Mac 版和 windows 版。</p>
+<h2 id="Step-3-写入镜像"><a href="#Step-3-写入镜像" class="headerlink" title="Step.3 写入镜像"></a>Step.3 写入镜像</h2><p>使用 <a href="https://www.balena.io/etcher/" target="_blank" rel="noopener">balenaEtcher</a>将树莓派镜像写入 SD 卡。在 windows 上，类似的可以使用 <a href="https://sourceforge.net/projects/win32diskimager/" target="_blank" rel="noopener">Win32 Disk Imager</a></p>
+<h2 id="Step-4-配置-WIFI-ssh"><a href="#Step-4-配置-WIFI-ssh" class="headerlink" title="Step.4 配置 WIFI / ssh"></a>Step.4 配置 WIFI / ssh</h2><p>为了使树莓派能够自动连接 WIFI，我们需要将一个 <code>wpa_supplicant.conf</code> 放在树莓派 boot 的根目录下。<code>wpa_supplicant.conf</code> 的配置内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev</span><br><span class="line">update_config=1</span><br><span class="line">country=CN</span><br><span class="line"></span><br><span class="line">network=&#123;</span><br><span class="line">  ssid=&quot;YOUR_WIFI_SSID&quot;</span><br><span class="line">  psk=&quot;YOUR_WIFI_PASSWORD&quot;</span><br><span class="line">  key_mgmt=WPA-PSK</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>新版本的树莓派，默认关闭了 ssh 功能，为了开启 ssh ，我们需要在 boot 的根目录下，创建一个空的 <code>ssh</code> 文件即可。</p>
+<p>在完成上述步骤之后，我们所有的前置工作均已经准备完成。接下来只需要将 SD 卡插入树莓派并接电开机，树莓派即会自动连接到指定 SSID 的 WIFI。我们登录路由器，即可看到给树莓派分配的 IP。 ssh 连接树莓派的默认账号是 <code>pi</code>，密码是 <code>raspberry</code>。</p>
+<h2 id="Step-5-修改用户名-密码"><a href="#Step-5-修改用户名-密码" class="headerlink" title="Step.5 修改用户名/密码"></a>Step.5 修改用户名/密码</h2><p>可以通过 <code>sudo raspi-config</code>，也可以使用 <code>adduser</code> 和 <code>passwd</code> 命令直接修改。</p>
+<h2 id="Step-6-locales"><a href="#Step-6-locales" class="headerlink" title="Step.6 locales"></a>Step.6 locales</h2><p>同样也可以在 <code>raspi-config</code> 中设置，也可以通过 <code>update-locale</code> 命令设置。我们也可以手动设置 locale 的值，可以参考 <a href="https://wiki.debian.org/Locale" target="_blank" rel="noopener">Debian 的文档</a>。</p>
+<h2 id="Step-7-国内更新源"><a href="#Step-7-国内更新源" class="headerlink" title="Step.7 国内更新源"></a>Step.7 国内更新源</h2><p>树莓派的更新源，涉及两个位置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/etc/apt/sources.list</span><br><span class="line">/etc/apt/sources.list.d/raspi.list</span><br></pre></td></tr></table></figure>
+<p>分别对应 <strong>apt 软件源</strong> 和 <strong>树莓派的系统镜像源</strong>。</p>
+<p>树莓官方网站中，给出了一系列的 raspbian <a href="https://www.raspbian.org/RaspbianMirrors" target="_blank" rel="noopener">软件镜像源</a>，但是并没有包括全部的。这里建议使用阿里云的源：<a href="http://mirrors.aliyun.com/raspbian/raspbian/" target="_blank" rel="noopener">http://mirrors.aliyun.com/raspbian/raspbian/</a> 。</p>
+<p>阿里云没有 archive.raspberrypi.org 的源，我们可以选择：</p>
+<p>切换到清华的源 <a href="https://mirrors.tuna.tsinghua.edu.cn/raspberrypi/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/raspberrypi/</a></p>
+<p>或者中科大的源 <a href="https://mirrors.ustc.edu.cn/archive.raspberrypi.org/" target="_blank" rel="noopener">https://mirrors.ustc.edu.cn/archive.raspberrypi.org/</a></p>
+<p>更新源中的 <code>stretch</code> / <code>jessie</code> / <code>wheezy</code> ，分别对应树莓派系统 raspbian 的发行版，和 Debian 的版本一一对应，参考<a href="https://www.debian.org/releases/" target="_blank" rel="noopener">Debian 的发行版本</a>。</p>
+<p>在修改完成之后，执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update &amp;&amp; sudo apt upgrade -y</span><br></pre></td></tr></table></figure>
+<p>来更新。</p>
+<h2 id="Step-8-安装基础软件"><a href="#Step-8-安装基础软件" class="headerlink" title="Step.8 安装基础软件"></a>Step.8 安装基础软件</h2><p>这一步因人而异，这里仅针对个人情况，做一个简单记录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 vim</span></span><br><span class="line">sudo apt install vim</span><br><span class="line"><span class="comment"># 安装 zsh</span></span><br><span class="line">sudo apt install zsh</span><br><span class="line"><span class="comment"># 安装 oh-my-zsh</span></span><br><span class="line">sh -c <span class="string">"<span class="variable">$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>"</span></span><br><span class="line"><span class="comment"># 安装 nvm/nodejs</span></span><br><span class="line">wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | zsh</span><br><span class="line"><span class="comment"># node</span></span><br><span class="line">nvm install</span><br><span class="line"><span class="comment"># nginx</span></span><br><span class="line">sudo apt install nginx</span><br><span class="line"><span class="comment"># php</span></span><br><span class="line">sudo apt install php</span><br></pre></td></tr></table></figure>
+<h2 id="Bonus-安装风扇"><a href="#Bonus-安装风扇" class="headerlink" title="Bonus 安装风扇"></a>Bonus 安装风扇</h2><p>红色线接树莓派 4 针脚，黑色线接树莓派 6 针脚。关于针脚的分布，可以参考<a href="https://github.com/Yradex/RaspberryPi3_OS/wiki/%E6%A0%91%E8%8E%93%E6%B4%BE-3-UART-%E5%8F%8A-GPIO-%E9%92%88%E8%84%9A%E5%AE%9A%E4%B9%89" target="_blank" rel="noopener">这篇教程</a>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/raspberry-pi/" rel="tag"># raspberry pi</a>
+          
+            <a href="/tags/mac/" rel="tag"># mac</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/05/yarn-versions/" rel="next" title="使用 yarn 管理版本的注意事项">
+                <i class="fa fa-chevron-left"></i> 使用 yarn 管理版本的注意事项
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/18/xss-for-beginner/" rel="prev" title="浅析 XSS">
+                浅析 XSS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="HakurouKen" />
+          <p class="site-author-name" itemprop="name">HakurouKen</p>
+          <p class="site-description motion-element" itemprop="description">↑ P站ID=55398733</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives/">
+              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-1-从树莓派官网下载镜像"><span class="nav-number">1.</span> <span class="nav-text">Step.1 从树莓派官网下载镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-2-格式化-SD-卡"><span class="nav-number">2.</span> <span class="nav-text">Step.2 格式化 SD 卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-3-写入镜像"><span class="nav-number">3.</span> <span class="nav-text">Step.3 写入镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-4-配置-WIFI-ssh"><span class="nav-number">4.</span> <span class="nav-text">Step.4 配置 WIFI / ssh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-5-修改用户名-密码"><span class="nav-number">5.</span> <span class="nav-text">Step.5 修改用户名/密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-6-locales"><span class="nav-number">6.</span> <span class="nav-text">Step.6 locales</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-7-国内更新源"><span class="nav-number">7.</span> <span class="nav-text">Step.7 国内更新源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step-8-安装基础软件"><span class="nav-number">8.</span> <span class="nav-text">Step.8 安装基础软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bonus-安装风扇"><span class="nav-number">9.</span> <span class="nav-text">Bonus 安装风扇</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+
+<div class="busuanzi-count" id="busuanzi_container_site_pv" style="display:none;">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+
+  
+
+</div>
+
+
+
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-flask"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HakurouKen</span>
+</div>
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js"></script>
+<script type="text/javascript" src="/js/src/post-details.js"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
