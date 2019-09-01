@@ -4,7 +4,11 @@ tags:
   - javascript
   - http
   - 面试
+
+date: 2019-04-28 23:11:07
 ---
+
+<!-- more -->
 
 ## TCP 三次握手 四次挥手
 
@@ -174,7 +178,7 @@ server {
 
 ### CORB 的表现
 
-CORB(Cross-Origin Read Blocking，屏蔽跨域读写0)是浏览器加载。如果我们的请求被 CORB 拦截了，会在浏览器中有类似下列的提示（根据浏览器版本不同，提示会有一些不同）：
+CORB(Cross-Origin Read Blocking，屏蔽跨域读写)是浏览器加载。如果我们的请求被 CORB 拦截了，会在浏览器中有类似下列的提示（根据浏览器版本不同，提示会有一些不同）：
 
 ```
 Cross-Origin Read Blocking (CORB) blocked cross-origin response https://www.example.com/example.html with MIME type text/html. See https://www.chromestatus.com/feature/5629709824032768 for more details.
@@ -272,7 +276,7 @@ gzip_types text/html text/css application/javascript;
 3. 所有的 HTTP 方法的作用，都是**约定**，具体的实现是由业务控制，协议本身并没有强制要求。例如，即使是在 HTTP 1.1 协议中，我们依然可以使用 POST 来替代 DELETE/PUT/PATCH 的行为。
 
 参考资料及扩展阅读：
-1. [HTTP Method详细解读(`GET` `HEAD` `POST` `OPTIONS` `PUT` `DELETE` `TRACE` `CONNECT`](https://www.cnblogs.com/machao/p/5788425.html)
+1. [HTTP Method详细解读(`GET` `HEAD` `POST` `OPTIONS` `PUT` `DELETE` `TRACE` `CONNECT`)](https://www.cnblogs.com/machao/p/5788425.html)
 2. [HTTP协议详解（一）](https://www.jianshu.com/p/d7a97cc74203)
 3. [MDN: HTTP Methods](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods)
 

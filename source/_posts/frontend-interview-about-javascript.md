@@ -3,7 +3,10 @@ title: Web 前端常见的 Javascript 面试基础题
 tags:
   - javascript
   - 面试
+date: 2019-04-28 23:11:43
 ---
+
+<!-- more -->
 
 ## == 的隐式转换
 
@@ -275,32 +278,30 @@ p2.toString(); // => '0,5'
 
 ```javascript
 if (!Function.prototype.bind) {
-  (function() {
+  Function.prototype.bind = function(otherThis /* otherArgs */) {
     var noop = function() {};
-    Function.prototype.bind = function(otherThis /* otherArgs */) {
-      var func = this;
-      var otherArgs = Array.prototype.slice.call(arguments, 1);
+    var func = this;
+    var otherArgs = Array.prototype.slice.call(arguments, 1);
 
-      var bound = function(/* restArgs */) {
-        var restArgs = Array.prototype.slice.call(arguments);
-        func.apply(
-          // 对于普通函数和构造函数，采用不同的 this 绑定策略：
-          // 普通函数直接绑定到给定的 context
-          // 构造函数绑定到当前的 this，在后面单独修改原型链
-          noop.prototype.isPrototypeOf(this) ? this : otherThis,
-          otherArgs.concat(restArgs)
-        );
-      };
-
-      // Function.prototype 没有 prototype 属性
-      // 这里为了维持继承的原型链，需要额外判断
-      if (this.prototype) {
-        noop.prototype = this.prototype;
-      }
-      bound.prototype = new noop();
-      return bound;
+    var bound = function(/* restArgs */) {
+      var restArgs = Array.prototype.slice.call(arguments);
+      func.apply(
+        // 对于普通函数和构造函数，采用不同的 this 绑定策略：
+        // 普通函数直接绑定到给定的 context
+        // 构造函数绑定到当前的 this，在后面单独修改原型链
+        noop.prototype.isPrototypeOf(this) ? this : otherThis,
+        otherArgs.concat(restArgs)
+      );
     };
-  })();
+
+    // Function.prototype 没有 prototype 属性
+    // 这里为了维持继承的原型链，需要额外判断
+    if (this.prototype) {
+      noop.prototype = this.prototype;
+    }
+    bound.prototype = new noop();
+    return bound;
+  };
 }
 ```
 
